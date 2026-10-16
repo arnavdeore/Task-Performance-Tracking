@@ -1,13 +1,14 @@
 // Mock data for the Dashboard (from design/Main.dc.html). Replaced by Supabase queries in Phase 3.
 
-export type Tone = 'blue' | 'green' | 'red'
+export type Tone = 'blue' | 'green' | 'red' | 'ink'
 
 export type StatTileData = {
   label: string
   value: string
   sub: string
   tone: Tone
-  to: string
+  /** Where the tile links to. Leave out for a plain, non-clickable tile. */
+  to?: string
 }
 
 export const statTiles: StatTileData[] = [

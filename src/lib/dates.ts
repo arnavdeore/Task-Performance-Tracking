@@ -12,6 +12,15 @@ export function weekDates(date: Date): Date[] {
   return Array.from({ length: 7 }, (_, i) => new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i))
 }
 
+/** Whole days from one ISO date (YYYY-MM-DD) to another; negative when `toIso` is earlier. */
+export function daysBetween(fromIso: string, toIso: string): number {
+  const utc = (iso: string) => {
+    const [y, m, d] = iso.split('-').map(Number)
+    return Date.UTC(y, m - 1, d)
+  }
+  return Math.round((utc(toIso) - utc(fromIso)) / 86400000)
+}
+
 /** "16 Oct" */
 export function shortDate(date: Date): string {
   return `${date.getDate()} ${MONTHS[date.getMonth()]}`

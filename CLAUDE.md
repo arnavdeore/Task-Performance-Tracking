@@ -44,7 +44,7 @@ Claude: update this section every time a step is finished, and tell Arnav what y
 - [x] Phase 1: prepare environment. Repo `arnavdeore/Task-Performance-Tracking`, Vite + React + TS + Tailwind, HashRouter, GitHub Actions deploy to GitHub Pages. Live: https://arnavdeore.github.io/Task-Performance-Tracking/
 - [ ] Phase 2: build the frontend with mock data (in progress)
   - [x] App shell + top nav (`AppShell`, `TopNav`, five tabs: Dashboard, Tasks, Performance, Reports, Settings; no Calendar tab by design). Reports and Settings are still `PagePlaceholder`.
-  - [ ] Dashboard, in the file order of design/Main.dc.html (`src/pages/Dashboard.tsx`):
+  - [x] Dashboard, in the file order of design/Main.dc.html (`src/pages/Dashboard.tsx`):
     - [x] Greeting + four stat tiles (`StatTile`)
     - [x] Thought strip (`ThoughtStrip`; the design-review "Preview next" / "Back to now" buttons have been removed)
     - [x] Today's tasks + focus footer (`TodayTasks`)
@@ -54,7 +54,13 @@ Claude: update this section every time a step is finished, and tell Arnav what y
     - [x] Work by category (`WorkByCategory`; the selected category lives in `Dashboard.tsx` and is passed to `DeadlineWatch` as `category`; counts in `categoryCounts`). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
     - [x] This week strip (`WeekStrip`; mock plan/done counts in `src/data/dashboard.ts`, week helpers `mondayIndex`/`weekDates`/`shortDate` in `src/lib/dates.ts`). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser. 
     - [x] Latest updates (`LatestUpdates`; sample entries in `latestUpdates` in `src/data/dashboard.ts`; the "Write an EOD update" button links to `/tasks`, where the pop-up will open in the Tasks step). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser. This completes the Dashboard.
-    - [ ] NEXT: Tasks page (board + Add task and EOD pop-ups). (Cleanups done: thought strip review buttons removed, Slate favicon, README rewritten.)
+    - Dashboard is complete.
+  - [ ] Tasks page, in five small steps (mock data in `src/data/tasks.ts`, which pretends today is `MOCK_TODAY` = 13 Oct 2026 like the design; stat maths in `src/lib/taskStats.ts`; the task list, EOD log and category filter state live in `src/pages/Tasks.tsx`):
+    - [x] 1. Header, three stat tiles, category filter pills, overdue pill, EOD update / Add task buttons (buttons do nothing yet). `StatTile` now works without a link. Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
+    - [ ] NEXT: 2. Board (four columns, task cards, category filter, Start / Mark done / Resume / Reopen)
+    - [ ] 3. EOD updates log under the board
+    - [ ] 4. Add task pop-up with validation
+    - [ ] 5. EOD update pop-up with validation, toast, hours added to the task (Cleanups done: thought strip review buttons removed, Slate favicon, README rewritten.)
     - [ ] Latest updates
   - [ ] Tasks page (board + Add task and EOD pop-ups)
   - [ ] Performance page
