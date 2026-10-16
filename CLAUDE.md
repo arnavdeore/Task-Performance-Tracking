@@ -52,7 +52,8 @@ Claude: update this section every time a step is finished, and tell Arnav what y
     - [x] Deadline watch with All / Overdue / Next 7 days filter (`DeadlineWatch`, already takes an optional `category` prop for the donut filter)
     - [x] Month calendar (`MonthCalendar`): holidays, bank 2nd/4th Saturdays, deadline dots, Hindu festivals (lavender), tithi on hover and in the selected-day note. Committed; NOT yet confirmed by Arnav in the browser.
     - [x] Work by category (`WorkByCategory`; the selected category lives in `Dashboard.tsx` and is passed to `DeadlineWatch` as `category`; counts in `categoryCounts`). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
-    - [ ] NEXT: This week strip
+    - [x] This week strip (`WeekStrip`; mock plan/done counts in `src/data/dashboard.ts`, week helpers `mondayIndex`/`weekDates`/`shortDate` in `src/lib/dates.ts`). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser. It sits alone in the last row until Latest updates is added beside it.
+    - [ ] NEXT: Latest updates
     - [ ] Latest updates
   - [ ] Tasks page (board + Add task and EOD pop-ups)
   - [ ] Performance page

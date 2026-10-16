@@ -5,6 +5,7 @@ import PerformanceCard from '../components/PerformanceCard'
 import StatTile from '../components/StatTile'
 import ThoughtStrip from '../components/ThoughtStrip'
 import TodayTasks from '../components/TodayTasks'
+import WeekStrip from '../components/WeekStrip'
 import WorkByCategory from '../components/WorkByCategory'
 import { statTiles } from '../data/dashboard'
 import type { CategoryKey } from '../data/dashboard'
@@ -43,6 +44,11 @@ export default function Dashboard() {
         <DeadlineWatch category={category} />
         <MonthCalendar />
         <WorkByCategory selected={category} onSelect={setCategory} />
+      </div>
+
+      {/* Row 4 (last row, so it grows to fill the frame): This week, then Latest updates beside it. */}
+      <div className="flex flex-[1_1_auto] flex-wrap items-stretch gap-5">
+        <WeekStrip today={today} />
       </div>
     </>
   )

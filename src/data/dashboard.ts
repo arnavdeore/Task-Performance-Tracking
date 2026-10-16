@@ -135,6 +135,19 @@ export const categoryCounts: CategoryCount[] = [
   { key: 'bi', count: 6, color: '#F0B44C' },
 ]
 
+// ---- This week ----
+
+/** Tasks planned for each day, Monday first (from the design). Phase 3 derives this from the tentative and fixed dates. */
+export const weekPlanned = [3, 2, 3, 2, 2, 1, 0]
+
+/** Mock "done" count for a day: past days mostly done, today one done, later days none. */
+export function mockWeekDone(dayIndex: number, todayIndex: number): number {
+  const planned = weekPlanned[dayIndex]
+  if (dayIndex < todayIndex) return Math.max(0, planned - (dayIndex % 3 === 0 ? 1 : 0))
+  if (dayIndex === todayIndex) return Math.min(planned, 1)
+  return 0
+}
+
 // ---- Month calendar ----
 
 export type CalendarDeadline = {
