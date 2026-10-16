@@ -1,9 +1,9 @@
 # Slate: personal job tracking and performance portal
 
-Owner: Aditi. Single user. Her job mixes development, data cleaning, data management and Power BI dashboards. She enters her own tasks, each with a TENTATIVE deadline (own target, can move) and a FIXED deadline (committed), and wants to analyse her performance against both.
+Owner: Arnav. Single user. Her job mixes development, data cleaning, data management and Power BI dashboards. She enters her own tasks, each with a TENTATIVE deadline (own target, can move) and a FIXED deadline (committed), and wants to analyse her performance against both.
 
 ## Decisions already made
-- Frontend: React + Vite + Tailwind CSS (installable as a PWA later). TypeScript vs JavaScript: ask Aditi to confirm in Phase 1.
+- Frontend: React + Vite + Tailwind CSS (installable as a PWA later). TypeScript vs JavaScript: ask Arnav to confirm in Phase 1.
 - Backend: Supabase (PostgreSQL + Auth). GitHub Pages is static only, so all data goes through Supabase.
 - Hosting: GitHub Pages (github.io). The site is public, so a login screen is required and every table needs Row Level Security.
 - Works on desktop and mobile (responsive, not two separate apps).
@@ -18,9 +18,9 @@ Two framework-free libraries are ready to reuse as they are (move both into `src
 - `reference/thoughts.js` — the rotating "thought of the moment" (Hindu calendar aware, about 5,300 thoughts, no repeats within a day). `reference/thoughts.test.mjs` is its test: `node reference/thoughts.test.mjs`.
 - `reference/holidays.js` — Indian holidays and bank closures for the Dashboard calendar, plus `holidayName()`, `isBankSaturday()` and `holidaysInMonth()` helpers. Fixed-date holidays repeat yearly; movable festivals are stored per year and need a new block added each December.
 
-Still on the older flat style and due a restyle in Phase 2: `Login.dc.html` and the three Mobile screens. Ask Aditi when to do that — the desktop pages are final.
+Still on the older flat style and due a restyle in Phase 2: `Login.dc.html` and the three Mobile screens. Ask Arnav when to do that — the desktop pages are final.
 
-## How to work with Aditi (important)
+## How to work with Arnav (important)
 - Instructor style: explain each step, exact menus/commands, expected result, common mistakes, and why.
 - One small step at a time. Wait for her to confirm before the next step. Never skip steps.
 - When there is a real choice, compare options with pros and cons first, then recommend one.
@@ -34,6 +34,15 @@ Still on the older flat style and due a restyle in Phase 2: `Login.dc.html` and 
 3. Supabase: database design (tables, columns, RLS), auth (email + password, public sign-ups disabled), then connect the frontend.
 4. Test (metrics maths, validation, mobile), error handling (empty states, failed saves, offline).
 5. Improvements: PWA install, export report, Calendar and Reports pages, mobile polish.
+
+## Progress
+Claude: update this section every time a step is finished, and tell Arnav what you changed.
+- [x] Phase 0: gather info
+- [x] Phase 1: prepare environment
+- [ ] Phase 2: build the frontend with mock data (in progress)
+  - [x] App shell + top nav
+  - [ ] Dashboard: stat tiles and thought strip built, waiting for Arnav's browser check; the other seven sections not started
+  - [ ] Tasks, Performance, Login, mobile layouts
 
 ## Hard rules
 - Never commit secrets. Only the Supabase URL and anon key go in `VITE_` env vars, and only because Row Level Security restricts every row to the signed-in user. Never use the service-role key in the frontend.

@@ -83,7 +83,7 @@ export default function TopNav() {
             A
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-[13px] font-bold">Aditi</span>
+            <span className="text-[13px] font-bold">Arnav</span>
             <span className="text-[11px] text-muted">Data analyst</span>
           </div>
         </div>
