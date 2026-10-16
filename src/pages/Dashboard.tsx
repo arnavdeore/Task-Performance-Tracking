@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import DeadlineWatch from '../components/DeadlineWatch'
 import PerformanceCard from '../components/PerformanceCard'
 import StatTile from '../components/StatTile'
 import ThoughtStrip from '../components/ThoughtStrip'
@@ -31,6 +32,11 @@ export default function Dashboard() {
       <div className="flex flex-wrap items-stretch gap-5">
         <TodayTasks />
         <PerformanceCard />
+      </div>
+
+      {/* Row 3: Deadline watch. The month calendar will join it here. */}
+      <div className="flex flex-wrap items-stretch gap-5">
+        <DeadlineWatch />
       </div>
     </>
   )

@@ -93,3 +93,28 @@ export const performanceSummary: PerformanceSummary = {
   estimateAccuracyPercent: 82,
   averageDelayDays: 1.3,
 }
+
+// ---- Deadline watch ----
+
+export type DeadlineStatus = 'todo' | 'progress' | 'overdue'
+
+export type DeadlineRow = {
+  id: string
+  title: string
+  category: CategoryKey
+  tentative: string
+  fixed: string
+  status: DeadlineStatus
+  /** Fixed date has passed. */
+  overdue: boolean
+  /** Fixed date falls in the next 7 days (an overdue task counts too when the "Next 7 days" filter is on). */
+  dueSoon: boolean
+}
+
+export const deadlineRows: DeadlineRow[] = [
+  { id: 'd1', title: 'Review sales dashboard KPIs', category: 'bi', tentative: '10 Oct', fixed: '11 Oct', status: 'overdue', overdue: true, dueSoon: false },
+  { id: 'd2', title: 'Fix sync script bug', category: 'dev', tentative: '13 Oct', fixed: '15 Oct', status: 'progress', overdue: false, dueSoon: true },
+  { id: 'd3', title: 'Clean customer export file', category: 'clean', tentative: '14 Oct', fixed: '16 Oct', status: 'progress', overdue: false, dueSoon: true },
+  { id: 'd4', title: 'Refresh monthly report', category: 'bi', tentative: '15 Oct', fixed: '17 Oct', status: 'todo', overdue: false, dueSoon: true },
+  { id: 'd5', title: 'Update master data tracker', category: 'mgmt', tentative: '18 Oct', fixed: '20 Oct', status: 'todo', overdue: false, dueSoon: false },
+]

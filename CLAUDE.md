@@ -41,7 +41,7 @@ Claude: update this section every time a step is finished, and tell Arnav what y
 - [x] Phase 1: prepare environment
 - [ ] Phase 2: build the frontend with mock data (in progress)
   - [x] App shell + top nav
-  - [ ] Dashboard (built in file order of design/Main.dc.html): [x] greeting + stat tiles, [x] thought strip, [x] Today's tasks (all live on Pages), [x] Performance card (built, waiting for Arnav's browser check); not started: Deadline watch, month calendar, Work by category, This week, Latest updates
+  - [ ] Dashboard (built in file order of design/Main.dc.html): [x] greeting + stat tiles, [x] thought strip, [x] Today's tasks, [x] Performance card (all live on Pages), [x] Deadline watch (built, waiting for Arnav's browser check); not started: month calendar, Work by category, This week, Latest updates. Later: clicking a Work-by-category slice filters Deadline watch (design behaviour).
   - [ ] Tasks, Performance, Login, mobile layouts
 
 ## Hard rules
