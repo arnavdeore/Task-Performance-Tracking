@@ -191,6 +191,32 @@ body {
   font-weight: 700;
 }
 
+/* Row button in lists such as "Work by category" */
+.rowb {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  text-align: left;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.rowb:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+.rowb.on {
+  background: #ffffff;
+  box-shadow: 0 10px 18px -12px rgba(35, 43, 94, 0.45);
+}
+
 /* Dashboard month calendar */
 .wkh {
   text-align: center;

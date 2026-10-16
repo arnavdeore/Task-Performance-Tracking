@@ -5,11 +5,14 @@ import PerformanceCard from '../components/PerformanceCard'
 import StatTile from '../components/StatTile'
 import ThoughtStrip from '../components/ThoughtStrip'
 import TodayTasks from '../components/TodayTasks'
+import WorkByCategory from '../components/WorkByCategory'
 import { statTiles } from '../data/dashboard'
+import type { CategoryKey } from '../data/dashboard'
 import { greeting, longDate } from '../lib/dates'
 
 export default function Dashboard() {
   const [today] = useState(() => new Date())
+  const [category, setCategory] = useState<CategoryKey | null>(null)
 
   return (
     <>
@@ -35,10 +38,11 @@ export default function Dashboard() {
         <PerformanceCard />
       </div>
 
-      {/* Row 3: Deadline watch and the month calendar, side by side. */}
+      {/* Row 3: Deadline watch, the month calendar and Work by category. The chosen category filters Deadline watch. */}
       <div className="flex flex-wrap items-stretch gap-5">
-        <DeadlineWatch />
+        <DeadlineWatch category={category} />
         <MonthCalendar />
+        <WorkByCategory selected={category} onSelect={setCategory} />
       </div>
     </>
   )

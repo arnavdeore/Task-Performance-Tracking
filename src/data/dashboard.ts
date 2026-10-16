@@ -119,6 +119,22 @@ export const deadlineRows: DeadlineRow[] = [
   { id: 'd5', title: 'Update master data tracker', category: 'mgmt', tentative: '18 Oct', fixed: '20 Oct', status: 'todo', overdue: false, dueSoon: false },
 ]
 
+// ---- Work by category (tasks done this month) ----
+
+export type CategoryCount = {
+  key: CategoryKey
+  count: number
+  /** Slice and dot colour. */
+  color: string
+}
+
+export const categoryCounts: CategoryCount[] = [
+  { key: 'dev', count: 7, color: '#2457C5' },
+  { key: 'clean', count: 6, color: '#1E9E68' },
+  { key: 'mgmt', count: 4, color: '#A99BEA' },
+  { key: 'bi', count: 6, color: '#F0B44C' },
+]
+
 // ---- Month calendar ----
 
 export type CalendarDeadline = {
