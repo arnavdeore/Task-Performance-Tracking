@@ -3,6 +3,7 @@ import type { Mood } from '../data/dashboard'
 import { statusNames } from '../data/tasks'
 import type { NewEodUpdate, Task, TaskStatus } from '../data/tasks'
 import Modal from './Modal'
+import { SHEET_FOOTER } from './sheetFooter'
 import { STATUS_COLOUR } from './statusColours'
 
 const MOODS: Mood[] = ['On track', 'At risk', 'Blocked']
@@ -123,7 +124,7 @@ export default function EodModal({ tasks, initialTaskId, onClose, onSave }: EodM
 
         <div className="grp">
           <span className="grph">Today</span>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-[18px]">
+          <div className="grid grid-cols-2 gap-3 md:gap-[18px]">
             <label className="lbl">
               Hours spent today
               <input
@@ -194,7 +195,7 @@ export default function EodModal({ tasks, initialTaskId, onClose, onSave }: EodM
           </label>
         </div>
 
-        <div className="flex flex-wrap gap-3.5">
+        <div className={`flex flex-wrap gap-3.5 ${SHEET_FOOTER}`}>
           <button
             type="button"
             className="pillbtn light h-[54px] flex-[1_1_160px] bg-[#F1F4FB] text-[15px] shadow-none"

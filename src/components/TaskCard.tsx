@@ -109,14 +109,14 @@ export default function TaskCard({ task, today, selected, onMove, onLog }: TaskC
       <div className="flex gap-2.5 pt-0.5">
         <button
           type="button"
-          className="pillbtn light h-[42px] flex-1 bg-[#F1F4FB] px-3 text-[13px] shadow-none"
+          className="pillbtn light h-11 flex-1 bg-[#F1F4FB] px-3 text-[13px] shadow-none md:h-[42px]"
           onClick={() => onLog?.(task.id)}
         >
           Log update
         </button>
         <button
           type="button"
-          className="pillbtn dark h-[42px] flex-1 px-3 text-[13px]"
+          className="pillbtn dark h-11 flex-1 px-3 text-[13px] md:h-[42px]"
           onClick={() => onMove(task.id, move.to)}
         >
           {move.label}

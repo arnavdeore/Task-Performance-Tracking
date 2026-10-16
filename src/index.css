@@ -66,6 +66,16 @@ body {
     0 1px 0 #ffffff inset,
     0 24px 40px -28px rgba(36, 50, 120, 0.38);
 }
+/* Same look as .glass, but only from 768px up (on a phone the Tasks board cards sit directly on the page). */
+@media (min-width: 768px) {
+  .glass-md {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1.5px solid rgba(255, 255, 255, 0.92);
+    box-shadow:
+      0 1px 0 #ffffff inset,
+      0 24px 40px -28px rgba(36, 50, 120, 0.38);
+  }
+}
 .white {
   background: #ffffff;
   box-shadow:

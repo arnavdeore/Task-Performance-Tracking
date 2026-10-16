@@ -41,19 +41,22 @@ export default function Performance() {
             How you are doing against your tentative and fixed deadlines.
           </p>
         </div>
-        <div className="flex flex-none flex-wrap items-center gap-3">
-          <div className="seg" role="group" aria-label="Period">
-            {periods.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                className={`segb${period === item.key ? ' on' : ''}`}
-                aria-pressed={period === item.key}
-                onClick={() => setPeriod(item.key)}
-              >
-                {item.label}
-              </button>
-            ))}
+        <div className="flex min-w-0 max-w-full flex-none flex-wrap items-center gap-3">
+          {/* On a phone the three buttons are wider than the screen, so they scroll sideways instead of overflowing. */}
+          <div className="max-w-full overflow-x-auto md:overflow-visible">
+            <div className="seg" role="group" aria-label="Period">
+              {periods.map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  className={`segb${period === item.key ? ' on' : ''}`}
+                  aria-pressed={period === item.key}
+                  onClick={() => setPeriod(item.key)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
           <button type="button" className="pillbtn dark h-[50px] px-7 text-[15px]">
             Export report

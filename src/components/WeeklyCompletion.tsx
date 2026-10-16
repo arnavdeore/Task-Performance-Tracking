@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { WeekStats } from '../data/performance'
 import { readWeek, weekPercent } from '../lib/performanceStats'
 
@@ -27,6 +27,13 @@ export default function WeeklyCompletion({ weeks, firstInPeriod }: WeeklyComplet
   const week = weeks[selected]
   const read = readWeek(weeks, selected)
 
+  // On a phone the chart is wider than the screen and scrolls sideways; start at the latest week, on the right.
+  const scrollRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const box = scrollRef.current
+    if (box) box.scrollLeft = box.scrollWidth
+  }, [])
+
   const change =
     read.changePoints === null
       ? { text: 'First week shown', colour: 'text-muted-2' }
@@ -52,33 +59,37 @@ export default function WeeklyCompletion({ weeks, firstInPeriod }: WeeklyComplet
 
       <div className="flex flex-wrap items-stretch gap-x-[26px] gap-y-5">
         <div className="flex min-w-0 flex-[1_1_520px] flex-col gap-2.5">
-          <div className="grid h-[200px] grid-cols-10 items-end gap-2">
-            {weeks.map((item, i) => (
-              <button
-                key={item.label}
-                type="button"
-                className={`pick flex h-full items-end justify-center gap-1 ${i >= firstInPeriod ? '' : 'opacity-45'}`}
-                aria-label={`Week of ${item.label}: ${item.done} of ${item.planned} planned tasks finished, ${weekPercent(item)} percent`}
-                aria-pressed={i === selected}
-                onClick={() => setSelected(i)}
-              >
-                <div className="cap pair hatch" style={{ height: item.planned * PX_PER_TASK }} />
-                <div
-                  className={`cap pair ${i === selected ? 'green' : 'blue'}`}
-                  style={{ height: item.done * PX_PER_TASK }}
-                />
-              </button>
-            ))}
-          </div>
-          <div className="grid grid-cols-10 gap-2">
-            {weeks.map((item, i) => (
-              <div
-                key={item.label}
-                className={`text-center text-xs text-muted ${i === selected ? 'font-extrabold' : 'font-medium'}`}
-              >
-                {item.label}
+          <div ref={scrollRef} className="overflow-x-auto">
+            <div className="flex min-w-[600px] flex-col gap-2.5">
+              <div className="grid h-[200px] grid-cols-10 items-end gap-2">
+                {weeks.map((item, i) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    className={`pick flex h-full items-end justify-center gap-1 ${i >= firstInPeriod ? '' : 'opacity-45'}`}
+                    aria-label={`Week of ${item.label}: ${item.done} of ${item.planned} planned tasks finished, ${weekPercent(item)} percent`}
+                    aria-pressed={i === selected}
+                    onClick={() => setSelected(i)}
+                  >
+                    <div className="cap pair hatch" style={{ height: item.planned * PX_PER_TASK }} />
+                    <div
+                      className={`cap pair ${i === selected ? 'green' : 'blue'}`}
+                      style={{ height: item.done * PX_PER_TASK }}
+                    />
+                  </button>
+                ))}
               </div>
-            ))}
+              <div className="grid grid-cols-10 gap-2">
+                {weeks.map((item, i) => (
+                  <div
+                    key={item.label}
+                    className={`text-center text-xs text-muted ${i === selected ? 'font-extrabold' : 'font-medium'}`}
+                  >
+                    {item.label}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           <p className="mb-0 mt-1 text-xs leading-[1.5] text-muted">
             Each pair is one week: the striped capsule is what you planned, the solid one is what you finished. Click a

@@ -14,12 +14,14 @@ type TaskBoardProps = {
   tasks: Task[]
   today: string
   selectedId: string
+  /** On a phone only this status is shown (the page's status chips pick it); desktop shows all four columns. */
+  phoneStatus: TaskStatus
   onMove: (id: string, to: TaskStatus) => void
   onLog?: (id: string) => void
 }
 
-/** The four-column board. Layout from design/Tasks.dc.html. */
-export default function TaskBoard({ tasks, today, selectedId, onMove, onLog }: TaskBoardProps) {
+/** The four-column board. On a phone it shows one status at a time. Layout from design/Tasks.dc.html. */
+export default function TaskBoard({ tasks, today, selectedId, phoneStatus, onMove, onLog }: TaskBoardProps) {
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(292px,1fr))] items-start gap-[18px]">
       {COLUMNS.map((column) => {
@@ -29,9 +31,12 @@ export default function TaskBoard({ tasks, today, selectedId, onMove, onLog }: T
           <section
             key={column.status}
             aria-label={name}
-            className="glass box-border flex flex-col gap-3.5 rounded-[30px] px-4 py-[18px]"
+            className={`glass-md box-border flex-col gap-3.5 rounded-[30px] md:flex md:px-4 md:py-[18px] ${
+              column.status === phoneStatus ? 'flex' : 'hidden'
+            }`}
           >
-            <div className="flex items-center justify-between gap-2.5 px-1.5">
+            {/* The status chips above the board show the name and count on a phone. */}
+            <div className="hidden items-center justify-between gap-2.5 px-1.5 md:flex">
               <span className="flex items-center gap-[9px] text-[16.5px] font-bold">
                 <span className={`h-[11px] w-[11px] rounded-full ${column.dot}`} />
                 {name}
