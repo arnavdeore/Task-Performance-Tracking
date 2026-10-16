@@ -46,7 +46,7 @@ Claude: update this section every time a step is finished, and tell Arnav what y
   - [x] App shell + top nav (`AppShell`, `TopNav`, five tabs: Dashboard, Tasks, Performance, Reports, Settings; no Calendar tab by design). Reports and Settings are still `PagePlaceholder`.
   - [ ] Dashboard, in the file order of design/Main.dc.html (`src/pages/Dashboard.tsx`):
     - [x] Greeting + four stat tiles (`StatTile`)
-    - [x] Thought strip (`ThoughtStrip`; its "Preview next" / "Back to now" buttons are design-review only and MUST be removed in the real app)
+    - [x] Thought strip (`ThoughtStrip`; the design-review "Preview next" / "Back to now" buttons have been removed)
     - [x] Today's tasks + focus footer (`TodayTasks`)
     - [x] Performance card with rings (`PerformanceCard`)
     - [x] Deadline watch with All / Overdue / Next 7 days filter (`DeadlineWatch`, already takes an optional `category` prop for the donut filter)
@@ -54,7 +54,7 @@ Claude: update this section every time a step is finished, and tell Arnav what y
     - [x] Work by category (`WorkByCategory`; the selected category lives in `Dashboard.tsx` and is passed to `DeadlineWatch` as `category`; counts in `categoryCounts`). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
     - [x] This week strip (`WeekStrip`; mock plan/done counts in `src/data/dashboard.ts`, week helpers `mondayIndex`/`weekDates`/`shortDate` in `src/lib/dates.ts`). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser. 
     - [x] Latest updates (`LatestUpdates`; sample entries in `latestUpdates` in `src/data/dashboard.ts`; the "Write an EOD update" button links to `/tasks`, where the pop-up will open in the Tasks step). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser. This completes the Dashboard.
-    - [ ] NEXT: Tasks page (board + Add task and EOD pop-ups). Before starting, remember the open cleanups: remove the ThoughtStrip "Preview next" buttons in the real app, Slate favicon, README.
+    - [ ] NEXT: Tasks page (board + Add task and EOD pop-ups). (Cleanups done: thought strip review buttons removed, Slate favicon, README rewritten.)
     - [ ] Latest updates
   - [ ] Tasks page (board + Add task and EOD pop-ups)
   - [ ] Performance page
@@ -77,8 +77,6 @@ Claude: update this section every time a step is finished, and tell Arnav what y
 - Design check order per section: look at the matching block in `design/Main.dc.html` (or Tasks/Performance), keep spacing, radii, colours and copy identical.
 
 ### Known small cleanups (do when convenient, one at a time, ask first)
-- `public/favicon.svg` and `public/icons.svg` are still the Vite starter files (the tab shows the Vite logo); `index.html` points to `/favicon.svg`. Replace with a Slate icon.
-- `README.md` is still the Vite starter text.
 - "Review sales dashboard KPIs" wraps to two lines in Today's tasks, so its chips sit lower than on the other cards. The design does the same; leave unless Arnav asks.
 - Optional idea Arnav may want: more Kalnirnay-style observances (Ekadashi, Sankashti Chaturthi, Amavasya, Purnima) and Maharashtra state holidays. Ask before adding.
 - Open question from earlier: should the thought card also appear on other pages?

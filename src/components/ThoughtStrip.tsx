@@ -1,34 +1,18 @@
 import { useEffect, useState } from 'react'
 import { thoughtLib as lib } from '../lib/thoughtLib'
 
-const TEN_MINUTES = 600000
-
-/** Which 10-minute slot of which day a time falls in; the thought only changes when this changes. */
-function slotOf(ms: number): string {
-  const d = new Date(ms)
-  return `${d.getDate()}:${Math.floor((d.getHours() * 60 + d.getMinutes()) / 10)}`
-}
-
 /** The rotating "thought of the moment". Changes every 10 minutes (at :00, :10, :20 ...). */
 export default function ThoughtStrip() {
   const [now, setNow] = useState(() => Date.now())
-  // How many 10-minute slots ahead the "Preview next" button has moved us.
-  const [peek, setPeek] = useState(0)
 
+  // Check the clock every 15 seconds; the thought itself only changes when the 10-minute slot does.
   useEffect(() => {
-    const timer = setInterval(() => {
-      const current = Date.now()
-      setNow((previous) => {
-        if (slotOf(current) !== slotOf(previous)) setPeek(0)
-        return current
-      })
-    }, 15000)
+    const timer = setInterval(() => setNow(Date.now()), 15000)
     return () => clearInterval(timer)
   }, [])
 
-  const at = now + peek * TEN_MINUTES
-  const thought = lib.thoughtAt(at)
-  const panchang = lib.panchang(at)
+  const thought = lib.thoughtAt(now)
+  const panchang = lib.panchang(now)
   const meta = `${panchang.tithi} · ${panchang.month} · Vikram Samvat ${panchang.samvat} · ${panchang.vara}`
 
   return (
@@ -68,22 +52,6 @@ export default function ThoughtStrip() {
         <p aria-live="polite" className="m-0 text-[17px] font-semibold leading-[1.55] text-[#2E2566]">
           {thought.text}
         </p>
-      </div>
-
-      {/* Design review only: remove both buttons in the real app (docs/design-notes.md, Thought strip). */}
-      <div className="flex flex-none items-center gap-2">
-        {peek > 0 && (
-          <button type="button" className="pillbtn light h-[38px] px-[18px] text-[12.5px]" onClick={() => setPeek(0)}>
-            Back to now
-          </button>
-        )}
-        <button
-          type="button"
-          className="pillbtn light h-[38px] px-5 text-[12.5px]"
-          onClick={() => setPeek((p) => p + 1)}
-        >
-          Preview next
-        </button>
       </div>
     </section>
   )

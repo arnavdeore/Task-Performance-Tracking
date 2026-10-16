@@ -1,32 +1,34 @@
-# React + TypeScript + Vite
+# Slate
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A personal job tracking and performance portal. Each task has a tentative deadline (own target, can move) and a fixed deadline (committed), and the app shows how performance holds up against both.
 
-Currently, two official plugins are available:
+Live site: https://arnavdeore.github.io/Task-Performance-Tracking/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Built with
+- React 19, TypeScript and Vite
+- Tailwind CSS 4
+- react-router-dom (HashRouter, so it works on GitHub Pages)
+- Supabase (database and sign-in) — planned for Phase 3; the screens use mock data for now
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Run it on your computer
 ```
+npm install
+npm run dev
+```
+Then open http://localhost:5173/Task-Performance-Tracking/ (the base path is required).
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Useful commands
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the local site |
+| `npm run build` | Type-check and build (run before every commit) |
+| `npm run lint` | Check the code with Oxlint |
+| `node src/lib/thoughts.test.mjs` | Test the thought-of-the-moment library |
+
+## Deploy
+Every push to `main` is built and published to GitHub Pages by GitHub Actions.
+
+## More
+- `CLAUDE.md` — project decisions, phases and progress
+- `docs/design-notes.md` — design system and screen behaviour
+- `design/` — the approved design files
