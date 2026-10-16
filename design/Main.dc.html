@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dashboard</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#DCE5F4}
+a{color:#2457C5}a:hover{color:#1A3F94}
+.glass{background:rgba(255,255,255,.6);border:1.5px solid rgba(255,255,255,.92);box-shadow:0 1px 0 #FFFFFF inset,0 24px 40px -28px rgba(36,50,120,.38)}
+.white{background:#FFFFFF;box-shadow:0 36px 56px -28px rgba(36,50,120,.42),0 2px 4px rgba(36,50,120,.05)}
+.lift{transition:transform .2s ease,box-shadow .2s ease}
+.lift:hover{transform:translateY(-3px)}
+.tile{box-sizing:border-box;min-width:172px;border-radius:24px;padding:16px 20px;display:flex;flex-direction:column;gap:3px;text-decoration:none;color:#1B2438}
+.tilel{font-size:12.5px;font-weight:600;color:#5B667D}
+.tilen{font-size:32px;font-weight:800;line-height:1.1;letter-spacing:-.02em}
+.tiles{font-size:11.5px;font-weight:600;color:#5B667D}
+.nav3{display:inline-flex;align-items:center;justify-content:center;padding:11px 22px;border-radius:999px;white-space:nowrap;color:#4A556B;font-size:13.5px;font-weight:600;text-decoration:none;transition:background .15s ease,color .15s ease}
+.nav3:hover{background:#EEF2FB;color:#232B5E}
+.nav3.on{background:#232B5E;color:#FFFFFF;font-weight:700;box-shadow:0 12px 18px -10px rgba(35,43,94,.7)}
+.pillbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;cursor:pointer;font-family:inherit;font-weight:700;text-decoration:none;transition:transform .08s ease,box-shadow .12s ease,background .15s ease}
+.pillbtn.dark{background:#232B5E;color:#FFFFFF;box-shadow:0 12px 20px -10px rgba(35,43,94,.7)}
+.pillbtn.dark:hover{transform:translateY(-1px);color:#FFFFFF}
+.pillbtn.dark:active{transform:translateY(1px)}
+.pillbtn.light{background:#FFFFFF;color:#232B5E;box-shadow:0 6px 14px -8px rgba(35,43,94,.35)}
+.pillbtn.light:hover{transform:translateY(-1px);color:#232B5E}
+.pillbtn.light:active{transform:translateY(1px)}
+.icobtn{width:38px;height:38px;border-radius:50%;border:0;background:transparent;color:#232B5E;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .15s ease}
+.icobtn:hover{background:rgba(35,43,94,.08)}
+.seg{display:inline-flex;gap:5px;padding:5px;border-radius:999px;background:rgba(255,255,255,.8);box-shadow:inset 0 1px 3px rgba(35,43,94,.14)}
+.segb{height:38px;padding:0 18px;border:0;border-radius:999px;background:transparent;color:#4A556B;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s ease,color .15s ease}
+.segb:hover{color:#232B5E}
+.segb.on{background:#232B5E;color:#FFFFFF;font-weight:700}
+.pick{background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
+.pick:focus-visible{outline:2px solid #232B5E;outline-offset:3px;border-radius:12px}
+.pick:hover .cap{filter:brightness(1.07)}
+.cap{width:22px;border-radius:999px;border:3px solid #FFFFFF;box-sizing:border-box;box-shadow:0 8px 14px -6px rgba(35,43,94,.35);transition:height .4s ease}
+.cap.hatch{background:repeating-linear-gradient(135deg,#C3D0E4 0 4px,#DCE5F2 4px 9px)}
+.cap.blue{background:linear-gradient(180deg,#5B93F2,#2457C5)}
+.cap.green{background:linear-gradient(180deg,#3CC38C,#1E9E68)}
+.cap.coral{background:linear-gradient(180deg,#F59A82,#E2674B)}
+.rowb{display:grid;width:100%;box-sizing:border-box;align-items:center;gap:10px;padding:10px 12px;border:0;border-radius:16px;background:transparent;text-align:left;font-family:inherit;font-size:13px;color:#1B2438;cursor:pointer;transition:background .15s ease}
+.rowb:hover{background:rgba(255,255,255,.8)}
+.rowb.on{background:#FFFFFF;box-shadow:0 10px 18px -12px rgba(35,43,94,.45)}
+.fld{box-sizing:border-box;width:100%;height:44px;padding:0 16px;border-radius:14px;border:1.5px solid #D3DCEC;background:#FFFFFF;font-family:inherit;font-size:14px;font-weight:500;color:#1B2438;transition:border-color .15s ease,box-shadow .15s ease}
+.fld:focus{outline:none;border-color:#232B5E;box-shadow:0 0 0 3px #CFD6F2}
+textarea.fld{height:auto;padding:12px 16px;resize:vertical;line-height:1.5}
+.fld.tent{border:1.5px dashed #2457C5}
+.fld.fixd{border-color:#F3BFBF;background:#FFF8F8}
+.lbl{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;color:#3A455C}
+.day{position:relative;box-sizing:border-box;height:42px;padding:0;border:0;border-radius:13px;background:rgba(255,255,255,.55);color:#2E384D;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:background .15s ease,transform .1s ease}
+.day.sat{background:#E7ECF5;color:#55617A}
+.day.hol{background:#FBEFD6;color:#6B4A07}
+.day:hover{background:#FFFFFF;transform:translateY(-1px)}
+.day.sel{background:#FFFFFF;box-shadow:0 0 0 2px #232B5E inset,0 10px 16px -12px rgba(35,43,94,.5)}
+.day.today{background:#232B5E;color:#FFFFFF;font-weight:800;box-shadow:0 12px 18px -12px rgba(35,43,94,.9)}
+.day.today.sel{box-shadow:0 0 0 2px #FFFFFF inset,0 12px 18px -12px rgba(35,43,94,.9)}
+.day:focus-visible{outline:2px solid #232B5E;outline-offset:2px}
+.wkh{text-align:center;font-size:11px;font-weight:700;color:#5B667D;letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height:100vh;box-sizing:border-box;padding:20px;display:flex;flex-direction:column;background:linear-gradient(150deg,#D3E3F8 0%,#E2E1F6 52%,#DDEEEA 100%);color:#1B2438;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+<div style="flex:1 1 auto;box-sizing:border-box;border-radius:44px;padding:24px;display:flex;flex-direction:column;gap:26px;background:rgba(255,255,255,.4);border:1.5px solid rgba(255,255,255,.85);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 40px 80px -40px rgba(36,50,120,.45)">
+<header class="white" style="box-sizing:border-box;border-radius:28px;padding:10px 18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 20px">
+<a href="Main.dc.html" aria-label="Slate home" style="flex:0 0 auto;display:flex;align-items:center;gap:10px;text-decoration:none;color:#1B2438;white-space:nowrap">
+<span style="position:relative;flex:0 0 auto;width:38px;height:38px;border-radius:13px;background:linear-gradient(160deg,#4C86F0 0%,#2457C5 55%,#1A3F94 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 10px 14px -8px rgba(36,87,197,.7)"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l8.5 4.2L12 12 3.5 7.7z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1.2"/><path d="M3.5 12l8.5 4.2 8.5-4.2" stroke="#CFE0FB" stroke-width="2"/><path d="M3.5 16.2l8.5 4.3 8.5-4.3" stroke="#93B4F0" stroke-width="2"/></svg><span style="position:absolute;right:-4px;bottom:-3px;width:12px;height:12px;border-radius:50%;background:#1E9E68;border:2.5px solid #FFFFFF;box-sizing:border-box"></span></span>
+<span style="font-size:22px;font-weight:800;letter-spacing:-.02em">Slate</span>
+</a>
+<nav aria-label="Main" style="flex:1 1 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px">
+<a class="nav3 on" href="Main.dc.html" aria-current="page">Dashboard</a>
+<a class="nav3" href="Tasks.dc.html">Tasks</a>
+<a class="nav3" href="Performance.dc.html">Performance</a>
+<a class="nav3" href="#">Reports</a>
+<a class="nav3" href="#">Settings</a>
+</nav>
+<div style="flex:0 0 auto;display:flex;align-items:center;gap:6px">
+<button type="button" class="icobtn" aria-label="Search"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+<button type="button" class="icobtn" aria-label="Notifications"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15z"/><path d="M10 21h4"/></svg></button>
+<div style="display:flex;align-items:center;gap:10px;margin-left:6px">
+<div role="img" aria-label="Profile" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(160deg,#F3F0FD,#D9D2F7);color:#4C3AA6;display:flex;align-items:center;justify-content:center;font-weight:800;box-shadow:0 1px 0 #FFFFFF inset,0 8px 12px -6px rgba(76,58,166,.45)">A</div>
+<div style="display:flex;flex-direction:column;line-height:1.25"><span style="font-size:13px;font-weight:700">Aditi</span><span style="font-size:11px;color:#5B667D">Data analyst</span></div>
+</div>
+</div>
+</header>
+
+<main style="flex:1 1 auto;display:flex;flex-direction:column;gap:26px">
+
+<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 24px;padding:0 6px">
+<div style="flex:1 1 320px;min-width:0">
+<h1 style="margin:0;font-size:30px;font-weight:800;letter-spacing:-.015em">{{greet}}, Aditi</h1>
+<p style="margin:7px 0 0;font-size:14px;line-height:1.55;color:#5B667D">Here is where your work stands today. {{dateText}}</p>
+</div>
+<div style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:12px"><a class="white lift tile" href="Tasks.dc.html"><span class="tilel">Open tasks</span><span class="tilen" style="color:#1A3F94">9</span><span class="tiles">5 due this week</span></a><a class="white lift tile" href="Performance.dc.html"><span class="tilel">Done this month</span><span class="tilen" style="color:#0F6B43">23</span><span class="tiles">4 more than September</span></a><a class="white lift tile" href="Performance.dc.html"><span class="tilel">On time, fixed dates</span><span class="tilen" style="color:#0F6B43">87%</span><span class="tiles">Target 90%</span></a><a class="white lift tile" href="Tasks.dc.html"><span class="tilel">Overdue</span><span class="tilen" style="color:#A12B2B">1</span><span class="tiles">Oldest 2 days late</span></a></div>
+</div>
+
+<section aria-label="Thought of the moment" class="glass" style="position:relative;overflow:hidden;border-radius:32px;padding:18px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;background:linear-gradient(120deg,rgba(243,240,253,.9) 0%,rgba(234,241,253,.85) 55%,rgba(230,246,238,.9) 100%)">
+<div style="flex:0 0 auto;width:52px;height:52px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:#FFFFFF;color:#7B6BD6;box-shadow:0 12px 18px -10px rgba(76,58,166,.45)"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20c-3.6-1-6-3.6-6-7 2.4.3 4.6 1.5 6 3.5 1.4-2 3.6-3.2 6-3.5 0 3.4-2.4 6-6 7z"/><path d="M12 16.5C9.6 14.4 9 11 12 5c3 6 2.4 9.4 0 11.5z"/></svg></div>
+<div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px">
+<span style="padding:3px 10px;border-radius:999px;background:#ECE8FB;color:#4C3AA6;font-size:11px;font-weight:700;box-shadow:0 1px 0 #FFFFFF inset,0 2px 0 #CFC7F0">{{th.src}}</span>
+<sc-if value="{{th.hasFest}}" hint-placeholder-val="{{false}}">
+<span style="padding:3px 10px;border-radius:999px;background:#FBEFD2;color:#7A5200;font-size:11px;font-weight:700;box-shadow:0 1px 0 #FFFFFF inset,0 2px 0 #F0D9A0">{{th.fest}}</span>
+</sc-if>
+<span style="font-size:12px;color:#5B667D">{{th.meta}}</span>
+</div>
+<p aria-live="polite" style="margin:0;font-size:17px;line-height:1.55;font-weight:600;color:#2E2566">{{th.text}}</p>
+</div>
+<div style="flex:0 0 auto;display:flex;align-items:center;gap:8px">
+<sc-if value="{{th.hasPeek}}" hint-placeholder-val="{{false}}">
+<button type="button" class="pillbtn light" onClick="{{th.reset}}" style="height:38px;padding:0 18px;font-size:12.5px">Back to now</button>
+</sc-if>
+<button type="button" class="pillbtn light" onClick="{{th.next}}" style="height:38px;padding:0 20px;font-size:12.5px">Preview next</button>
+</div>
+</section>
+
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:stretch">
+
+<section class="white" style="flex:1.6 1 560px;min-width:0;box-sizing:border-box;border-radius:34px;padding:22px 24px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+<h2 style="margin:0;font-size:21px;font-weight:700">Today&#8217;s tasks</h2>
+<a class="pillbtn light" href="Tasks.dc.html" style="height:36px;padding:0 20px;font-size:13px;background:#F1F4FB;box-shadow:none">See all</a>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px">
+<sc-for list="{{today3}}" as="t" hint-placeholder-count="3">
+<a class="lift" href="Tasks.dc.html" style="text-decoration:none;color:#1B2438;box-sizing:border-box;border-radius:26px;padding:16px;min-height:200px;display:flex;flex-direction:column;gap:12px;background:{{t.bg}}">
+<span style="align-self:flex-start;padding:4px 12px;border-radius:999px;background:#FFFFFF;font-size:11px;font-weight:600;color:#2E384D">{{t.pri}}</span>
+<span style="font-size:20px;font-weight:600;line-height:1.25;letter-spacing:-.01em">{{t.title}}</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<span style="padding:3px 10px;border-radius:999px;background:#FFFFFF;font-size:11px;font-weight:700;color:{{t.fg}}">{{t.cat}}</span>
+<span style="padding:2px 9px;border-radius:999px;font-size:11px;font-weight:600;background:#FFFFFF;border:1.5px dashed #2457C5;color:#2457C5">T {{t.tent}}</span>
+<span style="padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;background:#FCE6E6;color:#A12B2B;border:1px solid #F3BFBF">F {{t.fixed}}</span>
+</div>
+<div style="margin-top:auto;display:flex;align-items:center;gap:10px">
+<div style="flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.75);overflow:hidden"><div style="height:100%;border-radius:999px;background:#232B5E;width:{{t.pct}}%"></div></div>
+<span style="font-size:12px;font-weight:700;color:#2E384D">{{t.prog}}</span>
+</div>
+</a>
+</sc-for>
+</div>
+<div style="margin-top:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px;padding:14px 18px;border-radius:22px;background:#F4F7FD">
+<span style="font-size:13px;font-weight:700;color:#2E384D">{{focus.hoursText}}</span>
+<div style="flex:1 1 160px;min-width:120px;height:8px;border-radius:999px;background:#E3E9F4;overflow:hidden"><div style="height:100%;border-radius:999px;background:#232B5E;width:{{focus.pct}}%"></div></div>
+<span style="font-size:12.5px;color:#5B667D">{{focus.restText}}</span>
+</div>
+</section>
+
+<section class="glass" style="flex:1 1 380px;min-width:0;box-sizing:border-box;border-radius:34px;padding:22px 26px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+<h2 style="margin:0;font-size:21px;font-weight:700">Performance</h2>
+<span style="font-size:12px;color:#5B667D">This month</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#4A556B"><span style="width:10px;height:10px;border-radius:50%;background:#1E9E68"></span>Fixed deadlines met</span><span style="font-size:26px;font-weight:600;margin-left:18px">87%</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#4A556B"><span style="width:10px;height:10px;border-radius:50%;background:#2457C5"></span>Tentative dates hit</span><span style="font-size:26px;font-weight:600;margin-left:18px">70%</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#4A556B"><span style="width:10px;height:10px;border-radius:50%;background:#9A8BEA"></span>Estimate accuracy</span><span style="font-size:26px;font-weight:600;margin-left:18px">82%</span></div>
+</div>
+<svg role="img" aria-label="Rings: fixed deadlines met 87 percent, tentative dates hit 70 percent, estimate accuracy 82 percent" width="190" height="190" viewBox="0 0 200 200" style="flex:0 0 auto">
+<g fill="none" stroke-width="14" stroke-linecap="round">
+<circle cx="100" cy="100" r="88" stroke="#D6E2F2"/><circle cx="100" cy="100" r="66" stroke="#D6E2F2"/><circle cx="100" cy="100" r="44" stroke="#D6E2F2"/>
+<circle cx="100" cy="100" r="88" stroke="#1E9E68" stroke-dasharray="481 553" transform="rotate(-90 100 100)"/>
+<circle cx="100" cy="100" r="66" stroke="#2457C5" stroke-dasharray="290 415" transform="rotate(-90 100 100)"/>
+<circle cx="100" cy="100" r="44" stroke="#9A8BEA" stroke-dasharray="227 277" transform="rotate(-90 100 100)"/>
+</g>
+</svg>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:18px;background:#FBE3DF;font-size:13px"><span style="color:#A12B2B;font-weight:600">Average delay on late tasks</span><strong>1.3 days</strong></div>
+<a href="Performance.dc.html" style="font-size:13px;font-weight:700;text-decoration:none;color:#232B5E">Open full performance report</a>
+</section>
+
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:stretch">
+
+<section class="glass" style="flex:1 1 380px;min-width:0;box-sizing:border-box;border-radius:34px;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px">
+<h2 style="margin:0;font-size:21px;font-weight:700">Deadline watch</h2>
+<div class="seg" role="group" aria-label="Filter deadlines">
+<sc-for list="{{dlFilters}}" as="d" hint-placeholder-count="3">
+<button type="button" class="segb {{d.on}}" aria-pressed="{{d.pressed}}" onClick="{{d.pick}}">{{d.label}}</button>
+</sc-for>
+</div>
+</div>
+<div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid rgba(35,43,94,.08)">
+<div aria-hidden="true" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:{{r.catBg}};color:{{r.catFg}}">{{r.ini}}</div>
+<div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{r.title}}</span><span style="font-size:12px;color:#5B667D">{{r.cat}}, T {{r.tent}}</span></div>
+<div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+<span style="padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;background:#FCE6E6;color:#A12B2B;border:1px solid #F3BFBF">F {{r.fixed}}</span>
+<span style="padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;background:{{r.stBg}};color:{{r.stFg}}">{{r.status}}</span>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{noRows}}" hint-placeholder-val="{{false}}">
+<div style="padding:14px 0;border-top:1px solid rgba(35,43,94,.08);font-size:13px;font-weight:600;color:#0F6B43">Nothing in this view.</div>
+</sc-if>
+</div>
+<div style="margin-top:auto;display:flex;flex-wrap:wrap;gap:6px 16px;padding-top:10px;border-top:1px solid rgba(35,43,94,.08);font-size:11px;color:#4A556B">
+<span style="display:flex;align-items:center;gap:6px"><span style="padding:1px 7px;border-radius:999px;border:1.5px dashed #2457C5;color:#2457C5;font-weight:700">T</span>Tentative, can move</span>
+<span style="display:flex;align-items:center;gap:6px"><span style="padding:2px 7px;border-radius:999px;background:#FCE6E6;color:#A12B2B;border:1px solid #F3BFBF;font-weight:700">F</span>Fixed, counts toward on-time</span>
+</div>
+</section>
+
+<section class="glass" style="flex:1 1 380px;min-width:0;box-sizing:border-box;border-radius:34px;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px">
+<h2 style="margin:0;font-size:21px;font-weight:700">{{cal.title}}</h2>
+<div style="display:flex;align-items:center;gap:4px">
+<button type="button" class="icobtn" aria-label="Previous month" onClick="{{cal.prev}}" style="width:32px;height:32px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+<button type="button" class="segb {{cal.todayOn}}" onClick="{{cal.today}}" style="height:30px;padding:0 12px;background:rgba(255,255,255,.9)">Today</button>
+<button type="button" class="icobtn" aria-label="Next month" onClick="{{cal.next}}" style="width:32px;height:32px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+</div>
+</div>
+<div aria-hidden="true" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px">
+<div class="wkh">Mon</div><div class="wkh">Tue</div><div class="wkh">Wed</div><div class="wkh">Thu</div><div class="wkh">Fri</div><div class="wkh">Sat</div><div class="wkh">Sun</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px">
+<sc-for list="{{cal.cells}}" as="c" hint-placeholder-count="31">
+<button type="button" class="day {{c.cls}}" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" style="grid-column-start:{{c.col}}">
+<span aria-hidden="true" style="position:absolute;top:5px;right:6px;width:5px;height:5px;border-radius:50%;background:{{c.hDot}}"></span>
+<span>{{c.d}}</span>
+<span aria-hidden="true" style="display:flex;align-items:center;gap:3px;height:7px">
+<span style="width:6px;height:6px;border-radius:50%;background:{{c.fDot}}"></span>
+<span style="box-sizing:border-box;width:7px;height:7px;border-radius:50%;border:1.5px solid {{c.tDot}}"></span>
+</span>
+</button>
+</sc-for>
+</div>
+<div aria-live="polite" style="padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.8);font-size:12.5px;line-height:1.5;color:#2E384D">{{cal.note}}</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{cal.hols}}" as="hl" hint-placeholder-count="3">
+<span style="padding:4px 11px;border-radius:999px;background:#FBEFD6;color:#6B4A07;font-size:11.5px;font-weight:700">{{hl.text}}</span>
+</sc-for>
+<sc-if value="{{cal.noHols}}" hint-placeholder-val="{{false}}">
+<span style="font-size:11.5px;color:#5B667D">No holidays in this month.</span>
+</sc-if>
+</div>
+<div style="margin-top:auto;display:flex;flex-wrap:wrap;gap:6px 14px;padding-top:10px;border-top:1px solid rgba(35,43,94,.08);font-size:11px;color:#4A556B">
+<span style="display:flex;align-items:center;gap:6px"><span style="box-sizing:border-box;width:9px;height:9px;border-radius:50%;border:1.5px solid #2457C5"></span>Tentative date</span>
+<span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:#C23A3A"></span>Fixed deadline</span>
+<span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:3px;background:#FBEFD6;box-shadow:0 0 0 1px #E0A124 inset"></span>Holiday</span>
+<span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:3px;background:#E7ECF5"></span>Banks closed</span>
+<span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:3px;background:#232B5E"></span>Today</span>
+</div>
+</section>
+
+<section class="glass" style="flex:1 1 320px;min-width:0;box-sizing:border-box;border-radius:34px;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<h2 style="margin:0;font-size:21px;font-weight:700">Work by category</h2>
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:18px">
+<div style="position:relative;flex:0 0 auto;width:136px;height:136px;border-radius:50%;background:conic-gradient(#2457C5 0 30.4%,#1E9E68 30.4% 56.5%,#A99BEA 56.5% 73.9%,#F0B44C 73.9% 100%);box-shadow:0 16px 24px -12px rgba(35,43,94,.4)">
+<div style="position:absolute;top:22px;right:22px;bottom:22px;left:22px;border-radius:50%;background:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 2px 6px rgba(35,43,94,.12) inset"><span style="font-size:26px;font-weight:700;line-height:1">{{center.n}}</span><span style="font-size:11px;color:#5B667D;max-width:64px">{{center.label}}</span></div>
+</div>
+<div style="flex:1 1 150px;display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="4">
+<button type="button" class="rowb {{c.on}}" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" style="grid-template-columns:12px minmax(0,1fr) auto"><span style="width:10px;height:10px;border-radius:50%;background:{{c.color}}"></span><span>{{c.name}}</span><strong>{{c.n}}</strong></button>
+</sc-for>
+</div>
+</div>
+<p style="margin:0;font-size:12px;color:#5B667D">Pick a category to filter the deadline list and the donut centre.</p>
+</section>
+
+</div>
+
+<div style="flex:1 1 auto;display:flex;flex-wrap:wrap;gap:20px;align-items:stretch">
+
+<section class="white" style="flex:1.3 1 480px;min-width:0;box-sizing:border-box;border-radius:34px;padding:22px 24px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px">
+<h2 style="margin:0;font-size:21px;font-weight:700">This week</h2>
+<span style="font-size:13px;color:#5B667D">{{week.sub}}</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px">
+<sc-for list="{{week.days}}" as="d" hint-placeholder-count="7">
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<span style="font-size:12px;font-weight:700;color:{{d.fg}}">{{d.dn}}</span>
+<div role="img" aria-label="{{d.aria}}" style="width:100%;max-width:38px;height:128px;border-radius:14px;background:{{d.track}};overflow:hidden;display:flex;align-items:flex-end">
+<div style="width:100%;height:{{d.pct}}%;border-radius:14px;background:{{d.fill}}"></div>
+</div>
+<span style="font-size:12px;font-weight:700;color:#2E384D">{{d.doneText}}</span>
+<span style="font-size:11px;color:#5B667D">{{d.lbl}}</span>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding-top:14px;border-top:1px solid rgba(35,43,94,.08);font-size:12.5px;color:#4A556B">
+<span style="font-weight:700;color:#2E384D">{{week.pctText}}</span>
+<span>{{week.restText}}</span>
+<span>Monday to Sunday, from your fixed and tentative dates</span>
+</div>
+</section>
+
+<section class="glass" style="flex:1 1 380px;min-width:0;box-sizing:border-box;border-radius:34px;padding:22px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px">
+<h2 style="margin:0;font-size:21px;font-weight:700">Latest updates</h2>
+<a class="pillbtn light" href="Tasks.dc.html" style="height:36px;padding:0 18px;font-size:12.5px;background:#FFFFFF">Write an EOD update</a>
+</div>
+<sc-for list="{{recent}}" as="u" hint-placeholder-count="2">
+<div style="display:flex;flex-direction:column;gap:8px;padding:15px 18px;border-radius:22px;background:rgba(255,255,255,.88)">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+<span style="font-size:14.5px;font-weight:700;margin-right:4px">{{u.title}}</span>
+<span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;background:#EEF2FB;color:#2E384D">{{u.hours}}</span>
+<span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;background:{{u.moodBg}};color:{{u.moodFg}}">{{u.mood}}</span>
+</div>
+<p style="margin:0;font-size:13px;line-height:1.6;color:#3A455C">{{u.comment}}</p>
+<span style="font-size:11.5px;font-weight:600;color:#5B667D">{{u.when}}</span>
+</div>
+</sc-for>
+<p style="margin-top:auto;margin-bottom:0;font-size:12px;line-height:1.55;color:#5B667D">Each update adds its hours to your performance report. Write one at the end of the day from the tasks board.</p>
+</section>
+
+</div>
+
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mOff: 0, day: '', dl: 'all', cat: '', now: Date.now(), peek: 0 };
+    this.lib = this.buildLib();
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      const now = Date.now();
+      const slot = (t) => { const d = new Date(t); return d.getDate() + ':' + Math.floor((d.getHours() * 60 + d.getMinutes()) / 10); };
+      this.setState({ now, peek: slot(now) === slot(this.state.now) ? this.state.peek : 0 });
+    }, 15000);
+  }
+  componentWillUnmount() {
+    if (this.timer) clearInterval(this.timer);
+  }
+
+  buildLib() {
+    const APPS = [
+      "Carry this into your next dashboard.",
+      "Let it guide the next dataset you clean.",
+      "Try it on the task you have been postponing.",
+      "Bring it to your end-of-day update tonight.",
+      "Let it shape how you set your next deadline.",
+      "Apply it to one stubborn query today.",
+      "Share it with a teammate who could use it.",
+      "Take one slow breath, then pick up your first task.",
+      "Remember it when a deadline feels heavy.",
+      "Use it to choose today’s one priority.",
+      "Keep it close when the data refuses to behave.",
+      "Let it soften your next difficult conversation.",
+      "Start with ten focused minutes.",
+      "Let it steady you before a review or a demo.",
+      "Hold it lightly, and begin.",
+      "Make it the theme of your next break.",
+      "Say it once, softly, and start again.",
+      "Let it remind you why this work matters.",
+      "Let it help you close the day with a clear mind.",
+      "Read it twice, then get back to the screen.",
+      "Let it guide how you name and organise things today.",
+      "Use it when you plan tomorrow’s list.",
+      "Let it lighten the next small task.",
+      "Notice where it already shows up in your week."
+    ];
+
+    const HINDU = [
+      "Yogah karmasu kaushalam: skill in action is itself yoga. Be fully where your hands are.",
+      "You hold the right to the work, never to its fruits. Pour yourself into the effort and let the result arrive in its own time.",
+      "A steady mind is not one that feels nothing, but one that returns to centre after every wave.",
+      "Santosham param sukham: contentment is the highest happiness. Enough is also a place to rest.",
+      "Udyamena hi siddhyanti karyani, na manorathaih: tasks are finished by effort, not by wishing.",
+      "Tamaso ma jyotirgamaya: lead me from darkness toward light. Begin with the next small clarity.",
+      "Satyameva jayate: truth alone prevails. Honest numbers and honest effort make the strongest foundation.",
+      "Vasudhaiva kutumbakam: the world is one family. Work kindly; someone downstream depends on you.",
+      "Atmanam viddhi: know yourself. Notice what energises you today, and do that first.",
+      "Aim like the archer: still body, steady breath, clear target, then release without anxiety.",
+      "Patience is a form of tapas. Staying with a hard task a little longer is a quiet austerity that builds strength.",
+      "Kshama, forgiveness, begins at home. A missed deadline is a lesson, not a verdict.",
+      "Ahimsa starts in thought. Speak to yourself as gently as you would to a friend.",
+      "Seva turns work into worship. Ask who will be helped by what you finish today.",
+      "Like the lotus, rise from the mud and remain unstained. Difficulty need not define your day.",
+      "Dhairya, courage, is walking forward while afraid. Take the first step and the path clarifies.",
+      "Abhyasa and vairagya, steady practice and gentle detachment, are the two wings of a calm mind.",
+      "A lamp does not choose which room to light; it simply shines. Be useful where you are.",
+      "The sun rises without announcement and without fail. Consistency is its own kind of greatness.",
+      "Shraddha, faith in the process, makes a long task lighter to carry.",
+      "A river stays deep when it flows within its banks. Not every desire needs your attention today.",
+      "Kala, time, devours hesitation. Start small, and start now.",
+      "Anasakti, working without clinging, frees you to enjoy the work itself.",
+      "Tapas is a fire that purifies. Small daily efforts burn away the dross of doubt.",
+      "Vinaya, humility, keeps the learner’s door open. Ask the question, and be glad of the answer.",
+      "Where there is dharma there is steadiness. Do what is right, and the rest follows its course.",
+      "A long breath makes a long view. Breathe before you begin.",
+      "Sankalpa, a clear intention, is the seed. Name the one thing that matters today.",
+      "Daya, compassion, makes strength gentle. Strong people and strong teams carry it.",
+      "Set down yesterday’s weight. The mind carries only what you refuse to release.",
+      "Mitrata: a good friend is a field of ease. Reach out to someone whose company steadies you.",
+      "Even a thousand-mile road is made of single steps, and fortune favours the one who keeps walking.",
+      "The pot fills drop by drop. Do not despise small, steady progress.",
+      "Anger is smoke that hides the path. Wait for it to clear before you decide.",
+      "Vidya, learning, is wealth no one can take, and the more you share it the more it grows.",
+      "Aham brahmasmi: the same light lives in you. Speak and act from that quiet centre.",
+      "Tat tvam asi: you are that. Trust the capability that is already within you.",
+      "Charaiveti, charaiveti: keep moving, keep moving. The traveller who walks never grows stale.",
+      "Shanti is not the absence of work but the presence of balance within it.",
+      "As the swan sifts milk from water, separate what truly matters from the noise.",
+      "Nishkama karma, action without craving, is the secret of working hard and sleeping well.",
+      "The mind is restless, yes, but practice tames it, the way a gardener guides a wild vine.",
+      "Gratitude is the shortest prayer. Name three things that went right this week.",
+      "Rest is part of dharma. The field lies fallow so the harvest can be rich.",
+      "Be like the earth: patient, supporting everything, asking nothing, and still producing abundance.",
+      "Sthitaprajna, the one of steady wisdom, meets praise and blame with the same calm face.",
+      "The one who conquers the mind has a friend for life; the one who does not has a constant critic. Make peace with your thoughts.",
+      "Sheela, good character, is the quiet interest on every honest day’s work.",
+      "Mauna, a little silence, lets the answer you already carry become audible."
+    ];
+
+    const NATURE = [
+      "The river does not argue with the stone. It keeps flowing, and the stone yields.",
+      "A seed does not rush the sun. It grows in the dark first.",
+      "The banyan shelters thousands because it let its roots go deep before its branches spread.",
+      "The monsoon arrives late some years, and still the fields turn green. Trust the season you are in.",
+      "A diya is small, yet the whole room changes when it is lit.",
+      "The Ganga carries everything and remains the Ganga. Let the day pass through you without sticking.",
+      "A peacock’s feathers took a whole season to grow. Beautiful work is rarely quick.",
+      "The mountain is only many small stones that stayed. Stay with your task.",
+      "The tulsi plant is tended daily, not once. Care is a habit, not an event.",
+      "A bamboo bends in the storm and stands afterwards. Flexibility is strength.",
+      "The moon is never in a hurry, yet it completes its whole circle each month.",
+      "Dawn does not need your permission. Step into the new light and begin.",
+      "A potter’s wheel keeps turning and the clay slowly finds its shape. Keep turning.",
+      "The honeybee visits thousands of flowers for one spoon of honey. Quiet persistence tastes sweet.",
+      "Even the tallest mango tree began as a stone that someone planted and watered.",
+      "The conch gives its sound only when breath passes through it. Let your effort carry your voice.",
+      "Rain falls on every roof. Use what arrives and make it useful.",
+      "A boat is safe in harbour, yet it was built to sail. Try the thing that stretches you.",
+      "The sunflower follows the light. Turn toward what nourishes your focus.",
+      "Cool shade is the gift of a tree that endured many summers.",
+      "Clouds pass and the sky stays. Your calm is the sky, not the weather.",
+      "The oil lamp burns steadily when sheltered from the wind. Protect your attention.",
+      "A single thread is weak, but woven together it makes a sari that lasts. Habits weave results.",
+      "The lotus opens only when the sun is high. Some things cannot be forced, only prepared for.",
+      "The wind cannot carry a hill, but it can shape it over years. Gentle effort is not wasted.",
+      "The cuckoo sings after a long winter without apology. Your season will come.",
+      "A pearl is an oyster’s answer to irritation. Some of your best work may grow from a nuisance.",
+      "Water takes the shape of any pot and still remains water. Adapt without losing yourself.",
+      "The sea does not count its waves. Do not count every small setback.",
+      "A kite rises against the wind, not with it. Resistance can lift you.",
+      "The roots of an old peepal tree split stone slowly. Patience can break walls.",
+      "Morning dew does not fall in a storm; it settles quietly. Quiet work still nourishes.",
+      "The temple bell rings clear because it was struck with intent. Make your effort deliberate.",
+      "Embers that are kept covered stay alive through the night. Protect your energy.",
+      "A rangoli is made grain by grain, then admired as a whole. So is a finished project.",
+      "The swallow builds its nest with mud, one beakful at a time. Progress is built the same way.",
+      "Fog lifts without being asked to. A confusing task often clears if you keep walking.",
+      "A well is dug before the thirst arrives. Prepare a little today for tomorrow.",
+      "The koel does not compete with the crow; each has its own song. Run your own race.",
+      "The mountain stream finds a path around every rock. Look for another route.",
+      "The farmer sows without knowing which seed will sprout, and still sows. Plant generously.",
+      "Autumn leaves fall so the tree can rest and bud again. Letting go is part of growth.",
+      "The jasmine perfumes the whole evening yet asks nothing. Do good work quietly.",
+      "A candle loses nothing by lighting another. Share what you know.",
+      "The sunrise paints the same sky differently each day. Same routine, fresh eyes.",
+      "A lake is clear when it is still. Give your mind a minute to settle.",
+      "The first rain on dry earth smells like hope. Begin, even if conditions are not perfect.",
+      "A tortoise carries its home and still reaches the water. Steady beats swift.",
+      "The ocean is made of drops, and no drop is insignificant.",
+      "The earthen lamp turns clay into light. Ordinary materials can make something that glows."
+    ];
+
+    const GLOBAL = [
+      ["A journey of a thousand miles begins beneath your feet. Take the step in front of you.", "Chinese proverb"],
+      ["The best time to plant a tree was twenty years ago. The second best time is now.", "Proverb"],
+      ["Fall seven times, stand up eight.", "Japanese proverb"],
+      ["It does not matter how slowly you go as long as you do not stop.", "Confucian thought"],
+      ["What you can control is your effort and your response. Start there.", "Stoic idea"],
+      ["Begin anywhere. A rough start is better than a perfect plan that never leaves the page.", "Global wisdom"],
+      ["Done is a gentle teacher. Ship the draft, then learn from it.", "Global wisdom"],
+      ["Small wins stack like bricks. Lay one today.", "Global wisdom"],
+      ["Hard roads often lead to beautiful destinations.", "Global wisdom"],
+      ["The obstacle on the path becomes the path.", "Stoic idea"],
+      ["If you want to go fast, go alone. If you want to go far, go together.", "African proverb"],
+      ["Smooth seas never made a skilful sailor.", "Proverb"],
+      ["You do not need to see the whole staircase. Just take the first step.", "Global wisdom"],
+      ["Every expert was once a beginner who refused to quit.", "Global wisdom"],
+      ["Progress, not perfection, is the honest goal of any day.", "Global wisdom"],
+      ["Be a student of your own work: notice, adjust, repeat.", "Global wisdom"],
+      ["Kind words cost nothing and are remembered for years.", "Global wisdom"],
+      ["Your future self is quietly grateful for what you finish today.", "Global wisdom"],
+      ["Courage is not the absence of fear but the decision that something else matters more.", "Global wisdom"],
+      ["Discipline is choosing between what you want now and what you want most.", "Global wisdom"],
+      ["A calm mind solves what a rushed one only rearranges.", "Global wisdom"],
+      ["You are allowed to be a work in progress and a masterpiece at the same time.", "Global wisdom"],
+      ["The harder you work for something, the greater you will feel when you achieve it.", "Global wisdom"],
+      ["When the day is heavy, make the list shorter, not yourself smaller.", "Global wisdom"],
+      ["Rest is not a reward for finishing. It is part of how things get finished.", "Global wisdom"],
+      ["Where attention goes, energy flows. Choose where to point it.", "Global wisdom"],
+      ["Mistakes are proof that you are trying something.", "Global wisdom"],
+      ["Dig the well before you are thirsty.", "Chinese proverb"],
+      ["Even a clock that has stopped is right twice a day, so keep asking better questions.", "Proverb"],
+      ["He who asks a question is a fool for five minutes; he who never asks remains a fool forever.", "Chinese proverb"],
+      ["Tomorrow is built from what you do in the next hour.", "Global wisdom"],
+      ["A smooth process is born from many rough drafts.", "Global wisdom"],
+      ["Gratitude turns what we have into enough.", "Global wisdom"],
+      ["You cannot pour from an empty cup. Fill yours first, then serve.", "Proverb"],
+      ["Slow is smooth, and smooth becomes fast.", "Global wisdom"],
+      ["Doubt kills more dreams than failure ever will, so act while uncertain.", "Global wisdom"],
+      ["Many hands make light work; ask for one.", "Proverb"],
+      ["The man who moves a mountain begins by carrying away small stones.", "Chinese proverb"],
+      ["A smooth path rarely teaches. Respect the bumps.", "Global wisdom"],
+      ["Quality is remembered long after the deadline is forgotten.", "Global wisdom"],
+      ["Plan the work, then work the plan, and forgive yourself the gaps.", "Global wisdom"],
+      ["Where there is a will, there is usually a spreadsheet and a calendar.", "Global wisdom"],
+      ["A little progress each day adds up to big results.", "Global wisdom"],
+      ["Be patient with yourself; nothing in nature blooms all year.", "Global wisdom"],
+      ["If you cannot do great things, do small things in a great way.", "Global wisdom"],
+      ["Do what you can, with what you have, where you are.", "Proverb"],
+      ["The only way to eat an elephant is one bite at a time.", "Proverb"],
+      ["Clear is kind. Say what you mean, simply.", "Global wisdom"],
+      ["A good decision today beats a perfect decision next week.", "Global wisdom"],
+      ["Make it work, make it right, make it fast, in that order.", "Engineer’s maxim"],
+      ["Measure twice, cut once.", "Craftsman’s proverb"],
+      ["Clean data today saves a thousand arguments tomorrow.", "Analyst’s maxim"],
+      ["A chart is a sentence; make sure it says one clear thing.", "Analyst’s maxim"],
+      ["Curiosity is the engine of good analysis. Ask one more why.", "Analyst’s maxim"],
+      ["Trust the data, but check the source.", "Analyst’s maxim"],
+      ["A good dashboard answers the question before it is asked.", "Analyst’s maxim"],
+      ["Every messy dataset is just a story waiting for an editor.", "Analyst’s maxim"],
+      ["Naming things well is half of understanding them.", "Developer’s maxim"],
+      ["Write code, and notes, for the person you will be next month.", "Developer’s maxim"],
+      ["Simple is hard to build and easy to love.", "Developer’s maxim"],
+      ["Debugging is detective work: stay curious, not frustrated.", "Developer’s maxim"],
+      ["Let your results speak, and let your kindness speak louder.", "Global wisdom"],
+      ["Energy is a finite gift; spend it on what matters.", "Global wisdom"],
+      ["Your pace is your pace. Comparison is a thief of progress.", "Global wisdom"],
+      ["Growth lives just outside your comfort zone, near a door marked try.", "Global wisdom"],
+      ["Hope is a verb: it shows up as the next action.", "Global wisdom"],
+      ["Good things take time; great things take consistency.", "Global wisdom"],
+      ["Optimism is a skill. Practise it on small things first.", "Global wisdom"],
+      ["Today’s effort is tomorrow’s ease.", "Global wisdom"],
+      ["Do not wait for confidence. Action builds it.", "Global wisdom"],
+      ["Don’t count the days; make the days count.", "Global wisdom"],
+      ["One focused hour beats three distracted ones.", "Global wisdom"],
+      ["Some days you lead, some days you learn; both are progress.", "Global wisdom"],
+      ["Where you are is a starting point, not a verdict.", "Global wisdom"],
+      ["Tidy your desk and your mind will follow, a little.", "Global wisdom"],
+      ["The magic of a plan is that it lets your mind rest.", "Global wisdom"],
+      ["Appreciate the quiet work nobody applauds; it holds everything up.", "Global wisdom"],
+      ["A smile is a small, free upgrade for the whole room.", "Global wisdom"],
+      ["Ask for help early; it is cheaper than asking late.", "Global wisdom"],
+      ["Start with the end in mind, then take the first small step toward it.", "Global wisdom"],
+      ["You are closer to finishing than you feel.", "Global wisdom"],
+      ["Make peace with imperfect and ship it with care.", "Global wisdom"],
+      ["Wise people learn from everyone and compare to no one.", "Global wisdom"],
+      ["Kindness to yourself is not laziness; it is maintenance.", "Global wisdom"],
+      ["Breathe in clarity, breathe out clutter.", "Global wisdom"],
+      ["Work hard in silence and let your results be the noise.", "Global wisdom"],
+      ["Every day offers a clean page. Write something you are proud of.", "Global wisdom"],
+      ["A positive mind sees the same problem and finds a different door.", "Global wisdom"],
+      ["Failure is data. Collect it, analyse it, and improve the model.", "Analyst’s maxim"],
+      ["If the plan does not work, change the plan, not the goal.", "Proverb"],
+      ["A diamond is just a lump of coal that handled pressure well.", "Proverb"],
+      ["Trees that are slow to grow bear the best fruit.", "Proverb"],
+      ["Patience is bitter, but its fruit is sweet.", "Proverb"],
+      ["After the rain, the earth smells of possibility.", "Global wisdom"],
+      ["Little by little, a little becomes a lot.", "Tanzanian proverb"],
+      ["Where there is love there is life; bring care to your craft.", "Global wisdom"],
+      ["The lamp that lights others lights itself.", "Global wisdom"],
+      ["What you practise grows stronger. Practise calm.", "Global wisdom"],
+      ["Cherish ordinary moments; later you will know they were the big ones.", "Global wisdom"],
+      ["The word impossible often just means not yet.", "Global wisdom"],
+      ["Done with care is worth more than done with haste.", "Global wisdom"],
+      ["Focus is saying no to ninety good ideas so the one great one can happen.", "Global wisdom"],
+      ["There is always a way if you are willing to look sideways.", "Global wisdom"],
+      ["Each ending is a chance to tidy up before the next beginning.", "Global wisdom"],
+      ["Be the colleague whose calm is contagious.", "Global wisdom"],
+      ["Your work is a way of caring for people you may never meet.", "Global wisdom"],
+      ["Take pride in the steady and the reliable; they are rarer than flash.", "Global wisdom"],
+      ["Celebrate every step: acknowledgement is fuel.", "Global wisdom"]
+    ];
+
+    const TITHI_NAMES = ["Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi"];
+    const MONTHS = ["Chaitra", "Vaishakha", "Jyeshtha", "Ashadha", "Shravana", "Bhadrapada", "Ashvina", "Kartika", "Margashirsha", "Pausha", "Magha", "Phalguna"];
+    const VARA = ["Ravivara", "Somavara", "Mangalavara", "Budhavara", "Guruvara", "Shukravara", "Shanivara"];
+    const PHASES = ["Brahma Muhurta", "Pratah", "Madhyahna", "Aparahna", "Sandhya", "Ratri"];
+
+    const TITHI_TEXT = {
+      1: ["Pratipada is the doorway of the fortnight. Begin something small and honest today.", "A new tithi cycle opens: set the tone for the next two weeks with one clear intention."],
+      2: ["Dwitiya asks for companionship. Seek one useful conversation today.", "Two is the number of balance; weigh effort against rest."],
+      3: ["Tritiya favours steady creation. Build a little, not a lot, and finish it.", "Three small tasks done well make a good day."],
+      4: ["Chaturthi belongs to Ganesha, remover of obstacles. Name the one block in your way and take a step toward it.", "On Chaturthi, begin with a prayer or a pause, then clear the first hurdle."],
+      5: ["Panchami honours learning. Spend a few minutes growing a skill today.", "Five senses, one focus: give your task your full attention."],
+      6: ["Shashthi encourages discipline and care. Do the unglamorous part first.", "Look after your routines; they look after you."],
+      7: ["Saptami is a day of light and energy. Let your best hour go to your hardest task.", "Seven colours make the rainbow; bring variety and joy to your work."],
+      8: ["Ashtami is the day of strength. Be firm where it matters and gentle everywhere else.", "Shakti rises on Ashtami: trust your inner power to take on the difficult part."],
+      9: ["Navami celebrates completion and courage. Finish what you started.", "Nine is the number of fulfilment; bring one loose end to a close."],
+      10: ["Dashami is a day of victory over small doubts. Take the decision you have been postponing.", "Ten fingers, countless skills: use your hands to start the work."],
+      11: ["Ekadashi is a day to simplify. Eat light, think light, and keep your tasks few and clear.", "Ekadashi favours restraint and reflection. Do less, but do it with presence."],
+      12: ["Dwadashi invites gratitude. Thank someone who helped you recently.", "After the quiet of Ekadashi, Dwadashi asks you to act with a clearer mind."],
+      13: ["Trayodashi evening is Pradosh, a time sacred to Shiva. Make the closing hours of the day calm and kind.", "Trayodashi reminds you that endings can be peaceful. Wrap up with grace."],
+      14: ["Chaturdashi asks you to clear what is stale. Tidy a folder, a list, or a worry.", "Let go of one thing today that no longer serves your work."],
+      15: ["Purnima is fullness. Look at what you have completed this fortnight and let it shine.", "The full moon rewards reflection. Appreciate how far you have come."],
+      30: ["Amavasya is the dark of the moon, a time for rest and inner work. Slow down, and plan with quiet clarity.", "On Amavasya, honour the ancestors and your own roots, then begin again tomorrow in new light."]
+    };
+
+    const PAKSHA_TEXT = {
+      Shukla: [
+        "The moon is waxing: a good fortnight to build, begin and grow.",
+        "Shukla Paksha, the bright half, favours new efforts. Let your plans gain light day by day.",
+        "As the moon grows, let your focus grow with it, a little more each day.",
+        "In the bright fortnight, small steady additions become something full by the end."
+      ],
+      Krishna: [
+        "The moon is waning: a good fortnight to refine, finish and let go.",
+        "Krishna Paksha, the dark half, favours review and completion. Close open loops.",
+        "As the moon recedes, simplify; remove the extra to see the essential.",
+        "In the dark fortnight, polish what you have built and release what you do not need."
+      ]
+    };
+
+    const VARA_TEXT = [
+      ["Sunday is Ravivara, the day of Surya, giver of light and vitality. Rest, recharge and soak up a little sunshine.", "Surya rises every day without fail. Plan a gentle week ahead in his steady light.", "On Ravivara, tend to the body and spirit that carry your work."],
+      ["Monday is Somavara, the day of Shiva and the Moon. Start the week calm, clear and centred.", "Somavara favours steadiness over speed. Pick the week’s one theme and begin.", "A calm Monday sets the tone for the whole week. Breathe, then start."],
+      ["Tuesday is Mangalavara, the day of Hanuman and Mangala. Bring courage and energy to the hardest task.", "Mangalavara rewards action. Do the thing you have been delaying.", "Hanuman leapt across the ocean one confident decision at a time. Decide, then leap."],
+      ["Wednesday is Budhavara, ruled by Budha, the planet of intellect and speech. Think clearly, write clearly, ask clearly.", "Budhavara is a good day for analysis and communication. Share a clear update.", "Ganesha, patron of wisdom, is often honoured on Wednesday. Remove one obstacle."],
+      ["Thursday is Guruvara, the day of Brihaspati and the teacher. Learn something and share something.", "Guruvara honours wisdom. Review what you know, and refine your approach.", "A guru lights a lamp rather than carrying you. Pick up one lesson today."],
+      ["Friday is Shukravara, the day of Lakshmi and Shukra. Appreciate what you have built this week.", "Shukravara favours beauty and order. Tidy the work you will hand over.", "Lakshmi favours the diligent and the grateful. Finish the week with both."],
+      ["Saturday is Shanivara, the day of Shani, teacher of discipline. Slow, steady effort pays off.", "Shani rewards patience and honesty. Do the right thing quietly.", "Shanivara asks you to take responsibility and finish what you promised."]
+    ];
+
+    const PHASE_TEXT = [
+      ["Brahma Muhurta, the hour before dawn, is the stillest time of the day. Whatever you plant now grows quietly.", "In the pre-dawn hour the mind is clear. Take one slow breath and set your intention.", "Brahma Muhurta is a gift: a quiet mind before the world wakes."],
+      ["Pratah, the morning, is for your most important work. Start with the hardest thing while energy is fresh.", "Morning light is a fresh page. Write the first line of your day with care.", "A good morning is built from one small task finished early.", "Pratah favours focus. Silence a notification and begin."],
+      ["Madhyahna, midday, is the sun at full strength. Keep going, steadily, then eat and rest well.", "At noon, pause for water and a breath before the afternoon.", "Midday is a good moment to check your progress and adjust your plan."],
+      ["Aparahna, the afternoon, is for steady work and collaboration. Keep going; the finish is closer than it feels.", "When energy dips mid-afternoon, a short walk and a glass of water beat another coffee.", "Afternoon is for tidy-up work: reply, review, refine."],
+      ["Sandhya, twilight, is a threshold between work and rest. Take a breath and let the day soften.", "Evening is a good time for reflection. What went well today?", "As the light fades, write down tomorrow’s first task so your mind can relax."],
+      ["Ratri, the night, is for rest. Whatever is unfinished will still be there, and you will meet it better rested.", "The night is a pause, not a failure. Sleep is also productive.", "Close the screen, take a slow breath, and let tonight’s rest do its quiet work."]
+    ];
+
+    const FESTIVAL_TEXT = {
+      "2026-10-10": ["Mahalaya Amavasya: a day to remember those who came before and to begin the festive season with gratitude.", "At Mahalaya the goddess is invoked and the old makes way for the new. Tidy something old, and welcome something fresh.", "Honour your roots today; they hold you steady as you grow."],
+      "2026-10-20": ["Vijayadashami: the triumph of good over difficulty. Today, take one brave decision.", "Dussehra reminds us that every Ravana, every big problem, falls to patience, courage and right action.", "On Vijayadashami, finish something you have been carrying, and celebrate the win."],
+      "2026-10-22": ["Papankusha Ekadashi: a day to restrain the restless mind. Keep today light and focused.", "Papankusha means the goad that checks the elephant of wandering thoughts. Gently guide your attention back.", "Eat light, think clear, and let simplicity be your strength today."],
+      "2026-10-25": ["Sharad Purnima: the brightest moon of the year. Let a little of that light settle into your thinking.", "Under the autumn full moon, rest in what is complete and enough.", "Sharad Purnima celebrates abundance. Notice what has gone well this season."],
+      "2026-10-29": ["Karwa Chauth: a day of devotion and patience. Honour the people whose steady love holds your world together.", "Karwa Chauth is faith held through a long day. Hold yours with patience too.", "Moonrise rewards the one who waited. Good things come to those who keep their promise."],
+      "2026-11-06": ["Dhanteras: the festival of well-being and wealth. Invest a little today in your health, skills or savings.", "Dhanteras reminds us that health is the first wealth. Take care of your body today.", "Begin Diwali week by tidying your space and your plans, and welcome prosperity in."],
+      "2026-11-07": ["Choti Diwali approaches: clean what is cluttered, inside and out, before the lights are lit.", "A tidy desk and a tidy mind welcome the festival of lights.", "Let go of one small worry today as you prepare your lamps."],
+      "2026-11-08": ["Happy Diwali! Light a lamp, and let it remind you that a small flame can dispel a great darkness.", "Deepavali celebrates the return of light. May your work and your home shine today.", "On this day of lights, thank the people who made your year brighter.", "Diwali asks us to light one more lamp than we think we need. Be generous with your warmth."],
+      "2026-11-11": ["Bhai Dooj celebrates the bond between siblings. Call someone you care about.", "Bhai Dooj reminds us that love is a daily practice. Send a kind message today.", "Honour the people who have quietly looked out for you."],
+      "2026-11-15": ["Chhath Puja honours Surya and the discipline of the early riser. Offer thanks for the energy that gets things done.", "Chhath is devotion made visible through patience. Practise yours in your work today.", "Gratitude to the sun, the giver of life, is the purest form of thanks. Look up for a moment."],
+      "2026-11-21": ["Tulsi Vivah marks the sacred union of Tulsi and Vishnu. Care for something living today.", "Tulsi is tended with daily love. Show the same care to a long-running project.", "The sacred and the everyday meet at the tulsi plant. Find a small sacred moment in your day."],
+      "2026-11-24": ["Dev Diwali, the festival of lights of the gods. Let your work shine a little too.", "Dev Diwali lights up the riverbanks. Be a lamp for one person today.", "Light is shared, not spent. Pass your lamp to someone else."],
+      "2026-12-04": ["Utpanna Ekadashi: the beginning of the Ekadashi vows. Start a small good habit today.", "Utpanna Ekadashi celebrates the birth of a source of strength. Remember where yours comes from.", "Simplify today; clarity is the best offering."],
+      "2026-12-20": ["Gita Jayanti: the day the Gita’s teaching on duty and equanimity is remembered. Do your work with a steady heart.", "On Gita Jayanti, remember: you hold the right to action, not to its fruits. Act fully, and release the outcome.", "Mokshada Ekadashi and Gita Jayanti together: a day to find freedom in clear, honest action."],
+      "2026-12-23": ["Margashirsha Purnima: the full moon of a month dear to Krishna. Celebrate what has been completed.", "Under the winter full moon, rest in the fullness of the year so far.", "Purnima is a time for gratitude. Name three things that went well this month."],
+      "01-14": ["Makar Sankranti: the sun turns northward and days grow longer. A fresh beginning is in the air.", "Sankranti celebrates change and harvest. Reap something you have worked on.", "As the sun turns, turn your attention too, toward what is growing."],
+      "04-14": ["Baisakhi and the solar new year in many parts of India: a day to celebrate harvest and a fresh start.", "New year in the sun’s calendar: set one intention for the months ahead.", "Baisakhi is about gratitude for the fields you have tended. Look at your own."]
+    };
+
+    const NAVRATRI_TEXT = [
+      "Navratri celebrates Shakti, the force that gets things done. Draw on your own strength today.",
+      "Nine nights, nine forms of the goddess: each asks you to bring a different quality to your day.",
+      "In Navratri the focus is inward discipline. Keep your routines steady and your mind kind.",
+      "Navratri lights up the evenings. Finish your day with something joyful."
+    ];
+
+    function hash32(str) {
+      let h1 = 0xdeadbeef ^ str.length, h2 = 0x41c6ce57 ^ str.length;
+      for (let i = 0; i < str.length; i++) {
+        const c = str.charCodeAt(i);
+        h1 = Math.imul(h1 ^ c, 2654435761);
+        h2 = Math.imul(h2 ^ c, 1597334677);
+      }
+      h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+      h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+      return (h2 >>> 0) * 4294967296 + (h1 >>> 0);
+    }
+    function rnd(key) {
+      let a = hash32(key) >>> 0;
+      a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+
+    const R = Math.PI / 180;
+    const norm = (x) => ((x % 360) + 360) % 360;
+    function astro(ms) {
+      const d = ms / 86400000 + 2440587.5 - 2451545.0;
+      const g = norm(357.528 + 0.9856003 * d);
+      const sun = norm(280.460 + 0.9856474 * d + 1.915 * Math.sin(g * R) + 0.020 * Math.sin(2 * g * R));
+      const L = 218.316 + 13.176396 * d, M = norm(134.963 + 13.064993 * d), D = norm(297.850 + 12.190749 * d), F = norm(93.272 + 13.229350 * d);
+      const moon = norm(L + 6.289 * Math.sin(M * R) + 1.274 * Math.sin((2 * D - M) * R) + 0.658 * Math.sin(2 * D * R) + 0.214 * Math.sin(2 * M * R) - 0.186 * Math.sin(g * R) - 0.114 * Math.sin(2 * F * R) + 0.059 * Math.sin((2 * D - 2 * M) * R) + 0.057 * Math.sin((2 * D - M - g) * R) + 0.053 * Math.sin((2 * D + M) * R) + 0.046 * Math.sin((2 * D - g) * R) + 0.041 * Math.sin((M - g) * R));
+      return { sun, moon };
+    }
+    function elongation(ms) { const a = astro(ms); return norm(a.moon - a.sun); }
+
+    function panchang(ms) {
+      const dt = new Date(ms);
+      const e = elongation(ms);
+      const idx = Math.floor(e / 12);
+      const paksha = idx < 15 ? "Shukla" : "Krishna";
+      const num = (idx % 15) + 1;
+      const tithiName = num === 15 ? (paksha === "Shukla" ? "Purnima" : "Amavasya") : TITHI_NAMES[num - 1];
+      const tkey = num === 15 && paksha === "Krishna" ? 30 : num;
+      // previous new moon, to find the lunar month
+      let nm = ms - (e / 12.1907) * 86400000;
+      for (let i = 0; i < 3; i++) {
+        let x = elongation(nm);
+        if (x > 180) x -= 360;
+        nm -= (x / 12.1907) * 86400000;
+      }
+      const yr = dt.getFullYear();
+      const ayan = 23.857 + 0.01397 * (yr - 2000);
+      const rashi = Math.floor(norm(astro(nm).sun - ayan) / 30);
+      const monthIdx = (rashi + 1) % 12;
+      const gm = dt.getMonth() + 1;
+      const samvat = gm < 3 ? yr + 56 : gm === 3 ? (monthIdx === 0 ? yr + 57 : yr + 56) : yr + 57;
+      const hour = dt.getHours();
+      const phase = hour >= 4 && hour < 6 ? 0 : hour >= 6 && hour < 11 ? 1 : hour >= 11 && hour < 14 ? 2 : hour >= 14 && hour < 17 ? 3 : hour >= 17 && hour < 20 ? 4 : 5;
+      const p2 = (n) => (n < 10 ? "0" : "") + n;
+      const dayKey = yr + "-" + p2(gm) + "-" + p2(dt.getDate());
+      let festival = "";
+      let festKey = "";
+      if (FESTIVAL_TEXT[dayKey]) { festKey = dayKey; }
+      else if (FESTIVAL_TEXT[p2(gm) + "-" + p2(dt.getDate())]) { festKey = p2(gm) + "-" + p2(dt.getDate()); }
+      const FNAME = { "2026-10-10": "Mahalaya Amavasya", "2026-10-20": "Vijayadashami (Dussehra)", "2026-10-22": "Papankusha Ekadashi", "2026-10-25": "Sharad Purnima", "2026-10-29": "Karwa Chauth", "2026-11-06": "Dhanteras", "2026-11-07": "Choti Diwali", "2026-11-08": "Diwali", "2026-11-11": "Bhai Dooj", "2026-11-15": "Chhath Puja", "2026-11-21": "Tulsi Vivah", "2026-11-24": "Dev Diwali", "2026-12-04": "Utpanna Ekadashi", "2026-12-20": "Gita Jayanti", "2026-12-23": "Margashirsha Purnima", "01-14": "Makar Sankranti", "04-14": "Baisakhi" };
+      if (festKey) festival = FNAME[festKey];
+      let nav = 0;
+      if (yr === 2026 && gm === 10 && dt.getDate() >= 11 && dt.getDate() <= 19) {
+        nav = dt.getDate() - 10;
+        if (!festival) festival = "Sharad Navratri, day " + nav;
+        if (dt.getDate() === 19) festival = "Durga Ashtami and Maha Navami";
+      }
+      return {
+        tithi: paksha + " " + tithiName, paksha, tithiName, tkey, num,
+        month: MONTHS[monthIdx], samvat, vara: VARA[dt.getDay()], phase: PHASES[phase], phaseIdx: phase,
+        dayKey, festKey, festival, nav, weekday: dt.getDay()
+      };
+    }
+
+    function specialsFor(p) {
+      const out = [];
+      const push = (arr, lab, key) => arr.forEach((t, i) => out.push({ id: key + ":" + i, t, src: lab }));
+      if (p.festKey) push(FESTIVAL_TEXT[p.festKey], p.festival, "F" + p.festKey);
+      if (p.nav) push(NAVRATRI_TEXT, "Navratri, day " + p.nav, "N");
+      push(TITHI_TEXT[p.tkey] || [], p.tithi, "T" + p.tkey);
+      push(PAKSHA_TEXT[p.paksha], p.paksha + " Paksha", "P" + p.paksha);
+      push(VARA_TEXT[p.weekday], p.vara, "V" + p.weekday);
+      push(PHASE_TEXT[p.phaseIdx], p.phase, "H" + p.phaseIdx);
+      return out;
+    }
+
+    const CORES = [];
+    HINDU.forEach((t) => CORES.push({ t, src: "Hindu wisdom" }));
+    NATURE.forEach((t) => CORES.push({ t, src: "Nature’s lesson" }));
+    GLOBAL.forEach((g) => CORES.push({ t: g[0], src: g[1] }));
+
+    function slotStart(y, m, d, s) { return new Date(y, m - 1, d, 0, s * 10, 0, 0).getTime(); }
+
+    const dayCache = {};
+    function thoughtAt(ms) {
+      const dt = new Date(ms);
+      const y = dt.getFullYear(), m = dt.getMonth() + 1, d = dt.getDate();
+      const slot = Math.floor((dt.getHours() * 60 + dt.getMinutes()) / 10);
+      const dayKey = y + "-" + m + "-" + d;
+      let seq = dayCache[dayKey];
+      if (!seq) { seq = { used: {}, list: [] }; dayCache[dayKey] = seq; }
+      for (let s = seq.list.length; s <= slot; s++) {
+        const t0 = slotStart(y, m, d, s);
+        const p = panchang(t0 + 5 * 60000);
+        const k = dayKey + "#" + s;
+        const r1 = rnd(k + "a"), r2 = rnd(k + "b"), r3 = rnd(k + "c");
+        let pick = null;
+        if (r1 < 0.4) {
+          const avail = specialsFor(p).filter((x) => !seq.used["S" + x.id]);
+          if (avail.length) {
+            const x = avail[Math.floor(r2 * avail.length)];
+            seq.used["S" + x.id] = true;
+            pick = { text: x.t, src: x.src, id: "S" + x.id };
+          }
+        }
+        if (!pick) {
+          let i = Math.floor(r2 * CORES.length);
+          let guard = 0;
+          while (seq.used["C" + i] && guard < CORES.length) { i = (i + 1) % CORES.length; guard++; }
+          seq.used["C" + i] = true;
+          const a = Math.floor(r3 * (APPS.length + 1));
+          const c = CORES[i];
+          pick = { text: c.t + (a === 0 ? "" : " " + APPS[a - 1]), src: c.src, id: "C" + i + ":" + a };
+        }
+        seq.list.push(pick);
+      }
+      return Object.assign({ slot }, seq.list[slot]);
+    }
+
+    function approxCount() {
+      const spec = Object.keys(FESTIVAL_TEXT).reduce((n, k) => n + FESTIVAL_TEXT[k].length, 0)
+        + NAVRATRI_TEXT.length
+        + Object.keys(TITHI_TEXT).reduce((n, k) => n + TITHI_TEXT[k].length, 0)
+        + PAKSHA_TEXT.Shukla.length + PAKSHA_TEXT.Krishna.length
+        + VARA_TEXT.reduce((n, a) => n + a.length, 0)
+        + PHASE_TEXT.reduce((n, a) => n + a.length, 0);
+      return CORES.length * (APPS.length + 1) + spec;
+    }
+
+    return { thoughtAt, panchang, approxCount, coreCount: CORES.length, appCount: APPS.length };
+  }
+
+  renderVals() {
+    const { mOff, day, dl, cat, now, peek } = this.state;
+
+    const MN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const iso = (yy, mm, dd) => yy + '-' + ('0' + (mm + 1)).slice(-2) + '-' + ('0' + dd).slice(-2);
+    const dueList = [
+      { title: 'Review sales dashboard KPIs', tent: '2026-10-10', fixed: '2026-10-11' },
+      { title: 'Fix sync script bug', tent: '2026-10-13', fixed: '2026-10-15' },
+      { title: 'Clean customer export file', tent: '2026-10-14', fixed: '2026-10-16' },
+      { title: 'Refresh monthly report', tent: '2026-10-15', fixed: '2026-10-17' },
+      { title: 'Update master data tracker', tent: '2026-10-18', fixed: '2026-10-20' },
+      { title: 'Quarter close data pack', tent: '2026-10-26', fixed: '2026-10-30' },
+      { title: 'Branch mapping refresh', tent: '2026-11-03', fixed: '2026-11-05' }
+    ];
+    const HOL_FIXED = {
+      '01-01': 'New Year, banks closed', '01-14': 'Makar Sankranti', '01-26': 'Republic Day',
+      '04-01': 'Bank annual closing', '04-14': 'Dr Ambedkar Jayanti',
+      '05-01': 'Maharashtra Day, May Day and Buddha Purnima',
+      '08-15': 'Independence Day', '10-02': 'Gandhi Jayanti', '12-25': 'Christmas'
+    };
+    const HOL_2026 = {
+      '2026-01-23': 'Vasant Panchami', '2026-02-15': 'Maha Shivaratri', '2026-03-03': 'Holi',
+      '2026-03-20': 'Gudi Padwa and Ugadi', '2026-03-21': 'Id-ul-Fitr', '2026-03-27': 'Ram Navami',
+      '2026-03-31': 'Mahavir Jayanti', '2026-04-03': 'Good Friday', '2026-05-27': 'Bakrid',
+      '2026-06-26': 'Muharram', '2026-08-25': 'Eid-e-Milad', '2026-08-28': 'Raksha Bandhan',
+      '2026-09-04': 'Janmashtami', '2026-09-15': 'Ganesh Chaturthi', '2026-10-19': 'Maha Ashtami',
+      '2026-10-20': 'Maha Navami', '2026-10-21': 'Vijaya Dashami', '2026-10-26': 'Valmiki Jayanti',
+      '2026-11-08': 'Diwali', '2026-11-09': 'Diwali holiday', '2026-11-11': 'Bhai Dooj',
+      '2026-11-15': 'Chhath Puja', '2026-11-24': 'Guru Nanak Jayanti'
+    };
+    const holName = (k) => HOL_2026[k] || HOL_FIXED[k.slice(5)] || '';
+    const bankSat = (yy, mm, dd) => new Date(yy, mm, dd).getDay() === 6 && (Math.ceil(dd / 7) === 2 || Math.ceil(dd / 7) === 4);
+
+    const nowD = new Date(now);
+    const tKey = iso(nowD.getFullYear(), nowD.getMonth(), nowD.getDate());
+    const firstOf = new Date(nowD.getFullYear(), nowD.getMonth() + mOff, 1);
+    const cy = firstOf.getFullYear(), cm = firstOf.getMonth();
+    const dim = new Date(cy, cm + 1, 0).getDate();
+    const cells = [], hols = [];
+    let nF = 0, nT = 0;
+    for (let d = 1; d <= dim; d++) {
+      const k = iso(cy, cm, d);
+      const fx = dueList.filter((t) => t.fixed === k);
+      const tn = dueList.filter((t) => t.tent === k);
+      nF += fx.length;
+      nT += tn.length;
+      const hol = holName(k), sat = bankSat(cy, cm, d);
+      if (hol) hols.push({ text: d + ' ' + MN[cm].slice(0, 3) + ' · ' + hol });
+      const isToday = k === tKey, isSel = day === k;
+      const parts = fx.map((t) => t.title + ', fixed').concat(tn.map((t) => t.title + ', tentative'));
+      cells.push({
+        d, col: ((new Date(cy, cm, d).getDay() + 6) % 7) + 1,
+        cls: (hol ? 'hol ' : (sat ? 'sat ' : '')) + (isToday ? 'today ' : '') + (isSel ? 'sel' : ''),
+        pressed: isSel,
+        fDot: fx.length ? '#C23A3A' : 'transparent',
+        tDot: tn.length ? '#2457C5' : 'transparent',
+        hDot: hol ? '#E0A124' : 'transparent',
+        aria: d + ' ' + MN[cm] + ' ' + cy + (isToday ? ', today' : '') + (hol ? '. Holiday, ' + hol : (sat ? '. Banks closed' : '')) + (parts.length ? '. ' + parts.join('. ') : '. Nothing due'),
+        pick: () => this.setState({ day: isSel ? '' : k })
+      });
+    }
+    const selD = day.slice(0, 7) === iso(cy, cm, 1).slice(0, 7) ? Number(day.slice(8)) : 0;
+    let note;
+    if (selD) {
+      const items = dueList.filter((t) => t.fixed === day || t.tent === day);
+      const hol = holName(day), sat = bankSat(cy, cm, selD);
+      const bits = [];
+      if (hol) bits.push('holiday, ' + hol);
+      else if (sat) bits.push('banks closed, ' + (Math.ceil(selD / 7) === 2 ? 'second' : 'fourth') + ' Saturday');
+      items.forEach((t) => bits.push(t.title + (t.fixed === day ? ' (fixed)' : ' (tentative)')));
+      note = selD + ' ' + MN[cm] + ': ' + (bits.length ? bits.join('; ') : 'nothing due');
+    } else {
+      note = MN[cm] + ' has ' + nF + (nF === 1 ? ' fixed deadline, ' : ' fixed deadlines, ') + nT + (nT === 1 ? ' tentative date and ' : ' tentative dates and ') + hols.length + (hols.length === 1 ? ' holiday' : ' holidays') + '. Click a date to see it.';
+    }
+    const cal = {
+      title: MN[cm] + ' ' + cy, cells, note, hols, noHols: hols.length === 0,
+      todayOn: mOff === 0 && !day ? 'on' : '',
+      prev: () => this.setState({ mOff: mOff - 1, day: '' }),
+      next: () => this.setState({ mOff: mOff + 1, day: '' }),
+      today: () => this.setState({ mOff: 0, day: '' })
+    };
+
+    const DN = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const PLAN = [3, 2, 3, 2, 2, 1, 0];
+    const tIdx = (nowD.getDay() + 6) % 7;
+    const monday = new Date(nowD.getFullYear(), nowD.getMonth(), nowD.getDate() - tIdx);
+    let wDone = 0, wPlan = 0;
+    const wDays = PLAN.map((p, i) => {
+      const dt = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+      const done = i < tIdx ? Math.max(0, p - (i % 3 === 0 ? 1 : 0)) : (i === tIdx ? Math.min(p, 1) : 0);
+      wPlan += p;
+      wDone += done;
+      const pct = p ? Math.round(done / p * 100) : 0;
+      return {
+        dn: DN[i], lbl: dt.getDate() + ' ' + MN[dt.getMonth()].slice(0, 3),
+        fg: i === tIdx ? '#232B5E' : '#5B667D',
+        track: i === tIdx ? '#DCE5F6' : '#EDF1F8',
+        fill: i > tIdx ? '#C3D0E4' : (pct === 100 ? '#1E9E68' : '#2457C5'),
+        pct: p ? Math.max(pct, 5) : 0,
+        doneText: p ? done + '/' + p : '—',
+        aria: DN[i] + ' ' + dt.getDate() + ': ' + done + ' of ' + p + ' planned tasks done'
+      };
+    });
+    const week = {
+      days: wDays,
+      sub: wDone + ' of ' + wPlan + ' planned tasks done',
+      pctText: Math.round(wDone / wPlan * 100) + '% of the week done',
+      restText: (wPlan - wDone) + (wPlan - wDone === 1 ? ' task left' : ' tasks left')
+    };
+
+    const recent = [
+      { title: 'Fix sync script bug', hours: '2h', mood: 'On track', moodBg: '#E1F4EA', moodFg: '#0F6B43', comment: 'Reproduced the bug. The date parser fails on blank rows in the export.', when: 'Yesterday, 12 Oct' },
+      { title: 'Clean customer export file', hours: '1.5h', mood: 'At risk', moodBg: '#FBEFD2', moodFg: '#7A5200', comment: 'Removed duplicates. Three columns still need mapping from the old template.', when: 'Yesterday, 12 Oct' }
+    ];
+
+    const cDefs = [
+      { name: 'Development', n: 7, color: '#2457C5' },
+      { name: 'Data Cleaning', n: 6, color: '#1E9E68' },
+      { name: 'Data Management', n: 4, color: '#A99BEA' },
+      { name: 'Power BI', n: 6, color: '#F0B44C' }
+    ];
+    const cats = cDefs.map((c) => ({
+      ...c, on: cat === c.name ? 'on' : '', pressed: cat === c.name,
+      pick: () => this.setState({ cat: cat === c.name ? '' : c.name })
+    }));
+    const hit = cDefs.find((c) => c.name === cat);
+    const center = hit ? { n: hit.n, label: hit.name } : { n: 23, label: 'done' };
+
+    const C = {
+      dev: { cat: 'Development', catBg: '#E4EDFC', catFg: '#1A3F94', ini: 'D', bg: '#CFE0F9' },
+      clean: { cat: 'Data Cleaning', catBg: '#E1F4EA', catFg: '#0F6B43', ini: 'C', bg: '#D3EFE1' },
+      mgmt: { cat: 'Data Management', catBg: '#ECE8FB', catFg: '#4C3AA6', ini: 'M', bg: '#E4E2FA' },
+      bi: { cat: 'Power BI', catBg: '#FBEFD2', catFg: '#7A5200', ini: 'P', bg: '#FDE3C8' }
+    };
+    const S = {
+      todo: { status: 'To do', stBg: '#EEF1F6', stFg: '#4A556B' },
+      prog: { status: 'In progress', stBg: '#E4EDFC', stFg: '#1A3F94' },
+      over: { status: 'Overdue', stBg: '#C23A3A', stFg: '#FFFFFF' }
+    };
+    const all = [
+      { title: 'Review sales dashboard KPIs', ...C.bi, tent: '10 Oct', fixed: '11 Oct', ...S.over, over: true, soon: false },
+      { title: 'Fix sync script bug', ...C.dev, tent: '13 Oct', fixed: '15 Oct', ...S.prog, over: false, soon: true },
+      { title: 'Clean customer export file', ...C.clean, tent: '14 Oct', fixed: '16 Oct', ...S.prog, over: false, soon: true },
+      { title: 'Refresh monthly report', ...C.bi, tent: '15 Oct', fixed: '17 Oct', ...S.todo, over: false, soon: true },
+      { title: 'Update master data tracker', ...C.mgmt, tent: '18 Oct', fixed: '20 Oct', ...S.todo, over: false, soon: false }
+    ];
+    const rows = all.filter((r) => (dl === 'all' || (dl === 'over' && r.over) || (dl === 'soon' && (r.soon || r.over))) && (!cat || r.cat === cat));
+    const dlFilters = [['all', 'All'], ['over', 'Overdue'], ['soon', 'Next 7 days']].map(([k, label]) => ({
+      label, on: dl === k ? 'on' : '', pressed: dl === k, pick: () => this.setState({ dl: k })
+    }));
+    const t3 = [
+      { title: 'Review sales dashboard KPIs', pri: 'High priority', cat: C.bi.cat, fg: C.bi.catFg, bg: C.bi.bg, tent: '10 Oct', fixed: '11 Oct', est: 3, logged: 2 },
+      { title: 'Fix sync script bug', pri: 'High priority', cat: C.dev.cat, fg: C.dev.catFg, bg: C.dev.bg, tent: '13 Oct', fixed: '15 Oct', est: 3, logged: 2 },
+      { title: 'Clean customer export file', pri: 'Medium priority', cat: C.clean.cat, fg: C.clean.catFg, bg: C.clean.bg, tent: '14 Oct', fixed: '16 Oct', est: 4, logged: 1.5 }
+    ];
+    const today3 = t3.map((t) => ({ ...t, prog: t.logged + '/' + t.est + 'h', pct: Math.round(t.logged / t.est * 100) }));
+    const planH = t3.reduce((a, t) => a + t.est, 0), logH = t3.reduce((a, t) => a + t.logged, 0);
+    const focus = {
+      hoursText: logH + 'h logged of ' + planH + 'h planned today',
+      pct: Math.round(logH / planH * 100),
+      restText: Math.round((planH - logH) * 10) / 10 + 'h still to put in'
+    };
+
+    const eff = now + peek * 600000;
+    const tt = this.lib.thoughtAt(eff), pg = this.lib.panchang(eff);
+    const nd = new Date(now), hr = nd.getHours();
+    const th = {
+      text: tt.text, src: tt.src, hasFest: !!pg.festival, fest: pg.festival,
+      meta: pg.tithi + ' \u00b7 ' + pg.month + ' \u00b7 Vikram Samvat ' + pg.samvat + ' \u00b7 ' + pg.vara,
+      hasPeek: peek > 0,
+      next: () => this.setState({ peek: this.state.peek + 1 }),
+      reset: () => this.setState({ peek: 0 })
+    };
+    const greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+    const dateText = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][nd.getDay()] + ', ' + nd.getDate() + ' ' + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][nd.getMonth()] + ' ' + nd.getFullYear();
+    return { cal, week, recent, focus, cats, center, rows, dlFilters, noRows: rows.length === 0, today3, th, greet, dateText };
+  }
+}
+</script>
+</body>
+</html>

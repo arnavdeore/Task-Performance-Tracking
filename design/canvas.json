@@ -1,0 +1,95 @@
+{
+  "attachments": {},
+  "boards": {
+    "Login.dc.html": {
+      "h": 560,
+      "title": "Login (desktop and mobile)",
+      "w": 440,
+      "x": 1410,
+      "y": 2420
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "title": "Desktop - Dashboard",
+      "w": 1600,
+      "x": 0,
+      "y": 0
+    },
+    "MobileAdd.dc.html": {
+      "h": 844,
+      "title": "Mobile - Add task",
+      "w": 390,
+      "x": 940,
+      "y": 2420
+    },
+    "MobileHome.dc.html": {
+      "h": 844,
+      "title": "Mobile - Home",
+      "w": 390,
+      "x": 0,
+      "y": 2420
+    },
+    "MobileTasks.dc.html": {
+      "h": 844,
+      "title": "Mobile - Tasks",
+      "w": 390,
+      "x": 470,
+      "y": 2420
+    },
+    "Performance.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "title": "Desktop - Performance",
+      "w": 1600,
+      "x": 3360,
+      "y": 0
+    },
+    "Tasks.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "title": "Desktop - Tasks board and Add task",
+      "w": 1600,
+      "x": 1680,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-13T15:50:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t1": {
+      "kind": "title1",
+      "maxW": 4960,
+      "text": "Desktop web portal",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "t2": {
+      "kind": "title1",
+      "maxW": 1850,
+      "text": "Mobile screens and login",
+      "w": 240,
+      "x": 0,
+      "y": 2120
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Tasks.dc.html",
+    "Performance.dc.html",
+    "MobileHome.dc.html",
+    "MobileTasks.dc.html",
+    "MobileAdd.dc.html",
+    "Login.dc.html"
+  ],
+  "pages": [],
+  "title": "Job Tracker Wireframe",
+  "v": 3
+}

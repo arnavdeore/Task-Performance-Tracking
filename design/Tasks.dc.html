@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tasks board</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#DCE5F4}
+a{color:#2457C5}a:hover{color:#1A3F94}
+.glass{background:rgba(255,255,255,.6);border:1.5px solid rgba(255,255,255,.92);box-shadow:0 1px 0 #FFFFFF inset,0 24px 40px -28px rgba(36,50,120,.38)}
+.white{background:#FFFFFF;box-shadow:0 36px 56px -28px rgba(36,50,120,.42),0 2px 4px rgba(36,50,120,.05)}
+.lift{transition:transform .2s ease,box-shadow .2s ease}
+.lift:hover{transform:translateY(-3px)}
+.nav3{display:inline-flex;align-items:center;justify-content:center;padding:11px 22px;border-radius:999px;white-space:nowrap;color:#4A556B;font-size:13.5px;font-weight:600;text-decoration:none;transition:background .15s ease,color .15s ease}
+.nav3:hover{background:#EEF2FB;color:#232B5E}
+.nav3.on{background:#232B5E;color:#FFFFFF;font-weight:700;box-shadow:0 12px 18px -10px rgba(35,43,94,.7)}
+.pillbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;cursor:pointer;font-family:inherit;font-weight:700;text-decoration:none;transition:transform .08s ease,box-shadow .12s ease,background .15s ease}
+.pillbtn.dark{background:#232B5E;color:#FFFFFF;box-shadow:0 12px 20px -10px rgba(35,43,94,.7)}
+.pillbtn.dark:hover{transform:translateY(-1px);color:#FFFFFF}
+.pillbtn.dark:active{transform:translateY(1px)}
+.pillbtn.light{background:#FFFFFF;color:#232B5E;box-shadow:0 6px 14px -8px rgba(35,43,94,.35)}
+.pillbtn.light:hover{transform:translateY(-1px);color:#232B5E}
+.pillbtn.light:active{transform:translateY(1px)}
+.icobtn{width:38px;height:38px;border-radius:50%;border:0;background:transparent;color:#232B5E;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .15s ease}
+.icobtn:hover{background:rgba(35,43,94,.08)}
+.seg{display:inline-flex;gap:5px;padding:5px;border-radius:999px;background:rgba(255,255,255,.8);box-shadow:inset 0 1px 3px rgba(35,43,94,.14)}
+.segb{height:38px;padding:0 18px;border:0;border-radius:999px;background:transparent;color:#4A556B;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s ease,color .15s ease}
+.segb:hover{color:#232B5E}
+.segb.on{background:#232B5E;color:#FFFFFF;font-weight:700}
+.tile{box-sizing:border-box;min-width:172px;border-radius:24px;padding:16px 20px;display:flex;flex-direction:column;gap:3px;text-decoration:none;color:#1B2438}
+.tilel{font-size:12.5px;font-weight:600;color:#5B667D}
+.tilen{font-size:32px;font-weight:800;line-height:1.1;letter-spacing:-.02em}
+.tiles{font-size:11.5px;font-weight:600;color:#5B667D}
+.tcard{box-sizing:border-box;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:13px;box-shadow:0 20px 32px -24px rgba(36,50,120,.5),0 1px 2px rgba(36,50,120,.06)}
+.dchip{display:inline-flex;align-items:center;box-sizing:border-box;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.dchip.tentc{background:#F3F8FF;border:1.5px dashed #2457C5;color:#1A3F94}
+.dchip.fixc{background:#FDECEC;border:1px solid #F0B4B4;color:#A12B2B}
+.fld{box-sizing:border-box;width:100%;height:50px;padding:0 16px;border-radius:14px;border:1.5px solid #D3DCEC;background:#FFFFFF;font-family:inherit;font-size:15px;font-weight:500;color:#1B2438;transition:border-color .15s ease,box-shadow .15s ease}
+.fld:focus{outline:none;border-color:#232B5E;box-shadow:0 0 0 3px #CFD6F2}
+textarea.fld{height:auto;padding:14px 16px;resize:vertical;line-height:1.6}
+.fld.tent{border:1.5px dashed #2457C5}
+.fld.fixd{border-color:#F0B4B4;background:#FFF8F8}
+.lbl{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:700;color:#3A455C}
+.grp{display:flex;flex-direction:column;gap:14px;box-sizing:border-box;padding:20px;border-radius:24px;background:#F6F9FD;border:1px solid #E7EDF7}
+.grph{font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#6B7691}
+.dlg .seg{display:flex;padding:5px;background:#FFFFFF;box-shadow:inset 0 0 0 1.5px #E1E8F4}
+.dlg .segb{flex:1;height:42px;padding:0 8px;font-size:13.5px}
+.pickrow{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;box-sizing:border-box;padding:14px 16px;border-radius:16px;border:1.5px solid #E1E8F4;background:#FFFFFF;font-family:inherit;font-size:14px;font-weight:600;color:#1B2438;text-align:left;cursor:pointer;transition:all .15s ease}
+.pickrow:hover{border-color:#9DB9EE}
+.pickrow.on{border-color:#232B5E;background:#EEF2FC;box-shadow:0 8px 16px -12px rgba(35,43,94,.6)}
+</style>
+</helmet>
+<div style="min-height:100vh;box-sizing:border-box;padding:20px;display:flex;flex-direction:column;background:linear-gradient(150deg,#D3E3F8 0%,#E2E1F6 52%,#DDEEEA 100%);color:#1B2438;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+<div style="flex:1 1 auto;box-sizing:border-box;border-radius:44px;padding:24px;display:flex;flex-direction:column;gap:26px;background:rgba(255,255,255,.4);border:1.5px solid rgba(255,255,255,.85);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 40px 80px -40px rgba(36,50,120,.45)">
+<header class="white" style="box-sizing:border-box;border-radius:28px;padding:10px 18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 20px">
+<a href="Main.dc.html" aria-label="Slate home" style="flex:0 0 auto;display:flex;align-items:center;gap:10px;text-decoration:none;color:#1B2438;white-space:nowrap">
+<span style="position:relative;flex:0 0 auto;width:38px;height:38px;border-radius:13px;background:linear-gradient(160deg,#4C86F0 0%,#2457C5 55%,#1A3F94 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 10px 14px -8px rgba(36,87,197,.7)"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l8.5 4.2L12 12 3.5 7.7z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1.2"></path><path d="M3.5 12l8.5 4.2 8.5-4.2" stroke="#CFE0FB" stroke-width="2"></path><path d="M3.5 16.2l8.5 4.3 8.5-4.3" stroke="#93B4F0" stroke-width="2"></path></svg><span style="position:absolute;right:-4px;bottom:-3px;width:12px;height:12px;border-radius:50%;background:#1E9E68;border:2.5px solid #FFFFFF;box-sizing:border-box"></span></span>
+<span style="font-size:22px;font-weight:800;letter-spacing:-.02em">Slate</span>
+</a>
+<nav aria-label="Main" style="flex:1 1 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px">
+<a class="nav3" href="Main.dc.html">Dashboard</a>
+<a class="nav3 on" href="Tasks.dc.html" aria-current="page">Tasks</a>
+<a class="nav3" href="Performance.dc.html">Performance</a>
+<a class="nav3" href="#">Reports</a>
+<a class="nav3" href="#">Settings</a>
+</nav>
+<div style="flex:0 0 auto;display:flex;align-items:center;gap:6px">
+<button type="button" class="icobtn" aria-label="Search"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
+<button type="button" class="icobtn" aria-label="Notifications"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15z"></path><path d="M10 21h4"></path></svg></button>
+<div style="display:flex;align-items:center;gap:10px;margin-left:6px">
+<div role="img" aria-label="Profile" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(160deg,#F3F0FD,#D9D2F7);color:#4C3AA6;display:flex;align-items:center;justify-content:center;font-weight:800;box-shadow:0 1px 0 #FFFFFF inset,0 8px 12px -6px rgba(76,58,166,.45)">A</div>
+<div style="display:flex;flex-direction:column;line-height:1.25"><span style="font-size:13px;font-weight:700">Aditi</span><span style="font-size:11px;color:#5B667D">Data analyst</span></div>
+</div>
+</div>
+</header>
+
+<main style="flex:1 1 auto;display:flex;flex-direction:column;gap:26px">
+
+<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 24px;padding:0 6px">
+<div style="flex:1 1 320px;min-width:0">
+<h1 style="margin:0;font-size:30px;font-weight:800;letter-spacing:-.015em">Tasks</h1>
+<p style="margin:7px 0 0;font-size:14px;line-height:1.55;color:#5B667D;max-width:48ch">Move cards across as work progresses, and log an update at the end of each day.</p>
+</div>
+<div style="flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+<div class="white lift tile"><span class="tilel">Open tasks</span><span class="tilen" style="color:#1A3F94">{{openCount}}</span><span class="tiles">{{openSub}}</span></div>
+<div class="white lift tile"><span class="tilel">Fixed dates, next 7 days</span><span class="tilen" style="color:#1B2438">{{dueWeek}}</span><span class="tiles">{{weekSub}}</span></div>
+<div class="white lift tile"><span class="tilel">Logged today</span><span class="tilen" style="color:#0F6B43">{{todayHours}}h</span><span class="tiles">{{logSub}}</span></div>
+</div>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 20px;padding:0 6px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+<div class="seg" role="group" aria-label="Filter by category">
+<sc-for list="{{filters}}" as="fl" hint-placeholder-count="5">
+<button type="button" class="segb {{fl.on}}" aria-pressed="{{fl.pressed}}" onClick="{{fl.pick}}">{{fl.label}}</button>
+</sc-for>
+</div>
+<span style="padding:7px 15px;border-radius:999px;background:#FDECEC;font-size:12.5px;font-weight:700;color:#A12B2B">{{overdueText}}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+<button type="button" class="pillbtn light" onClick="{{openEodTab}}" style="height:50px;padding:0 26px;font-size:14px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16M4 12h10M4 18.5h7"></path><path d="M15.5 19.5l5.5-5.5-2-2-5.5 5.5-.5 2.5z"></path></svg>EOD update</button>
+<button type="button" class="pillbtn dark" onClick="{{openAddTab}}" style="height:50px;padding:0 28px;font-size:15px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Add task</button>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(292px,1fr));gap:18px;align-items:start">
+<sc-for list="{{cols}}" as="col" hint-placeholder-count="4">
+<section class="glass" aria-label="{{col.name}}" style="box-sizing:border-box;border-radius:30px;padding:18px 16px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 6px">
+<span style="display:flex;align-items:center;gap:9px;font-size:16.5px;font-weight:700"><span style="width:11px;height:11px;border-radius:50%;background:{{col.dot}}"></span>{{col.name}}</span>
+<span style="min-width:30px;text-align:center;padding:5px 12px;border-radius:999px;background:#FFFFFF;box-shadow:0 6px 10px -6px rgba(35,43,94,.4);font-size:13px;font-weight:700">{{col.count}}</span>
+</div>
+<sc-for list="{{col.cards}}" as="c" hint-placeholder-count="3">
+<article class="tcard lift" style="background:#FFFFFF;border-left:6px solid {{c.accent}};{{c.ring}}">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+<span style="display:flex;align-items:center;gap:7px;min-width:0;font-size:12.5px;font-weight:700;color:{{c.catFg}}"><span style="flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:{{c.accent}}"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{c.cat}}</span></span>
+<span style="flex:0 0 auto;padding:4px 12px;border-radius:999px;font-size:11.5px;font-weight:700;background:{{c.priBg}};color:{{c.priFg}}">{{c.pri}}</span>
+</div>
+<h3 style="margin:0;font-size:18px;font-weight:600;line-height:1.35;letter-spacing:-.01em">{{c.title}}</h3>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span class="dchip tentc">Tentative {{c.tentText}}</span>
+<span class="dchip fixc">Fixed {{c.fixedText}}</span>
+</div>
+<sc-if value="{{c.hasNote}}" hint-placeholder-val="{{false}}">
+<p style="margin:0;font-size:13px;line-height:1.6;color:#4A556B;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{c.note}}</p>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px;padding-top:2px">
+<div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 10px">
+<span style="font-size:12.5px;font-weight:700;color:{{c.footFg}}">{{c.foot}}</span>
+<span style="font-size:12.5px;font-weight:700;color:#2E384D">{{c.hrsText}}</span>
+</div>
+<div style="height:8px;border-radius:999px;background:#EDF1F8;overflow:hidden"><div style="height:100%;border-radius:999px;background:{{c.accent}};width:{{c.pct}}%"></div></div>
+</div>
+<div style="display:flex;gap:10px;padding-top:2px">
+<button type="button" class="pillbtn light" onClick="{{c.log}}" style="flex:1;height:42px;padding:0 12px;font-size:13px;background:#F1F4FB;box-shadow:none">Log update</button>
+<button type="button" class="pillbtn dark" onClick="{{c.move}}" style="flex:1;height:42px;padding:0 12px;font-size:13px">{{c.moveLabel}}</button>
+</div>
+</article>
+</sc-for>
+<sc-if value="{{col.empty}}" hint-placeholder-val="{{false}}">
+<div style="padding:26px 18px;border:1.5px dashed #AEBBD3;border-radius:22px;text-align:center;font-size:13px;color:#5B667D">Nothing here</div>
+</sc-if>
+</section>
+</sc-for>
+</div>
+
+<section class="white" style="flex:1 1 auto;box-sizing:border-box;border-radius:34px;padding:26px 30px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px">
+<h2 style="margin:0;font-size:21px;font-weight:700">EOD updates</h2>
+<span style="font-size:13px;color:#5B667D">Newest first. Hours here feed your performance report.</span>
+</div>
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:0 4px;font-size:13px;font-weight:700;color:#5B667D"><span>{{g.label}}</span><span>{{g.hoursText}}</span></div>
+<sc-for list="{{g.entries}}" as="en" hint-placeholder-count="2">
+<div style="display:flex;flex-direction:column;gap:10px;padding:18px 22px;border-radius:24px;background:#F4F7FD;border:1px solid #E7EDF7">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px">
+<span style="font-size:15.5px;font-weight:700;margin-right:6px">{{en.title}}</span>
+<span style="padding:4px 12px;border-radius:999px;font-size:11.5px;font-weight:700;background:#FFFFFF;color:#1B2438">{{en.hText}}</span>
+<span style="padding:4px 12px;border-radius:999px;font-size:11.5px;font-weight:700;background:{{en.moodBg}};color:{{en.moodFg}}">{{en.mood}}</span>
+<span style="padding:4px 12px;border-radius:999px;font-size:11.5px;font-weight:700;background:{{en.stBg}};color:{{en.stFg}}">{{en.status}}</span>
+</div>
+<div style="font-size:14px;line-height:1.65;color:#2E384D;max-width:92ch">{{en.comment}}</div>
+<sc-if value="{{en.hasNext}}" hint-placeholder-val="{{false}}">
+<div style="font-size:13px;line-height:1.6;color:#5B667D">{{en.nextText}}</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{g.empty}}" hint-placeholder-val="{{false}}">
+<div style="padding:22px;border:1.5px dashed #AEBBD3;border-radius:22px;font-size:13.5px;color:#5B667D">No update yet. Use the EOD update button to write one.</div>
+</sc-if>
+</div>
+</sc-for>
+</section>
+
+</main>
+</div>
+<div style="display:{{modalDisplay}};position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;align-items:center;justify-content:center;box-sizing:border-box;padding:24px;background:rgba(27,36,56,.45);overflow-y:auto" onClick="{{closePanel}}">
+<div class="dlg" role="dialog" aria-modal="true" aria-label="{{dlgTitle}}" onClick="{{stop}}" style="width:100%;max-width:780px;max-height:calc(100vh - 48px);overflow-y:auto;box-sizing:border-box;margin:auto;border-radius:36px;padding:32px 34px;display:flex;flex-direction:column;gap:22px;background:#FFFFFF;border:1.5px solid #FFFFFF;box-shadow:0 40px 80px -20px rgba(27,36,56,.55),0 12px 24px -8px rgba(36,87,197,.3)">
+
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+<div>
+<h2 style="margin:0;font-size:25px;font-weight:800;letter-spacing:-.01em">{{dlgTitle}}</h2>
+<p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:#5B667D;max-width:58ch">{{dlgSub}}</p>
+</div>
+<button type="button" aria-label="Close" onClick="{{closePanel}}" class="pillbtn light" style="flex:0 0 auto;width:46px;height:46px;border-radius:50%;background:#F1F4FB;box-shadow:none"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+
+<sc-if value="{{isAdd}}" hint-placeholder-val="{{true}}">
+<div style="display:flex;flex-direction:column;gap:18px">
+<sc-if value="{{hasErrors}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="display:flex;flex-direction:column;gap:6px;padding:16px 18px;border-radius:18px;background:#FCE6E6;color:#A12B2B;font-size:13.5px;font-weight:600;line-height:1.5">
+<sc-for list="{{errors}}" as="er" hint-placeholder-count="1"><span>{{er.msg}}</span></sc-for>
+</div>
+</sc-if>
+
+<div class="grp">
+<span class="grph">The task</span>
+<label class="lbl">Task title
+<input class="fld" type="text" placeholder="What needs to be done?" value="{{f.title}}" onChange="{{h.title}}"></label>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
+<label class="lbl">Category
+<select class="fld" value="{{f.cat}}" onChange="{{h.cat}}"><option>Development</option><option>Data Cleaning</option><option>Data Management</option><option>Power BI</option></select></label>
+<div class="lbl">Priority
+<div class="seg" role="group" aria-label="Priority">
+<sc-for list="{{pris}}" as="p" hint-placeholder-count="3">
+<button type="button" class="segb {{p.on}}" aria-pressed="{{p.pressed}}" onClick="{{p.pick}}">{{p.label}}</button>
+</sc-for>
+</div></div>
+</div>
+</div>
+
+<div class="grp">
+<span class="grph">Deadlines</span>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
+<label class="lbl">Tentative deadline
+<input class="fld tent" type="date" value="{{f.tent}}" onChange="{{h.tent}}"></label>
+<label class="lbl">Fixed deadline
+<input class="fld fixd" type="date" value="{{f.fixed}}" onChange="{{h.fixed}}"></label>
+</div>
+<p style="margin:0;font-size:13px;line-height:1.6;color:#5B667D">Tentative is your own target and can move. Fixed is the committed date and drives your on-time score.</p>
+</div>
+
+<div class="grp">
+<span class="grph">Effort and notes</span>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
+<label class="lbl">Estimated hours
+<input class="fld" type="number" min="0" step="0.5" placeholder="0" value="{{f.est}}" onChange="{{h.est}}"></label>
+<label class="lbl">Status
+<select class="fld" value="{{f.status}}" onChange="{{h.status}}"><option>To do</option><option>In progress</option><option>Waiting</option><option>Done</option></select></label>
+</div>
+<label class="lbl">Notes
+<textarea class="fld" rows="3" placeholder="Optional details" value="{{f.notes}}" onChange="{{h.notes}}"></textarea></label>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:14px">
+<button type="button" class="pillbtn light" onClick="{{clearForm}}" style="flex:1 1 160px;height:54px;font-size:15px;background:#F1F4FB;box-shadow:none">Clear</button>
+<button type="button" class="pillbtn dark" onClick="{{addTask}}" style="flex:2 1 260px;height:54px;font-size:15px">Add task</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isEod}}" hint-placeholder-val="{{false}}">
+<div style="display:flex;flex-direction:column;gap:18px">
+<sc-if value="{{hasEErrors}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="display:flex;flex-direction:column;gap:6px;padding:16px 18px;border-radius:18px;background:#FCE6E6;color:#A12B2B;font-size:13.5px;font-weight:600;line-height:1.5">
+<sc-for list="{{eErrors}}" as="er" hint-placeholder-count="1"><span>{{er.msg}}</span></sc-for>
+</div>
+</sc-if>
+
+<div class="grp">
+<span class="grph">Which task is this about?</span>
+<div style="display:flex;flex-direction:column;gap:10px;max-height:252px;overflow-y:auto;padding:2px 2px 6px">
+<sc-for list="{{eodTasks}}" as="o" hint-placeholder-count="4">
+<button type="button" class="pickrow {{o.on}}" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}"><span style="min-width:0">{{o.title}}</span><span style="flex:0 0 auto;padding:4px 11px;border-radius:999px;font-size:11.5px;font-weight:700;background:{{o.stBg}};color:{{o.stFg}}">{{o.status}}</span></button>
+</sc-for>
+</div>
+</div>
+
+<div class="grp">
+<span class="grph">Today</span>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
+<label class="lbl">Hours spent today
+<input class="fld" type="number" min="0" max="24" step="0.5" placeholder="0" value="{{e.hours}}" onChange="{{h.hours}}"></label>
+<label class="lbl">Status after today
+<select class="fld" value="{{eStatus}}" onChange="{{h.estatus}}"><option>To do</option><option>In progress</option><option>Waiting</option><option>Done</option></select></label>
+</div>
+<div class="lbl">How did it go?
+<div class="seg" role="group" aria-label="How did it go">
+<sc-for list="{{moods}}" as="m" hint-placeholder-count="3">
+<button type="button" class="segb {{m.on}}" aria-pressed="{{m.pressed}}" onClick="{{m.pick}}">{{m.label}}</button>
+</sc-for>
+</div></div>
+</div>
+
+<div class="grp">
+<span class="grph">Your update</span>
+<label class="lbl">Today’s update
+<textarea class="fld" rows="4" placeholder="What did you finish, and what is left?" value="{{e.comment}}" onChange="{{h.comment}}"></textarea></label>
+<label class="lbl">Tomorrow or blockers (optional)
+<input class="fld" type="text" placeholder="What comes next, or what is stopping you?" value="{{e.next}}" onChange="{{h.next}}"></label>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:14px">
+<button type="button" class="pillbtn light" onClick="{{clearEod}}" style="flex:1 1 160px;height:54px;font-size:15px;background:#F1F4FB;box-shadow:none">Clear</button>
+<button type="button" class="pillbtn dark" onClick="{{saveEod}}" style="flex:2 1 260px;height:54px;font-size:15px">Save EOD update</button>
+</div>
+</div>
+</sc-if>
+
+</div>
+</div>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}">
+<div role="status" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;max-width:calc(100vw - 48px);box-sizing:border-box;padding:16px 26px;border-radius:16px;background:#232B5E;color:#FFFFFF;font-size:14.5px;font-weight:700;box-shadow:0 16px 28px -10px rgba(35,43,94,.7)">{{toast}}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.today = '2026-10-13';
+    this.state = {
+      panel: false, tab: 'add', filter: 'All', sel: '', toast: '',
+      f: this.blankForm(), errors: [],
+      e: this.blankEod(), eErrors: [],
+      cards: [
+        { id: 'c1', title: 'Refresh monthly report', cat: 'Power BI', pri: 'Medium', tent: '2026-10-15', fixed: '2026-10-17', status: 'To do', est: 2, logged: 0, doneOn: '', note: '' },
+        { id: 'c2', title: 'Validate branch codes list', cat: 'Data Cleaning', pri: 'Low', tent: '2026-10-19', fixed: '2026-10-22', status: 'To do', est: 1.5, logged: 0, doneOn: '', note: '' },
+        { id: 'c3', title: 'Update master data tracker', cat: 'Data Management', pri: 'Medium', tent: '2026-10-18', fixed: '2026-10-20', status: 'To do', est: 3, logged: 0, doneOn: '', note: '' },
+        { id: 'c4', title: 'Document ETL steps', cat: 'Development', pri: 'Low', tent: '2026-10-21', fixed: '2026-10-24', status: 'To do', est: 4, logged: 0, doneOn: '', note: '' },
+        { id: 'c5', title: 'Review sales dashboard KPIs', cat: 'Power BI', pri: 'High', tent: '2026-10-10', fixed: '2026-10-11', status: 'In progress', est: 3, logged: 2, doneOn: '', note: '' },
+        { id: 'c6', title: 'Fix sync script bug', cat: 'Development', pri: 'High', tent: '2026-10-13', fixed: '2026-10-15', status: 'In progress', est: 3, logged: 2, doneOn: '', note: 'EOD: Reproduced the bug. The date parser fails on blank rows in the export.' },
+        { id: 'c7', title: 'Clean customer export file', cat: 'Data Cleaning', pri: 'Medium', tent: '2026-10-14', fixed: '2026-10-16', status: 'In progress', est: 4, logged: 1.5, doneOn: '', note: 'EOD: Removed duplicates. Three columns still need mapping from the old template.' },
+        { id: 'c8', title: 'Dashboard sign-off from manager', cat: 'Power BI', pri: 'Medium', tent: '2026-10-14', fixed: '2026-10-16', status: 'Waiting', est: 0.5, logged: 0, doneOn: '', note: 'Waiting on approval' },
+        { id: 'c9', title: 'Data access request', cat: 'Data Management', pri: 'Low', tent: '2026-10-15', fixed: '2026-10-17', status: 'Waiting', est: 0.5, logged: 0, doneOn: '', note: 'Waiting on IT' },
+        { id: 'c10', title: 'Weekly sales merge', cat: 'Data Cleaning', pri: 'Medium', tent: '2026-10-08', fixed: '2026-10-09', status: 'Done', est: 2, logged: 2, doneOn: '2026-10-08', note: '' },
+        { id: 'c11', title: 'Fix date filter bug', cat: 'Development', pri: 'Medium', tent: '2026-10-09', fixed: '2026-10-10', status: 'Done', est: 2, logged: 2, doneOn: '2026-10-09', note: '' },
+        { id: 'c12', title: 'Outlet list cleanup', cat: 'Data Management', pri: 'Low', tent: '2026-10-06', fixed: '2026-10-07', status: 'Done', est: 1.5, logged: 1.5, doneOn: '2026-10-08', note: '' }
+      ],
+      log: [
+        { id: 'l1', date: '2026-10-12', task: 'c6', title: 'Fix sync script bug', hours: 2, mood: 'On track', status: 'In progress', comment: 'Reproduced the bug. The date parser fails on blank rows in the export.', next: 'Patch the parser and rerun the sample file.' },
+        { id: 'l2', date: '2026-10-12', task: 'c7', title: 'Clean customer export file', hours: 1.5, mood: 'At risk', status: 'In progress', comment: 'Removed duplicates. Three columns still need mapping from the old template.', next: 'Get the column mapping confirmed.' }
+      ]
+    };
+  }
+
+  componentDidMount() {
+    this.onKey = (ev) => { if (ev.key === 'Escape' && this.state.panel) this.setState({ panel: false }); };
+    document.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() {
+    if (this.onKey) document.removeEventListener('keydown', this.onKey);
+  }
+
+  blankForm() { return { title: '', cat: 'Development', pri: 'Medium', tent: '', fixed: '', est: '', status: 'To do', notes: '' }; }
+  blankEod() { return { task: '', hours: '', mood: 'On track', status: '', comment: '', next: '' }; }
+  fmt(iso) {
+    if (!iso) return 'not set';
+    const p = iso.split('-');
+    return Number(p[2]) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Number(p[1]) - 1];
+  }
+  days(a, b) {
+    const t = (s) => { const p = s.split('-'); return Date.UTC(Number(p[0]), Number(p[1]) - 1, Number(p[2])); };
+    return Math.round((t(b) - t(a)) / 86400000);
+  }
+  wd(iso) {
+    const p = iso.split('-');
+    return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(Date.UTC(Number(p[0]), Number(p[1]) - 1, Number(p[2]))).getUTCDay()];
+  }
+  flash(msg) {
+    this.setState({ toast: msg });
+    setTimeout(() => this.setState({ toast: '' }), 3500);
+  }
+
+  moveCard(id, to) {
+    this.setState({
+      cards: this.state.cards.map((c) => c.id === id ? { ...c, status: to, doneOn: to === 'Done' ? this.today : '' } : c),
+      sel: id
+    });
+  }
+  openEod(id) {
+    const c = this.state.cards.find((x) => x.id === id);
+    this.setState({ panel: true, tab: 'eod', sel: id, e: { ...this.state.e, task: id, status: c ? c.status : '' }, eErrors: [] });
+  }
+  addTask() {
+    const F = this.state.f;
+    const errs = [];
+    if (!F.title.trim()) errs.push('Add a task title.');
+    if (!F.fixed) errs.push('Pick a fixed deadline. It drives your on-time score.');
+    if (F.tent && F.fixed && F.tent > F.fixed) errs.push('The tentative date should not be after the fixed date.');
+    const est = F.est === '' ? 0 : Number(F.est);
+    if (isNaN(est) || est < 0) errs.push('Estimated hours must be zero or more.');
+    if (errs.length) { this.setState({ errors: errs.map((m, i) => ({ id: i, msg: m })) }); return; }
+    const id = 'n' + Date.now();
+    const card = { id, title: F.title.trim(), cat: F.cat, pri: F.pri, tent: F.tent, fixed: F.fixed, status: F.status, est, logged: 0, doneOn: F.status === 'Done' ? this.today : '', note: F.notes.trim() };
+    this.setState({ cards: [card, ...this.state.cards], f: this.blankForm(), errors: [], sel: id, filter: 'All', panel: false });
+    this.flash('Added "' + card.title + '" to ' + card.status + '.');
+  }
+  saveEod() {
+    const E = this.state.e;
+    const errs = [];
+    const card = this.state.cards.find((c) => c.id === E.task);
+    if (!card) errs.push('Pick the task this update is about.');
+    if (!E.comment.trim()) errs.push('Write a short update about the task.');
+    const hrs = E.hours === '' ? 0 : Number(E.hours);
+    if (isNaN(hrs) || hrs < 0 || hrs > 24) errs.push('Hours today should be between 0 and 24.');
+    if (errs.length) { this.setState({ eErrors: errs.map((m, i) => ({ id: i, msg: m })) }); return; }
+    const status = E.status || card.status;
+    const entry = { id: 'l' + Date.now(), date: this.today, task: card.id, title: card.title, hours: hrs, mood: E.mood, status, comment: E.comment.trim(), next: E.next.trim() };
+    this.setState({
+      cards: this.state.cards.map((c) => c.id === card.id ? { ...c, status, logged: Math.round((c.logged + hrs) * 100) / 100, doneOn: status === 'Done' ? this.today : '', note: 'EOD: ' + entry.comment } : c),
+      log: [entry, ...this.state.log], e: this.blankEod(), eErrors: [], sel: card.id, panel: false
+    });
+    this.flash('EOD update saved for "' + card.title + '".');
+  }
+
+  renderVals() {
+    const st = this.state, today = this.today, F = st.f, E = st.e;
+    const CAT = {
+      'Development': { bg: '#E4EDFC', fg: '#1A3F94', pbg: '#CFE0F9', acc: '#2457C5' },
+      'Data Cleaning': { bg: '#E1F4EA', fg: '#0F6B43', pbg: '#D3EFE1', acc: '#1E9E68' },
+      'Data Management': { bg: '#ECE8FB', fg: '#4C3AA6', pbg: '#E4E2FA', acc: '#8B7BE0' },
+      'Power BI': { bg: '#FBEFD2', fg: '#7A5200', pbg: '#FDE3C8', acc: '#DD9A22' }
+    };
+    const ST = {
+      'To do': { bg: '#EEF1F6', fg: '#4A556B' },
+      'In progress': { bg: '#E4EDFC', fg: '#1A3F94' },
+      'Waiting': { bg: '#ECE8FB', fg: '#4C3AA6' },
+      'Done': { bg: '#E1F4EA', fg: '#0F6B43' }
+    };
+    const PRI = {
+      'High': { bg: '#FCE6E6', fg: '#A12B2B' },
+      'Medium': { bg: '#EEF2FB', fg: '#3A455C' },
+      'Low': { bg: '#F2F5F9', fg: '#5B667D' }
+    };
+    const MOOD = { 'On track': ['#E1F4EA', '#0F6B43'], 'At risk': ['#FBEFD2', '#7A5200'], 'Blocked': ['#FCE6E6', '#A12B2B'] };
+
+    const open = st.cards.filter((c) => c.status !== 'Done');
+    const overdue = open.filter((c) => c.fixed < today).length;
+    const dueWeek = open.filter((c) => { const d = this.days(today, c.fixed); return d >= 0 && d <= 6; }).length;
+    const todayHours = Math.round(st.log.filter((l) => l.date === today).reduce((a, l) => a + l.hours, 0) * 10) / 10;
+
+    const mapCard = (c) => {
+      let foot, fg;
+      if (c.status === 'Done') {
+        const late = this.days(c.fixed, c.doneOn);
+        foot = 'Done ' + this.fmt(c.doneOn) + (late > 0 ? ', ' + late + (late === 1 ? ' day late' : ' days late') : ', on time');
+        fg = late > 0 ? '#A12B2B' : '#0F6B43';
+      } else if (c.fixed < today) {
+        const o = this.days(c.fixed, today);
+        foot = 'Overdue by ' + o + (o === 1 ? ' day' : ' days');
+        fg = '#A12B2B';
+      } else {
+        foot = (c.est ? 'Est ' + c.est + 'h' : 'No estimate') + (c.logged ? ', ' + c.logged + 'h logged' : '');
+        fg = '#5B667D';
+      }
+      const mv = { 'To do': ['In progress', 'Start'], 'In progress': ['Done', 'Mark done'], 'Waiting': ['In progress', 'Resume'], 'Done': ['In progress', 'Reopen'] }[c.status];
+      return {
+        ...c, catBg: CAT[c.cat].bg, catFg: CAT[c.cat].fg, pbg: CAT[c.cat].pbg, accent: CAT[c.cat].acc,
+        priText: c.pri + ' priority', priBg: PRI[c.pri].bg, priFg: PRI[c.pri].fg,
+        pct: c.status === 'Done' ? 100 : (c.est ? Math.min(100, Math.round(c.logged / c.est * 100)) : 0),
+        hrsText: c.est ? c.logged + '/' + c.est + 'h' : (c.logged ? c.logged + 'h' : 'No estimate'),
+        tentText: this.fmt(c.tent), fixedText: this.fmt(c.fixed),
+        ring: c.id === st.sel ? 'box-shadow:0 0 0 2px #2457C5,0 18px 30px -14px rgba(36,87,197,.4)' : '',
+        isHigh: c.pri === 'High', hasNote: !!c.note,
+        foot, footFg: fg, moveLabel: mv[1],
+        move: () => this.moveCard(c.id, mv[0]),
+        log: () => this.openEod(c.id)
+      };
+    };
+    const colDefs = [
+      ['To do', '#8A94A8', '#ECEFF5'], ['In progress', '#2457C5', '#E3ECFC'],
+      ['Waiting', '#8B7BE0', '#EAE6FA'], ['Done', '#1E9E68', '#DFF3E8']
+    ];
+    const cols = colDefs.map(([name, dot, bg]) => {
+      const cards = st.cards.filter((c) => c.status === name && (st.filter === 'All' || c.cat === st.filter)).map(mapCard);
+      return { name, dot, bg, cards, count: cards.length, empty: cards.length === 0 };
+    });
+
+    const fNames = ['All', 'Development', 'Data Cleaning', 'Data Management', 'Power BI'];
+    const filters = fNames.map((n) => ({ label: n, on: st.filter === n ? 'on' : '', pressed: st.filter === n, pick: () => this.setState({ filter: n }) }));
+    const pris = ['Low', 'Medium', 'High'].map((p) => ({ label: p, on: F.pri === p ? 'on' : '', pressed: F.pri === p, pick: () => this.setState({ f: { ...this.state.f, pri: p } }) }));
+    const moods = ['On track', 'At risk', 'Blocked'].map((m) => ({ label: m, on: E.mood === m ? 'on' : '', pressed: E.mood === m, pick: () => this.setState({ e: { ...this.state.e, mood: m } }) }));
+    const eodTasks = open.map((c) => ({
+      title: c.title, status: c.status, stBg: ST[c.status].bg, stFg: ST[c.status].fg,
+      on: E.task === c.id ? 'on' : '', pressed: E.task === c.id,
+      pick: () => this.setState({ e: { ...this.state.e, task: c.id, status: c.status }, sel: c.id })
+    }));
+
+    const dates = Array.from(new Set([today].concat(st.log.map((l) => l.date)))).sort().reverse();
+    const groups = dates.map((d) => {
+      const es = st.log.filter((l) => l.date === d);
+      const hrs = Math.round(es.reduce((a, l) => a + l.hours, 0) * 10) / 10;
+      return {
+        label: (d === today ? 'Today, ' : '') + this.wd(d) + ' ' + this.fmt(d),
+        hoursText: hrs ? hrs + 'h logged' : 'No hours logged',
+        empty: es.length === 0,
+        entries: es.map((l) => ({
+          ...l, hText: l.hours + 'h', moodBg: MOOD[l.mood][0], moodFg: MOOD[l.mood][1],
+          stBg: ST[l.status].bg, stFg: ST[l.status].fg, hasNext: !!l.next, nextText: 'Next: ' + l.next
+        }))
+      };
+    });
+
+    const sf = (k) => (ev) => this.setState({ f: { ...this.state.f, [k]: ev.target.value } });
+    const se = (k) => (ev) => this.setState({ e: { ...this.state.e, [k]: ev.target.value } });
+    const h = {
+      title: sf('title'), cat: sf('cat'), tent: sf('tent'), fixed: sf('fixed'), est: sf('est'), status: sf('status'), notes: sf('notes'),
+      hours: se('hours'), estatus: se('status'), comment: se('comment'), next: se('next')
+    };
+
+    return {
+      cols, filters, pris, moods, eodTasks, groups, h, f: F, e: E,
+      openCount: open.length, overdueText: overdue ? overdue + ' overdue' : 'None overdue', dueWeek, todayHours,
+      openSub: st.cards.filter((c) => c.status === 'To do').length + ' to do · ' + st.cards.filter((c) => c.status === 'In progress').length + ' in progress · ' + st.cards.filter((c) => c.status === 'Waiting').length + ' waiting',
+      weekSub: overdue ? overdue + (overdue === 1 ? ' is already overdue' : ' are already overdue') : 'Nothing overdue',
+      logSub: (() => { const n = st.log.filter((l) => l.date === today).length; return n ? 'Across ' + n + (n === 1 ? ' task' : ' tasks') : 'No update written yet'; })(),
+      modalDisplay: st.panel ? 'flex' : 'none',
+      dlgTitle: st.tab === 'eod' ? 'EOD update' : 'Add task',
+      dlgSub: st.tab === 'eod' ? 'Log what you did today. Hours here feed your performance report.' : 'Set a tentative target and a fixed commitment. The fixed date drives your on-time score.',
+      stop: (ev) => ev.stopPropagation(),
+      isAdd: st.tab === 'add', isEod: st.tab === 'eod',
+      eStatus: E.status || 'In progress',
+      errors: st.errors, hasErrors: st.errors.length > 0, eErrors: st.eErrors, hasEErrors: st.eErrors.length > 0,
+      toast: st.toast, hasToast: !!st.toast,
+      openAddTab: () => this.setState({ panel: true, tab: 'add', errors: [] }),
+      openEodTab: () => this.setState({ panel: true, tab: 'eod', eErrors: [] }),
+      closePanel: () => this.setState({ panel: false }),
+      addTask: () => this.addTask(), saveEod: () => this.saveEod(),
+      clearForm: () => this.setState({ f: this.blankForm(), errors: [] }),
+      clearEod: () => this.setState({ e: this.blankEod(), eErrors: [] })
+    };
+  }
+}
+</script>
+</body>
+</html>

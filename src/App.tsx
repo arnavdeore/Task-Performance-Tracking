@@ -5,9 +5,9 @@ export default function App() {
         <h1 className="text-5xl font-extrabold tracking-tight text-[#1B2438]">Slate</h1>
         <p className="mt-3 text-[#5B667D]">Job tracking and performance portal</p>
         <span className="mt-7 inline-block rounded-full bg-[#232B5E] px-6 py-2.5 text-sm font-bold text-white">
-          Hello Slate
+          Hey Arnav 
         </span>
       </div>
     </div>
   )
-}
+ }

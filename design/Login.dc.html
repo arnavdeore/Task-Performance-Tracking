@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2457C5}
+</style>
+</helmet>
+<div style="width:440px;height:560px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:24px;background:#E4EDFC;color:#1B2438;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+<div style="width:100%;box-sizing:border-box;background:#FFFFFF;border:1px solid #DDE4EF;border-radius:20px;padding:28px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="position:relative;flex:0 0 auto;width:42px;height:42px;border-radius:14px;background:linear-gradient(160deg,#4C86F0 0%,#2457C5 55%,#1A3F94 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 3px 0 #173E94,0 8px 12px -4px rgba(36,87,197,.5)"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l8.5 4.2L12 12 3.5 7.7z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1.2"/><path d="M3.5 12l8.5 4.2 8.5-4.2" stroke="#CFE0FB" stroke-width="2"/><path d="M3.5 16.2l8.5 4.3 8.5-4.3" stroke="#93B4F0" stroke-width="2"/></svg><span style="position:absolute;right:-3px;bottom:-2px;width:11px;height:11px;border-radius:50%;background:#1E9E68;border:2px solid #FFFFFF;box-sizing:border-box"></span></span>
+<span style="display:flex;flex-direction:column;line-height:1.1"><span style="font-size:24px;font-weight:800;letter-spacing:-.02em">Slate</span><span style="margin-top:3px;font-size:11px;font-weight:600;color:#5B667D">Work and performance</span></span>
+</div>
+<div>
+<h1 style="margin:0;font-size:22px;font-weight:800">Sign in</h1>
+<p style="margin:6px 0 0;font-size:13px;line-height:1.5;color:#5B667D">This is a private portal. Only your account can open your tasks.</p>
+</div>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600">Email
+<input type="email" placeholder="you@example.com" style="height:48px;box-sizing:border-box;padding:0 14px;border-radius:12px;border:1px solid #C5CFDF;font-family:inherit;font-size:15px"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600">Password
+<input type="password" placeholder="Your password" style="height:48px;box-sizing:border-box;padding:0 14px;border-radius:12px;border:1px solid #C5CFDF;font-family:inherit;font-size:15px"></label>
+<a href="Main.dc.html" style="height:48px;border-radius:12px;background:#2457C5;color:#FFFFFF;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;text-decoration:none">Sign in</a>
+<a href="#" style="font-size:13px;font-weight:600;text-align:center;text-decoration:none;min-height:44px;display:flex;align-items:center;justify-content:center">Forgot password</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":440,"height":560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
