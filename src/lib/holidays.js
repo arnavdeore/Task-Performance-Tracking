@@ -11,6 +11,10 @@
 // nationally relevant set plus Maharashtra-relevant days. Confirm against your own
 // state's list before relying on it.
 //
+// Oct 2026 note: Dussehra (Vijaya Dashami) is Tuesday 20 Oct (confirmed by Arnav and by
+// Hindu calendar sources: Hindutone and Business Today, Oct 2026). An older bank list had
+// Vijaya Dashami on 21 Oct; that entry was removed so the calendar and thought strip agree.
+//
 // Banks are also closed on every Sunday and on the SECOND and FOURTH Saturday of each
 // month - that is computed, not listed, by isBankSaturday() below.
 
@@ -42,9 +46,8 @@ export const HOL_BY_YEAR = {
     '2026-08-28': 'Raksha Bandhan',
     '2026-09-04': 'Janmashtami',
     '2026-09-15': 'Ganesh Chaturthi',
-    '2026-10-19': 'Maha Ashtami',
-    '2026-10-20': 'Maha Navami',
-    '2026-10-21': 'Vijaya Dashami',
+    '2026-10-19': 'Durga Ashtami and Maha Navami',
+    '2026-10-20': 'Dussehra (Vijaya Dashami)',
     '2026-10-26': 'Valmiki Jayanti',
     '2026-11-08': 'Diwali',
     '2026-11-09': 'Diwali holiday',
@@ -82,6 +85,46 @@ export function holidaysInMonth(year, monthIndex) {
   for (let d = 1; d <= days; d++) {
     const iso = year + '-' + String(monthIndex + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
     const name = holidayName(iso);
+    if (name) out.push({ date: iso, day: d, name });
+  }
+  return out;
+}
+
+// Hindu festivals and observances that are NOT public holidays. They get a lavender marker
+// in the calendar. Same rule as above: hand-kept, year-specific, never guessed. A year that
+// is missing shows none. Sources for 2026: Hindutone October 2026 festival guide, Business
+// Today Navratri 2026 calendar, and the festival list already used by the thought strip.
+export const FESTIVALS_BY_YEAR = {
+  2026: {
+    '2026-10-10': 'Mahalaya Amavasya',
+    '2026-10-11': 'Sharad Navratri begins',
+    '2026-10-17': 'Tula Sankranti',
+    '2026-10-22': 'Papankusha Ekadashi',
+    '2026-10-25': 'Sharad Purnima (Kojagiri)',
+    '2026-10-29': 'Karwa Chauth',
+    '2026-11-01': 'Ahoi Ashtami',
+    '2026-11-06': 'Dhanteras',
+    '2026-11-07': 'Choti Diwali',
+    '2026-11-21': 'Tulsi Vivah',
+    '2026-12-04': 'Utpanna Ekadashi',
+    '2026-12-20': 'Gita Jayanti',
+    '2026-12-23': 'Margashirsha Purnima'
+  }
+};
+
+/** iso: 'YYYY-MM-DD'. Returns the Hindu festival name, or '' when there is none. */
+export function festivalName(iso) {
+  const year = Number(iso.slice(0, 4));
+  return (FESTIVALS_BY_YEAR[year] || {})[iso] || '';
+}
+
+/** Every Hindu festival in one month, for the lavender chips under the calendar grid. */
+export function festivalsInMonth(year, monthIndex) {
+  const days = new Date(year, monthIndex + 1, 0).getDate();
+  const out = [];
+  for (let d = 1; d <= days; d++) {
+    const iso = year + '-' + String(monthIndex + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    const name = festivalName(iso);
     if (name) out.push({ date: iso, day: d, name });
   }
   return out;

@@ -41,7 +41,7 @@ Claude: update this section every time a step is finished, and tell Arnav what y
 - [x] Phase 1: prepare environment
 - [ ] Phase 2: build the frontend with mock data (in progress)
   - [x] App shell + top nav
-  - [ ] Dashboard (built in file order of design/Main.dc.html): [x] greeting + stat tiles, [x] thought strip, [x] Today's tasks, [x] Performance card (all live on Pages), [x] Deadline watch (built, waiting for Arnav's browser check); not started: month calendar, Work by category, This week, Latest updates. Later: clicking a Work-by-category slice filters Deadline watch (design behaviour).
+  - [ ] Dashboard (built in file order of design/Main.dc.html): [x] greeting + stat tiles, [x] thought strip, [x] Today's tasks, [x] Performance card, [x] Deadline watch (all live on Pages), [x] Month calendar with holidays, bank Saturdays and Hindu festivals/tithi (built, waiting for Arnav's browser check); not started: Work by category, This week, Latest updates. Later: clicking a Work-by-category slice filters Deadline watch (design behaviour).
   - [ ] Tasks, Performance, Login, mobile layouts
 
 ## Hard rules
@@ -55,3 +55,4 @@ Claude: update this section every time a step is finished, and tell Arnav what y
 - dev: `npm run dev`
 - build: `npm run build`
 - deploy: GitHub Actions on push to main (set up in Phase 1)
+- Dussehra 2026 is Tue 20 Oct (confirmed by Arnav); calendar and thought strip agree. Tithi shown in the calendar is computed at about 6 am by src/lib/thoughts.js and can differ from a printed Kalnirnay by a day near tithi changes; festivals come from hand-kept tables in src/lib/holidays.js.

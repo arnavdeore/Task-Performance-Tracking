@@ -118,3 +118,22 @@ export const deadlineRows: DeadlineRow[] = [
   { id: 'd4', title: 'Refresh monthly report', category: 'bi', tentative: '15 Oct', fixed: '17 Oct', status: 'todo', overdue: false, dueSoon: true },
   { id: 'd5', title: 'Update master data tracker', category: 'mgmt', tentative: '18 Oct', fixed: '20 Oct', status: 'todo', overdue: false, dueSoon: false },
 ]
+
+// ---- Month calendar ----
+
+export type CalendarDeadline = {
+  title: string
+  /** ISO dates, YYYY-MM-DD */
+  tentative: string
+  fixed: string
+}
+
+export const calendarDeadlines: CalendarDeadline[] = [
+  { title: 'Review sales dashboard KPIs', tentative: '2026-10-10', fixed: '2026-10-11' },
+  { title: 'Fix sync script bug', tentative: '2026-10-13', fixed: '2026-10-15' },
+  { title: 'Clean customer export file', tentative: '2026-10-14', fixed: '2026-10-16' },
+  { title: 'Refresh monthly report', tentative: '2026-10-15', fixed: '2026-10-17' },
+  { title: 'Update master data tracker', tentative: '2026-10-18', fixed: '2026-10-20' },
+  { title: 'Quarter close data pack', tentative: '2026-10-26', fixed: '2026-10-30' },
+  { title: 'Branch mapping refresh', tentative: '2026-11-03', fixed: '2026-11-05' },
+]

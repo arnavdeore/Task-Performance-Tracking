@@ -190,3 +190,67 @@ body {
   color: #ffffff;
   font-weight: 700;
 }
+
+/* Dashboard month calendar */
+.wkh {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-muted);
+  letter-spacing: 0.02em;
+}
+.day {
+  position: relative;
+  box-sizing: border-box;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.55);
+  color: #2e384d;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
+}
+.day.sat {
+  background: var(--color-bank-cell);
+  color: #55617a;
+}
+.day.hol {
+  background: var(--color-holiday-cell);
+  color: #6b4a07;
+}
+.day:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+.day.sel {
+  background: #ffffff;
+  box-shadow:
+    0 0 0 2px var(--color-navy) inset,
+    0 10px 16px -12px rgba(35, 43, 94, 0.5);
+}
+.day.today {
+  background: var(--color-navy);
+  color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 12px 18px -12px rgba(35, 43, 94, 0.9);
+}
+.day.today.sel {
+  box-shadow:
+    0 0 0 2px #ffffff inset,
+    0 12px 18px -12px rgba(35, 43, 94, 0.9);
+}
+.day:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 2px;
+}

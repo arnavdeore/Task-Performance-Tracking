@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { createThoughtLib } from '../lib/thoughts.js'
+import { thoughtLib as lib } from '../lib/thoughtLib'
 
-const lib = createThoughtLib()
 const TEN_MINUTES = 600000
 
 /** Which 10-minute slot of which day a time falls in; the thought only changes when this changes. */
