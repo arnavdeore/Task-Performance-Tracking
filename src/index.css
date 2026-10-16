@@ -1,1 +1,188 @@
 @import "tailwindcss";
+
+/* Colours from docs/design-notes.md. Use as bg-navy, text-blue-dark, bg-red-pastel, etc. */
+@theme {
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  --color-ink: #1b2438;
+  --color-muted: #5b667d;
+  --color-muted-2: #4a556b;
+
+  --color-navy: #232b5e;
+
+  --color-blue: #2457c5;
+  --color-blue-dark: #1a3f94;
+  --color-blue-pastel: #e4edfc;
+  --color-blue-card: #cfe0f9;
+
+  --color-green: #1e9e68;
+  --color-green-dark: #0f6b43;
+  --color-green-pastel: #e1f4ea;
+  --color-green-card: #d3efe1;
+
+  --color-red: #c23a3a;
+  --color-red-dark: #a12b2b;
+  --color-red-pastel: #fce6e6;
+  --color-red-border: #f0b4b4;
+  --color-red-card: #fbd9d2;
+
+  --color-lavender: #8b7be0;
+  --color-lavender-dark: #4c3aa6;
+  --color-lavender-pastel: #ece8fb;
+  --color-lavender-card: #e4e2fa;
+
+  --color-amber: #dd9a22;
+  --color-amber-dark: #7a5200;
+  --color-amber-pastel: #fbefd2;
+  --color-amber-card: #fde3c8;
+
+  --color-holiday-cell: #fbefd6;
+  --color-bank-cell: #e7ecf5;
+}
+
+body {
+  margin: 0;
+  background: #dce5f4;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+a {
+  color: var(--color-blue);
+}
+a:hover {
+  color: var(--color-blue-dark);
+}
+
+/* Card kinds */
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 1px 0 #ffffff inset,
+    0 24px 40px -28px rgba(36, 50, 120, 0.38);
+}
+.white {
+  background: #ffffff;
+  box-shadow:
+    0 36px 56px -28px rgba(36, 50, 120, 0.42),
+    0 2px 4px rgba(36, 50, 120, 0.05);
+}
+
+/* Top nav tabs */
+.nav3 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 22px;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: var(--color-muted-2);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.nav3:hover {
+  background: #eef2fb;
+  color: var(--color-navy);
+}
+.nav3.on {
+  background: var(--color-navy);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 12px 18px -10px rgba(35, 43, 94, 0.7);
+}
+
+/* Pill buttons: primary (.dark) and secondary (.light) */
+.pillbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.12s ease,
+    background 0.15s ease;
+}
+.pillbtn.dark {
+  background: var(--color-navy);
+  color: #ffffff;
+  box-shadow: 0 12px 20px -10px rgba(35, 43, 94, 0.7);
+}
+.pillbtn.dark:hover {
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+.pillbtn.light {
+  background: #ffffff;
+  color: var(--color-navy);
+  box-shadow: 0 6px 14px -8px rgba(35, 43, 94, 0.35);
+}
+.pillbtn.light:hover {
+  transform: translateY(-1px);
+  color: var(--color-navy);
+}
+.pillbtn:active {
+  transform: translateY(1px);
+}
+
+/* Round icon button (search, bell) */
+.icobtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  color: var(--color-navy);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+.icobtn:hover {
+  background: rgba(35, 43, 94, 0.08);
+}
+
+/* Segmented control */
+.seg {
+  display: inline-flex;
+  gap: 5px;
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 1px 3px rgba(35, 43, 94, 0.14);
+}
+.segb {
+  height: 38px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-muted-2);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.segb:hover {
+  color: var(--color-navy);
+}
+.segb.on {
+  background: var(--color-navy);
+  color: #ffffff;
+  font-weight: 700;
+}
