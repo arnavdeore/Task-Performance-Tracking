@@ -73,3 +73,23 @@ export const todayTasks: TodayTask[] = [
     loggedHours: 1.5,
   },
 ]
+
+// ---- Performance card (this month) ----
+
+export type PerformanceSummary = {
+  /** Percent of fixed deadlines met. */
+  fixedMetPercent: number
+  /** Percent of tentative dates hit. */
+  tentativeHitPercent: number
+  /** How close the time estimates were to the time actually logged, in percent. */
+  estimateAccuracyPercent: number
+  /** Average days late, across tasks that finished late. */
+  averageDelayDays: number
+}
+
+export const performanceSummary: PerformanceSummary = {
+  fixedMetPercent: 87,
+  tentativeHitPercent: 70,
+  estimateAccuracyPercent: 82,
+  averageDelayDays: 1.3,
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PerformanceCard from '../components/PerformanceCard'
 import StatTile from '../components/StatTile'
 import ThoughtStrip from '../components/ThoughtStrip'
 import TodayTasks from '../components/TodayTasks'
@@ -26,9 +27,10 @@ export default function Dashboard() {
 
       <ThoughtStrip />
 
-      {/* Row 2. Performance (Dashboard step 3) will join Today's tasks here. */}
+      {/* Row 2: Today's tasks and Performance, side by side. */}
       <div className="flex flex-wrap items-stretch gap-5">
         <TodayTasks />
+        <PerformanceCard />
       </div>
     </>
   )
