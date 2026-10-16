@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import StatTile from '../components/StatTile'
 import ThoughtStrip from '../components/ThoughtStrip'
+import TodayTasks from '../components/TodayTasks'
 import { statTiles } from '../data/dashboard'
 import { greeting, longDate } from '../lib/dates'
 
@@ -24,6 +25,11 @@ export default function Dashboard() {
       </div>
 
       <ThoughtStrip />
+
+      {/* Row 2. Performance (Dashboard step 3) will join Today's tasks here. */}
+      <div className="flex flex-wrap items-stretch gap-5">
+        <TodayTasks />
+      </div>
     </>
   )
 }
