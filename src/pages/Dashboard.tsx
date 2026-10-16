@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import DeadlineWatch from '../components/DeadlineWatch'
+import LatestUpdates from '../components/LatestUpdates'
 import MonthCalendar from '../components/MonthCalendar'
 import PerformanceCard from '../components/PerformanceCard'
 import StatTile from '../components/StatTile'
@@ -49,6 +50,7 @@ export default function Dashboard() {
       {/* Row 4 (last row, so it grows to fill the frame): This week, then Latest updates beside it. */}
       <div className="flex flex-[1_1_auto] flex-wrap items-stretch gap-5">
         <WeekStrip today={today} />
+        <LatestUpdates />
       </div>
     </>
   )

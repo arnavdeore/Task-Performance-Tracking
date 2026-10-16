@@ -148,6 +148,39 @@ export function mockWeekDone(dayIndex: number, todayIndex: number): number {
   return 0
 }
 
+// ---- Latest updates (the two most recent EOD entries) ----
+
+export type Mood = 'On track' | 'At risk' | 'Blocked'
+
+export type LatestUpdate = {
+  id: string
+  title: string
+  hours: string
+  mood: Mood
+  comment: string
+  /** Shown as written, e.g. "Yesterday, 12 Oct". Phase 3 formats this from the real date. */
+  when: string
+}
+
+export const latestUpdates: LatestUpdate[] = [
+  {
+    id: 'u1',
+    title: 'Fix sync script bug',
+    hours: '2h',
+    mood: 'On track',
+    comment: 'Reproduced the bug. The date parser fails on blank rows in the export.',
+    when: 'Yesterday, 12 Oct',
+  },
+  {
+    id: 'u2',
+    title: 'Clean customer export file',
+    hours: '1.5h',
+    mood: 'At risk',
+    comment: 'Removed duplicates. Three columns still need mapping from the old template.',
+    when: 'Yesterday, 12 Oct',
+  },
+]
+
 // ---- Month calendar ----
 
 export type CalendarDeadline = {
