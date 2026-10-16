@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import AddTaskModal from '../components/AddTaskModal'
 import EodLog from '../components/EodLog'
 import EodModal from '../components/EodModal'
@@ -30,11 +31,19 @@ export default function Tasks() {
   const [filter, setFilter] = useState<CategoryFilter>('all')
   // The card last touched gets a blue ring.
   const [selectedId, setSelectedId] = useState('')
-  // Which pop-up is open, and (for the EOD one) which task it opened on.
-  const [panel, setPanel] = useState<'add' | 'eod' | null>(null)
+  // The EOD pop-up, and which task it opened on.
+  const [eodOpen, setEodOpen] = useState(false)
   const [eodTaskId, setEodTaskId] = useState('')
   const [toast, setToast] = useState('')
   const today = MOCK_TODAY
+
+  // The Add task pop-up is open whenever the address is /tasks/new. That way the phone's Back button closes it,
+  // and the tab bar's Add button can open it from any page.
+  const location = useLocation()
+  const navigate = useNavigate()
+  const addOpen = location.pathname === '/tasks/new'
+  const openAdd = () => navigate('/tasks/new')
+  const closeAdd = () => navigate('/tasks', { replace: true })
 
   // The confirmation message disappears by itself after a few seconds.
   useEffect(() => {
@@ -54,13 +63,13 @@ export default function Tasks() {
     setTasks((all) => [task, ...all])
     setSelectedId(task.id)
     setFilter('all')
-    setPanel(null)
+    closeAdd()
     setToast(`Added "${task.title}" to ${statusNames[task.status]}.`)
   }
 
   function openEod(taskId: string) {
     setEodTaskId(taskId)
-    setPanel('eod')
+    setEodOpen(true)
   }
 
   // Saving an update adds its hours to the task, sets the status chosen, copies the text to the card note,
@@ -84,7 +93,7 @@ export default function Tasks() {
     )
     setEodLog((log) => [entry, ...log])
     setSelectedId(task.id)
-    setPanel(null)
+    setEodOpen(false)
     setToast(`EOD update saved for "${task.title}".`)
   }
 
@@ -174,7 +183,7 @@ export default function Tasks() {
             </svg>
             EOD update
           </button>
-          <button type="button" className="pillbtn dark h-[50px] px-7 text-[15px]" onClick={() => setPanel('add')}>
+          <button type="button" className="pillbtn dark h-[50px] px-7 text-[15px]" onClick={openAdd}>
             <svg
               aria-hidden="true"
               width="18"
@@ -196,9 +205,9 @@ export default function Tasks() {
 
       <EodLog log={eodLog} today={today} />
 
-      {panel === 'add' && <AddTaskModal onClose={() => setPanel(null)} onAdd={addTask} />}
-      {panel === 'eod' && (
-        <EodModal tasks={tasks} initialTaskId={eodTaskId} onClose={() => setPanel(null)} onSave={saveEod} />
+      {addOpen && <AddTaskModal onClose={closeAdd} onAdd={addTask} />}
+      {eodOpen && (
+        <EodModal tasks={tasks} initialTaskId={eodTaskId} onClose={() => setEodOpen(false)} onSave={saveEod} />
       )}
       {toast && <Toast message={toast} />}
     </>

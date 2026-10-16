@@ -9,7 +9,7 @@ const NUMBER_COLOUR: Record<Tone, string> = {
 }
 
 const TILE =
-  'white box-border flex min-w-[172px] flex-col gap-[3px] rounded-[24px] px-5 py-4 text-ink no-underline transition duration-200 hover:-translate-y-[3px] hover:text-ink'
+  'white box-border flex min-w-0 flex-col md:min-w-[172px] gap-[3px] rounded-[24px] px-5 py-4 text-ink no-underline transition duration-200 hover:-translate-y-[3px] hover:text-ink'
 
 /** Label, big number and a sub-line that adds information. A tile with `to` is a link; without it, a plain card. */
 export default function StatTile({ label, value, sub, tone, to }: StatTileData) {

@@ -68,7 +68,12 @@ Claude: update this section every time a step is finished, and tell Arnav what y
     - [x] 4. By category table (`CategoryTable`, always "this month" like the design) and Late and overdue (`LateAndOverdue`); the selected category lives in `Performance.tsx`. Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser. This completes the Performance page.
   - [ ] Login, then the three Mobile screens (restyle them first). Arnav said to start.
     - [x] Login (`src/pages/Login.tsx`, restyled to match the desktop pages; own `/login` route without the top nav via `ShellLayout` in `src/App.tsx`; logo drawing shared as `SlateMark`). Sign in is a stand-in: it checks the fields and opens the Dashboard; Supabase auth comes in Phase 3. Nothing links to `#/login` yet. Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
-    - [ ] NEXT: Mobile screens (MobileHome, MobileTasks, MobileAdd) restyled to match the desktop pages
+    - Mobile screens: Arnav chose "Option C" = the SAME pages adapted for phones under 768px (`md`), not separate mobile pages. The three Mobile*.dc.html files are only a guide to what a phone should show. Steps:
+      - [x] 1. Bottom tab bar (`BottomNav`: Home, Tasks, round Add, Stats = Performance, Settings; `md:hidden`). `TopNav` hides its centre tabs under `md`. `AppShell` has tighter padding on phones and room for the bar (`bottomNav` prop). Add task now lives at the address `#/tasks/new` (route `/tasks/*`; `Tasks.tsx` opens the pop-up when the path is `/tasks/new`, so Back closes it). Toast moves above the bar on phones. Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
+      - [x] 2. Phone Home: `Dashboard.tsx` reorders the same sections on phones (order: greeting, thought, 2x2 tiles, Deadline watch, Today's tasks, This week, Performance, Work by category, calendar, Latest updates). Technique: rows are `contents md:flex...` and each section sits in `<div className="order-N md:contents md:order-none">` so desktop is unchanged. Phone greeting is smaller and the date-only subtitle; `StatTile` min-width only from `md`; gaps are 16px on phones. Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
+      - [ ] NEXT: 3. Phone Tasks (one status at a time with the category pills and search)
+      - [ ] 4. Phone Add task (existing form as a full-screen sheet with a Back button)
+      - [ ] 5. Check Performance and Login at phone width
 - [ ] Phase 3: Supabase. [ ] Phase 4: test and error handling. [ ] Phase 5: improvements.
 
 ## Current state and handoff notes (read this first in a new session)

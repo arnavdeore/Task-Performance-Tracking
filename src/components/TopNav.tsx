@@ -34,7 +34,8 @@ export default function TopNav() {
         <span className="text-[22px] font-extrabold tracking-[-0.02em]">Slate</span>
       </NavLink>
 
-      <nav aria-label="Main" className="flex flex-1 flex-wrap items-center justify-center gap-1">
+      {/* On phones the bottom tab bar (BottomNav) replaces these tabs. */}
+      <nav aria-label="Main" className="hidden flex-1 flex-wrap items-center justify-center gap-1 md:flex">
         {TABS.map((tab) => (
           <NavLink
             key={tab.to}
@@ -68,7 +69,7 @@ export default function TopNav() {
           >
             A
           </div>
-          <div className="flex flex-col leading-tight">
+          <div className="hidden flex-col leading-tight sm:flex">
             <span className="text-[13px] font-bold">Arnav</span>
             <span className="text-[11px] text-muted">Data analyst</span>
           </div>
