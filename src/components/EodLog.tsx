@@ -1,14 +1,8 @@
 import { statusNames } from '../data/tasks'
-import type { EodUpdate, TaskStatus } from '../data/tasks'
+import type { EodUpdate } from '../data/tasks'
 import { formatIso, weekdayOfIso } from '../lib/dates'
 import { MOOD_COLOUR } from './moodColours'
-
-const STATUS_COLOUR: Record<TaskStatus, string> = {
-  todo: 'bg-[#EEF1F6] text-muted-2',
-  progress: 'bg-blue-pastel text-blue-dark',
-  waiting: 'bg-lavender-pastel text-lavender-dark',
-  done: 'bg-green-pastel text-green-dark',
-}
+import { STATUS_COLOUR } from './statusColours'
 
 type EodLogProps = {
   log: EodUpdate[]

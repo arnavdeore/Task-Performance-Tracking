@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import AddTaskModal from '../components/AddTaskModal'
 import EodLog from '../components/EodLog'
+import EodModal from '../components/EodModal'
 import StatTile from '../components/StatTile'
 import TaskBoard from '../components/TaskBoard'
 import Toast from '../components/Toast'
 import { categoryNames } from '../data/dashboard'
 import type { CategoryKey } from '../data/dashboard'
 import { initialEodLog, initialTasks, MOCK_TODAY, statusNames } from '../data/tasks'
-import type { NewTask, Task, TaskStatus } from '../data/tasks'
+import type { EodUpdate, NewEodUpdate, NewTask, Task, TaskStatus } from '../data/tasks'
 import { dueInWeekCount, hoursLoggedOn, openTasks, overdueCount, tasksLoggedOn } from '../lib/taskStats'
 
 export type CategoryFilter = CategoryKey | 'all'
@@ -25,12 +26,13 @@ function plural(count: number, one: string, many: string): string {
 export default function Tasks() {
   // The task list and the EOD log live here so the board and the pop-ups can share them. Phase 3 loads them from Supabase.
   const [tasks, setTasks] = useState(initialTasks)
-  const [eodLog] = useState(initialEodLog)
+  const [eodLog, setEodLog] = useState(initialEodLog)
   const [filter, setFilter] = useState<CategoryFilter>('all')
   // The card last touched gets a blue ring.
   const [selectedId, setSelectedId] = useState('')
-  // Which pop-up is open. The EOD update pop-up joins in the next step.
-  const [panel, setPanel] = useState<'add' | null>(null)
+  // Which pop-up is open, and (for the EOD one) which task it opened on.
+  const [panel, setPanel] = useState<'add' | 'eod' | null>(null)
+  const [eodTaskId, setEodTaskId] = useState('')
   const [toast, setToast] = useState('')
   const today = MOCK_TODAY
 
@@ -54,6 +56,36 @@ export default function Tasks() {
     setFilter('all')
     setPanel(null)
     setToast(`Added "${task.title}" to ${statusNames[task.status]}.`)
+  }
+
+  function openEod(taskId: string) {
+    setEodTaskId(taskId)
+    setPanel('eod')
+  }
+
+  // Saving an update adds its hours to the task, sets the status chosen, copies the text to the card note,
+  // and puts the entry at the top of the log. Done stamps today's date; any other status clears it.
+  function saveEod(update: NewEodUpdate) {
+    const task = tasks.find((item) => item.id === update.taskId)
+    if (!task) return
+    const entry: EodUpdate = { ...update, id: `l${Date.now()}`, date: today, title: task.title }
+    setTasks((all) =>
+      all.map((item) =>
+        item.id === task.id
+          ? {
+              ...item,
+              status: update.statusAfter,
+              loggedHours: Math.round((item.loggedHours + update.hours) * 100) / 100,
+              completedOn: update.statusAfter === 'done' ? today : '',
+              notes: `EOD: ${update.comment}`,
+            }
+          : item,
+      ),
+    )
+    setEodLog((log) => [entry, ...log])
+    setSelectedId(task.id)
+    setPanel(null)
+    setToast(`EOD update saved for "${task.title}".`)
   }
 
   // Moving a card to Done stamps today's date as the completed date; moving it anywhere else clears it.
@@ -125,7 +157,7 @@ export default function Tasks() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <button type="button" className="pillbtn light h-[50px] px-[26px] text-sm">
+          <button type="button" className="pillbtn light h-[50px] px-[26px] text-sm" onClick={() => openEod('')}>
             <svg
               aria-hidden="true"
               width="18"
@@ -160,11 +192,14 @@ export default function Tasks() {
         </div>
       </div>
 
-      <TaskBoard tasks={visibleTasks} today={today} selectedId={selectedId} onMove={moveTask} />
+      <TaskBoard tasks={visibleTasks} today={today} selectedId={selectedId} onMove={moveTask} onLog={openEod} />
 
       <EodLog log={eodLog} today={today} />
 
       {panel === 'add' && <AddTaskModal onClose={() => setPanel(null)} onAdd={addTask} />}
+      {panel === 'eod' && (
+        <EodModal tasks={tasks} initialTaskId={eodTaskId} onClose={() => setPanel(null)} onSave={saveEod} />
+      )}
       {toast && <Toast message={toast} />}
     </>
   )

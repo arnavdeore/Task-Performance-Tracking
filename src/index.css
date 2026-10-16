@@ -329,6 +329,73 @@ textarea.fld {
   font-size: 13.5px;
 }
 
+/* "Which task is this about?" rows in the EOD pop-up */
+.pickrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1.5px solid #e1e8f4;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.pickrow:hover {
+  border-color: #9db9ee;
+}
+.pickrow.on {
+  border-color: var(--color-navy);
+  background: #eef2fc;
+  box-shadow: 0 8px 16px -12px rgba(35, 43, 94, 0.6);
+}
+
+/* Capsule bars on the Performance page */
+.pick {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+.pick:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+.pick:hover .cap {
+  filter: brightness(1.07);
+}
+.cap {
+  width: 24px;
+  border-radius: 999px;
+  border: 3px solid #ffffff;
+  box-sizing: border-box;
+  box-shadow: 0 8px 14px -6px rgba(35, 43, 94, 0.35);
+  transition: height 0.4s ease;
+}
+.cap.hatch {
+  background: repeating-linear-gradient(135deg, #c3d0e4 0 4px, #dce5f2 4px 9px);
+}
+.cap.blue {
+  background: linear-gradient(180deg, #5b93f2, #2457c5);
+}
+.cap.green {
+  background: linear-gradient(180deg, #3cc38c, #1e9e68);
+}
+/* Two capsules side by side (Weekly completion): share the column on narrow screens instead of overflowing. */
+.cap.pair {
+  width: min(24px, calc(50% - 2px));
+}
+
 /* Dashboard month calendar */
 .wkh {
   text-align: center;

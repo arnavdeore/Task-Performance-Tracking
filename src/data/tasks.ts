@@ -30,6 +30,9 @@ export type Task = {
 /** What the Add task form hands over; the page adds the id, the logged hours and the completed date. */
 export type NewTask = Omit<Task, 'id' | 'loggedHours' | 'completedOn'>
 
+/** What the EOD update form hands over; the page adds the id, the date and the task title. */
+export type NewEodUpdate = Omit<EodUpdate, 'id' | 'date' | 'title'>
+
 export type EodUpdate = {
   id: string
   /** ISO date */
