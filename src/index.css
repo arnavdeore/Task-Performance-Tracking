@@ -47,11 +47,15 @@ body {
   font-family: var(--font-sans);
 }
 
-a {
-  color: var(--color-blue);
-}
-a:hover {
-  color: var(--color-blue-dark);
+/* In the base layer so Tailwind classes like text-ink can override the default link colour.
+   (Styles outside a layer always beat Tailwind's classes, which turned card titles blue.) */
+@layer base {
+  a {
+    color: var(--color-blue);
+  }
+  a:hover {
+    color: var(--color-blue-dark);
+  }
 }
 
 /* Card kinds */
