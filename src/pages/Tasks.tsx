@@ -1,8 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import AddTaskModal from '../components/AddTaskModal'
+import EodLog from '../components/EodLog'
 import StatTile from '../components/StatTile'
+import TaskBoard from '../components/TaskBoard'
+import Toast from '../components/Toast'
 import { categoryNames } from '../data/dashboard'
 import type { CategoryKey } from '../data/dashboard'
-import { initialEodLog, initialTasks, MOCK_TODAY } from '../data/tasks'
+import { initialEodLog, initialTasks, MOCK_TODAY, statusNames } from '../data/tasks'
+import type { NewTask, Task, TaskStatus } from '../data/tasks'
 import { dueInWeekCount, hoursLoggedOn, openTasks, overdueCount, tasksLoggedOn } from '../lib/taskStats'
 
 export type CategoryFilter = CategoryKey | 'all'
@@ -19,10 +24,47 @@ function plural(count: number, one: string, many: string): string {
 /** The Tasks page. Layout from design/Tasks.dc.html. */
 export default function Tasks() {
   // The task list and the EOD log live here so the board and the pop-ups can share them. Phase 3 loads them from Supabase.
-  const [tasks] = useState(initialTasks)
+  const [tasks, setTasks] = useState(initialTasks)
   const [eodLog] = useState(initialEodLog)
   const [filter, setFilter] = useState<CategoryFilter>('all')
+  // The card last touched gets a blue ring.
+  const [selectedId, setSelectedId] = useState('')
+  // Which pop-up is open. The EOD update pop-up joins in the next step.
+  const [panel, setPanel] = useState<'add' | null>(null)
+  const [toast, setToast] = useState('')
   const today = MOCK_TODAY
+
+  // The confirmation message disappears by itself after a few seconds.
+  useEffect(() => {
+    if (!toast) return
+    const timer = setTimeout(() => setToast(''), 3500)
+    return () => clearTimeout(timer)
+  }, [toast])
+
+  // A new task goes to the top of its column. The filter resets to All so the new card is visible.
+  function addTask(newTask: NewTask) {
+    const task: Task = {
+      ...newTask,
+      id: `n${Date.now()}`,
+      loggedHours: 0,
+      completedOn: newTask.status === 'done' ? today : '',
+    }
+    setTasks((all) => [task, ...all])
+    setSelectedId(task.id)
+    setFilter('all')
+    setPanel(null)
+    setToast(`Added "${task.title}" to ${statusNames[task.status]}.`)
+  }
+
+  // Moving a card to Done stamps today's date as the completed date; moving it anywhere else clears it.
+  function moveTask(id: string, to: TaskStatus) {
+    setTasks((all) =>
+      all.map((task) => (task.id === id ? { ...task, status: to, completedOn: to === 'done' ? today : '' } : task)),
+    )
+    setSelectedId(id)
+  }
+
+  const visibleTasks = filter === 'all' ? tasks : tasks.filter((task) => task.category === filter)
 
   const open = openTasks(tasks)
   const overdue = overdueCount(tasks, today)
@@ -100,7 +142,7 @@ export default function Tasks() {
             </svg>
             EOD update
           </button>
-          <button type="button" className="pillbtn dark h-[50px] px-7 text-[15px]">
+          <button type="button" className="pillbtn dark h-[50px] px-7 text-[15px]" onClick={() => setPanel('add')}>
             <svg
               aria-hidden="true"
               width="18"
@@ -117,6 +159,13 @@ export default function Tasks() {
           </button>
         </div>
       </div>
+
+      <TaskBoard tasks={visibleTasks} today={today} selectedId={selectedId} onMove={moveTask} />
+
+      <EodLog log={eodLog} today={today} />
+
+      {panel === 'add' && <AddTaskModal onClose={() => setPanel(null)} onAdd={addTask} />}
+      {toast && <Toast message={toast} />}
     </>
   )
 }

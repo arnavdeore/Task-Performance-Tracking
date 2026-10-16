@@ -27,6 +27,9 @@ export type Task = {
   notes: string
 }
 
+/** What the Add task form hands over; the page adds the id, the logged hours and the completed date. */
+export type NewTask = Omit<Task, 'id' | 'loggedHours' | 'completedOn'>
+
 export type EodUpdate = {
   id: string
   /** ISO date */

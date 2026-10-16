@@ -57,10 +57,10 @@ Claude: update this section every time a step is finished, and tell Arnav what y
     - Dashboard is complete.
   - [ ] Tasks page, in five small steps (mock data in `src/data/tasks.ts`, which pretends today is `MOCK_TODAY` = 13 Oct 2026 like the design; stat maths in `src/lib/taskStats.ts`; the task list, EOD log and category filter state live in `src/pages/Tasks.tsx`):
     - [x] 1. Header, three stat tiles, category filter pills, overdue pill, EOD update / Add task buttons (buttons do nothing yet). `StatTile` now works without a link. Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
-    - [ ] NEXT: 2. Board (four columns, task cards, category filter, Start / Mark done / Resume / Reopen)
-    - [ ] 3. EOD updates log under the board
-    - [ ] 4. Add task pop-up with validation
-    - [ ] 5. EOD update pop-up with validation, toast, hours added to the task (Cleanups done: thought strip review buttons removed, Slate favicon, README rewritten.)
+    - [x] 2. Board (`TaskBoard`, `TaskCard`; styles `.tcard .dchip` in `src/index.css`): four columns, category filter, Start / Mark done / Resume / Reopen move cards and the stat tiles follow. "Log update" is inert until step 5 (`TaskCard` takes an optional `onLog`). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
+    - [x] 3. EOD updates log under the board (`EodLog`; mood chip colours shared with Latest updates in `src/components/moodColours.ts`). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
+    - [x] 4. Add task pop-up with validation (`Modal` is reusable for the EOD pop-up, `AddTaskModal`, `Toast`; form styles `.fld .lbl .grp .grph .dlg` in `src/index.css`; `panel` and `toast` state in `Tasks.tsx`). Built and passes `npm run build`; NOT yet confirmed by Arnav in the browser.
+    - [ ] NEXT: 5. EOD update pop-up with validation, toast, hours added to the task (Cleanups done: thought strip review buttons removed, Slate favicon, README rewritten.)
     - [ ] Latest updates
   - [ ] Tasks page (board + Add task and EOD pop-ups)
   - [ ] Performance page

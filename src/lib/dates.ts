@@ -21,6 +21,19 @@ export function daysBetween(fromIso: string, toIso: string): number {
   return Math.round((utc(toIso) - utc(fromIso)) / 86400000)
 }
 
+/** An ISO date (YYYY-MM-DD) as "13 Oct", or "not set" when empty. */
+export function formatIso(iso: string): string {
+  if (!iso) return 'not set'
+  const [, month, day] = iso.split('-').map(Number)
+  return `${day} ${MONTHS[month - 1]}`
+}
+
+/** "Mon", "Tue" … for an ISO date (YYYY-MM-DD). */
+export function weekdayOfIso(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number)
+  return WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]
+}
+
 /** "16 Oct" */
 export function shortDate(date: Date): string {
   return `${date.getDate()} ${MONTHS[date.getMonth()]}`

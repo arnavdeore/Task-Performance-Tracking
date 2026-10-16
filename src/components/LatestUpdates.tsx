@@ -1,13 +1,6 @@
 import { Link } from 'react-router-dom'
 import { latestUpdates } from '../data/dashboard'
-import type { Mood } from '../data/dashboard'
-
-// Full class names are written out so Tailwind can see them.
-const MOOD_COLOUR: Record<Mood, string> = {
-  'On track': 'bg-green-pastel text-green-dark',
-  'At risk': 'bg-amber-pastel text-amber-dark',
-  Blocked: 'bg-red-pastel text-red-dark',
-}
+import { MOOD_COLOUR } from './moodColours'
 
 /** "Latest updates": the two most recent EOD entries. Layout from design/Main.dc.html. */
 export default function LatestUpdates() {

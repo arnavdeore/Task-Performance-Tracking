@@ -217,6 +217,118 @@ body {
   box-shadow: 0 10px 18px -12px rgba(35, 43, 94, 0.45);
 }
 
+/* Tasks board card and its date chips */
+.tcard {
+  box-sizing: border-box;
+  border-radius: 22px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  background: #ffffff;
+  box-shadow:
+    0 20px 32px -24px rgba(36, 50, 120, 0.5),
+    0 1px 2px rgba(36, 50, 120, 0.06);
+}
+.tcard.sel {
+  box-shadow:
+    0 0 0 2px var(--color-blue),
+    0 18px 30px -14px rgba(36, 87, 197, 0.4);
+}
+.dchip {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.dchip.tentc {
+  background: #f3f8ff;
+  border: 1.5px dashed var(--color-blue);
+  color: var(--color-blue-dark);
+}
+.dchip.fixc {
+  background: #fdecec;
+  border: 1px solid var(--color-red-border);
+  color: var(--color-red-dark);
+}
+
+/* Pop-up forms (Add task, EOD update) */
+.fld {
+  box-sizing: border-box;
+  width: 100%;
+  height: 50px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1.5px solid #d3dcec;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-ink);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.fld:focus {
+  outline: none;
+  border-color: var(--color-navy);
+  box-shadow: 0 0 0 3px #cfd6f2;
+}
+textarea.fld {
+  height: auto;
+  padding: 14px 16px;
+  resize: vertical;
+  line-height: 1.6;
+}
+.fld.tent {
+  border: 1.5px dashed var(--color-blue);
+}
+.fld.fixd {
+  border-color: var(--color-red-border);
+  background: #fff8f8;
+}
+.lbl {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3a455c;
+}
+.grp {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  padding: 20px;
+  border-radius: 24px;
+  background: #f6f9fd;
+  border: 1px solid #e7edf7;
+}
+.grph {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #6b7691;
+}
+.dlg .seg {
+  display: flex;
+  padding: 5px;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1.5px #e1e8f4;
+}
+.dlg .segb {
+  flex: 1;
+  height: 42px;
+  padding: 0 8px;
+  font-size: 13.5px;
+}
+
 /* Dashboard month calendar */
 .wkh {
   text-align: center;
