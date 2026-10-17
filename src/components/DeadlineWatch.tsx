@@ -31,14 +31,10 @@ function matches(row: DeadlineRow, filter: Filter, category: CategoryKey | null)
   return true
 }
 
-type DeadlineWatchProps = {
-  /** When set (by clicking a slice of "Work by category"), only that category is listed. */
-  category?: CategoryKey | null
-}
-
-/** "Deadline watch": upcoming and overdue tasks with a three-way filter. Layout from design/Main.dc.html. */
-export default function DeadlineWatch({ category = null }: DeadlineWatchProps) {
+/** "Deadline watch": upcoming and overdue tasks with a three-way filter and category pills. Layout from design/Main.dc.html. */
+export default function DeadlineWatch() {
   const [filter, setFilter] = useState<Filter>('all')
+  const [category, setCategory] = useState<CategoryKey | null>(null)
   const rows = deadlineRows.filter((row) => matches(row, filter, category))
 
   return (
@@ -55,6 +51,31 @@ export default function DeadlineWatch({ category = null }: DeadlineWatchProps) {
               onClick={() => setFilter(item.key)}
             >
               {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Category pills: scroll sideways on a phone, as on the Tasks page. */}
+      <div className="-mx-1 overflow-x-auto px-1 pb-0.5">
+        <div className="seg" role="group" aria-label="Filter by category">
+          <button
+            type="button"
+            className={`segb${category === null ? ' on' : ''}`}
+            aria-pressed={category === null}
+            onClick={() => setCategory(null)}
+          >
+            All work
+          </button>
+          {(Object.keys(categoryNames) as CategoryKey[]).map((key) => (
+            <button
+              key={key}
+              type="button"
+              className={`segb${category === key ? ' on' : ''}`}
+              aria-pressed={category === key}
+              onClick={() => setCategory(key)}
+            >
+              {categoryNames[key]}
             </button>
           ))}
         </div>

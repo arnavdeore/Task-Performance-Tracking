@@ -1,6 +1,6 @@
 import { categoryNames } from '../data/dashboard'
 import type { CategoryKey } from '../data/dashboard'
-import { categoryPerformance, ESTIMATE_ACCURACY_PERCENT } from '../data/performance'
+import { categoryPerformance } from '../data/performance'
 import { hoursVariancePercent } from '../lib/performanceStats'
 
 // Full class names are written out so Tailwind can see them.
@@ -36,7 +36,7 @@ export default function CategoryTable({ selected, onSelect }: CategoryTableProps
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="m-0 text-[21px] font-bold">By category (this month)</h2>
         <span className="text-xs text-muted">
-          Hours: {actual}h actual vs {planned}h planned. Estimate accuracy {ESTIMATE_ACCURACY_PERCENT}%
+          Hours: {actual}h actual vs {planned}h planned
         </span>
       </div>
 

@@ -75,26 +75,6 @@ export const todayTasks: TodayTask[] = [
   },
 ]
 
-// ---- Performance card (this month) ----
-
-export type PerformanceSummary = {
-  /** Percent of fixed deadlines met. */
-  fixedMetPercent: number
-  /** Percent of tentative dates hit. */
-  tentativeHitPercent: number
-  /** How close the time estimates were to the time actually logged, in percent. */
-  estimateAccuracyPercent: number
-  /** Average days late, across tasks that finished late. */
-  averageDelayDays: number
-}
-
-export const performanceSummary: PerformanceSummary = {
-  fixedMetPercent: 87,
-  tentativeHitPercent: 70,
-  estimateAccuracyPercent: 82,
-  averageDelayDays: 1.3,
-}
-
 // ---- Deadline watch ----
 
 export type DeadlineStatus = 'todo' | 'progress' | 'overdue'
@@ -118,22 +98,6 @@ export const deadlineRows: DeadlineRow[] = [
   { id: 'd3', title: 'Clean customer export file', category: 'clean', tentative: '14 Oct', fixed: '16 Oct', status: 'progress', overdue: false, dueSoon: true },
   { id: 'd4', title: 'Refresh monthly report', category: 'bi', tentative: '15 Oct', fixed: '17 Oct', status: 'todo', overdue: false, dueSoon: true },
   { id: 'd5', title: 'Update master data tracker', category: 'mgmt', tentative: '18 Oct', fixed: '20 Oct', status: 'todo', overdue: false, dueSoon: false },
-]
-
-// ---- Work by category (tasks done this month) ----
-
-export type CategoryCount = {
-  key: CategoryKey
-  count: number
-  /** Slice and dot colour. */
-  color: string
-}
-
-export const categoryCounts: CategoryCount[] = [
-  { key: 'dev', count: 7, color: '#2457C5' },
-  { key: 'clean', count: 6, color: '#1E9E68' },
-  { key: 'mgmt', count: 4, color: '#A99BEA' },
-  { key: 'bi', count: 6, color: '#F0B44C' },
 ]
 
 // ---- This week ----

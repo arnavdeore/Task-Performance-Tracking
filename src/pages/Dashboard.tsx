@@ -2,14 +2,11 @@ import { useState } from 'react'
 import DeadlineWatch from '../components/DeadlineWatch'
 import LatestUpdates from '../components/LatestUpdates'
 import MonthCalendar from '../components/MonthCalendar'
-import PerformanceCard from '../components/PerformanceCard'
 import StatTile from '../components/StatTile'
 import ThoughtStrip from '../components/ThoughtStrip'
 import TodayTasks from '../components/TodayTasks'
 import WeekStrip from '../components/WeekStrip'
-import WorkByCategory from '../components/WorkByCategory'
 import { statTiles } from '../data/dashboard'
-import type { CategoryKey } from '../data/dashboard'
 import { greeting, longDate } from '../lib/dates'
 
 /*
@@ -21,7 +18,6 @@ import { greeting, longDate } from '../lib/dates'
  */
 export default function Dashboard() {
   const [today] = useState(() => new Date())
-  const [category, setCategory] = useState<CategoryKey | null>(null)
 
   return (
     <>
@@ -46,26 +42,20 @@ export default function Dashboard() {
         <ThoughtStrip />
       </div>
 
-      {/* Row 2: Today's tasks and Performance, side by side. */}
+      {/* Row 2: Today's tasks. The full performance picture lives on the Performance tab. */}
       <div className="contents md:flex md:flex-wrap md:items-stretch md:gap-5">
         <div className="order-5 md:contents md:order-none">
           <TodayTasks />
         </div>
-        <div className="order-7 md:contents md:order-none">
-          <PerformanceCard />
-        </div>
       </div>
 
-      {/* Row 3: Deadline watch, the month calendar and Work by category. The chosen category filters Deadline watch. */}
+      {/* Row 3: Deadline watch (it has its own category pills) and the month calendar. Category breakdowns live on Performance. */}
       <div className="contents md:flex md:flex-wrap md:items-stretch md:gap-5">
         <div className="order-4 md:contents md:order-none">
-          <DeadlineWatch category={category} />
+          <DeadlineWatch />
         </div>
         <div className="order-9 md:contents md:order-none">
           <MonthCalendar />
-        </div>
-        <div className="order-8 md:contents md:order-none">
-          <WorkByCategory selected={category} onSelect={setCategory} />
         </div>
       </div>
 

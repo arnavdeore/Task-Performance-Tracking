@@ -27,20 +27,28 @@ export type MonthStats = {
   tentativeHit: number
   /** Total days late, added up over the tasks that finished late. */
   lateDays: number
+  /** Hours you estimated for the tasks finished that month. */
+  plannedHours: number
+  /** Hours you actually logged on them. */
+  loggedHours: number
+  /** Finished within 10% of the time estimate. */
+  onEstimate: number
+  /** Took more than 10% longer than estimated. The rest finished faster than planned. */
+  tookLonger: number
 }
 
 // January to October 2026. October is the current month.
 export const monthlyStats: MonthStats[] = [
-  { month: 'Jan', done: 14, onTime: 10, tentativeHit: 8, lateDays: 7 },
-  { month: 'Feb', done: 16, onTime: 12, tentativeHit: 10, lateDays: 6 },
-  { month: 'Mar', done: 18, onTime: 14, tentativeHit: 11, lateDays: 6 },
-  { month: 'Apr', done: 17, onTime: 13, tentativeHit: 10, lateDays: 5 },
-  { month: 'May', done: 19, onTime: 15, tentativeHit: 12, lateDays: 7 },
-  { month: 'Jun', done: 20, onTime: 16, tentativeHit: 13, lateDays: 6 },
-  { month: 'Jul', done: 21, onTime: 17, tentativeHit: 14, lateDays: 5 },
-  { month: 'Aug', done: 22, onTime: 19, tentativeHit: 15, lateDays: 4 },
-  { month: 'Sep', done: 21, onTime: 19, tentativeHit: 15, lateDays: 3 },
-  { month: 'Oct', done: 23, onTime: 20, tentativeHit: 16, lateDays: 4 },
+  { month: 'Jan', done: 14, onTime: 10, tentativeHit: 8, lateDays: 7, plannedHours: 40, loggedHours: 46, onEstimate: 8, tookLonger: 4 },
+  { month: 'Feb', done: 16, onTime: 12, tentativeHit: 10, lateDays: 6, plannedHours: 44, loggedHours: 48, onEstimate: 10, tookLonger: 4 },
+  { month: 'Mar', done: 18, onTime: 14, tentativeHit: 11, lateDays: 6, plannedHours: 50, loggedHours: 57, onEstimate: 11, tookLonger: 4 },
+  { month: 'Apr', done: 17, onTime: 13, tentativeHit: 10, lateDays: 5, plannedHours: 47, loggedHours: 52, onEstimate: 11, tookLonger: 4 },
+  { month: 'May', done: 19, onTime: 15, tentativeHit: 12, lateDays: 7, plannedHours: 52, loggedHours: 58, onEstimate: 13, tookLonger: 4 },
+  { month: 'Jun', done: 20, onTime: 16, tentativeHit: 13, lateDays: 6, plannedHours: 54, loggedHours: 59, onEstimate: 14, tookLonger: 5 },
+  { month: 'Jul', done: 21, onTime: 17, tentativeHit: 14, lateDays: 5, plannedHours: 57, loggedHours: 62, onEstimate: 15, tookLonger: 4 },
+  { month: 'Aug', done: 22, onTime: 19, tentativeHit: 15, lateDays: 4, plannedHours: 60, loggedHours: 65, onEstimate: 16, tookLonger: 4 },
+  { month: 'Sep', done: 21, onTime: 19, tentativeHit: 15, lateDays: 3, plannedHours: 55, loggedHours: 58, onEstimate: 16, tookLonger: 3 },
+  { month: 'Oct', done: 23, onTime: 20, tentativeHit: 16, lateDays: 4, plannedHours: 56, loggedHours: 62, onEstimate: 19, tookLonger: 3 },
 ]
 
 export type WeekStats = {
@@ -108,9 +116,6 @@ export const lateTasks: LateTask[] = [
 
 /** The year the monthly figures belong to. */
 export const YEAR = 2026
-
-/** How close time estimates were to time logged. Fixed in the design; the formula is decided in Phase 3. */
-export const ESTIMATE_ACCURACY_PERCENT = 82
 
 /** Fixed-deadline target, in percent. */
 export const FIXED_TARGET_PERCENT = 90

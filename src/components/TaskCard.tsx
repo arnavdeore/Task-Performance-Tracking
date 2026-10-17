@@ -29,20 +29,33 @@ function plural(count: number, one: string, many: string): string {
   return `${count} ${count === 1 ? one : many}`
 }
 
-/** The status line above the progress bar, with its colour. */
-function footLine(task: Task, today: string): { text: string; colour: string } {
+type BadgeIcon = 'clock' | 'alert' | 'check'
+
+/** The badge above the progress bar: how close the fixed date is (or how it ended), with a colour that says how urgent it is. */
+function statusBadge(task: Task, today: string): { text: string; colour: string; icon: BadgeIcon; late: boolean } {
   if (task.status === 'done') {
     const late = daysBetween(task.fixed, task.completedOn)
-    return {
-      text: `Done ${formatIso(task.completedOn)}${late > 0 ? `, ${plural(late, 'day', 'days')} late` : ', on time'}`,
-      colour: late > 0 ? 'text-red-dark' : 'text-green-dark',
-    }
+    return late > 0
+      ? { text: `Done ${formatIso(task.completedOn)}, ${plural(late, 'day', 'days')} late`, colour: 'bg-red-pastel text-red-dark', icon: 'alert', late: false }
+      : { text: `Done ${formatIso(task.completedOn)}, on time`, colour: 'bg-green-pastel text-green-dark', icon: 'check', late: false }
   }
-  if (task.fixed < today) {
-    return { text: `Overdue by ${plural(daysBetween(task.fixed, today), 'day', 'days')}`, colour: 'text-red-dark' }
+  const left = daysBetween(today, task.fixed)
+  if (left < 0) {
+    return { text: `Overdue ${plural(-left, 'day', 'days')}`, colour: 'bg-red text-white', icon: 'alert', late: true }
   }
-  const estimate = task.estimateHours ? `Est ${task.estimateHours}h` : 'No estimate'
-  return { text: estimate + (task.loggedHours ? `, ${task.loggedHours}h logged` : ''), colour: 'text-muted' }
+  if (left === 0) return { text: 'Due today', colour: 'bg-amber-pastel text-amber-dark', icon: 'clock', late: false }
+  if (left === 1) return { text: 'Due tomorrow', colour: 'bg-amber-pastel text-amber-dark', icon: 'clock', late: false }
+  return { text: `Due in ${left} days`, colour: 'bg-blue-pastel text-blue-dark', icon: 'clock', late: false }
+}
+
+function BadgeSymbol({ icon }: { icon: BadgeIcon }) {
+  return (
+    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+      {icon === 'clock' && <path d="M12 7v5l3 2M12 3a9 9 0 100 18 9 9 0 000-18z" />}
+      {icon === 'alert' && <path d="M12 8v5M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" />}
+      {icon === 'check' && <path d="M5 12.5l4.5 4.5L19 7.5" />}
+    </svg>
+  )
 }
 
 type TaskCardProps = {
@@ -53,75 +66,100 @@ type TaskCardProps = {
   onLog?: (id: string) => void
 }
 
-/** One card on the Tasks board. Layout from design/Tasks.dc.html. */
+/** One card on the Tasks board. Each status has its own look (see .tcard.st-* in index.css). Compact on purpose. Layout from design/Tasks.dc.html. */
 export default function TaskCard({ task, today, selected, onMove, onLog }: TaskCardProps) {
   const category = CATEGORY_STYLE[task.category]
   const priority = PRIORITY_STYLE[task.priority]
-  const foot = footLine(task, today)
+  const badge = statusBadge(task, today)
+  const finished = task.status === 'done'
   const move = MOVE[task.status]
-  const percent =
-    task.status === 'done'
-      ? 100
-      : task.estimateHours
-        ? Math.min(100, Math.round((task.loggedHours / task.estimateHours) * 100))
-        : 0
+  const percent = task.estimateHours ? Math.min(100, Math.round((task.loggedHours / task.estimateHours) * 100)) : 0
   const hoursText = task.estimateHours
-    ? `${task.loggedHours}/${task.estimateHours}h`
+    ? task.status === 'todo'
+      ? `Est ${task.estimateHours}h`
+      : `${task.loggedHours} of ${task.estimateHours}h`
     : task.loggedHours
       ? `${task.loggedHours}h`
       : 'No estimate'
 
   return (
     <article
-      className={`tcard border-l-[6px] transition duration-200 hover:-translate-y-[3px] ${category.stripe}${selected ? ' sel' : ''}`}
+      className={`tcard st-${task.status} border-l-[5px] transition duration-200 hover:-translate-y-0.5 ${category.stripe}${badge.late ? ' late' : ''}${selected ? ' sel' : ''}`}
     >
-      <div className="flex items-center justify-between gap-2.5">
-        <span className={`flex min-w-0 items-center gap-[7px] text-[12.5px] font-bold ${category.text}`}>
-          <span className={`h-2 w-2 flex-none rounded-full ${category.dot}`} />
+      <div className="flex items-center justify-between gap-2">
+        <span className={`flex min-w-0 items-center gap-1.5 text-xs font-bold ${category.text}`}>
+          <span className={`h-[7px] w-[7px] flex-none rounded-full ${category.dot}`} />
           <span className="overflow-hidden text-ellipsis whitespace-nowrap">{categoryNames[task.category]}</span>
         </span>
-        <span className={`flex-none rounded-full px-3 py-1 text-[11.5px] font-bold ${priority.colour}`}>
+        <span className={`flex-none rounded-full px-2.5 py-0.5 text-[11px] font-bold ${priority.colour}`}>
           {priority.label}
         </span>
       </div>
 
-      <h3 className="m-0 text-lg font-semibold leading-[1.35] tracking-[-0.01em]">{task.title}</h3>
+      <h3 className="m-0 text-base font-semibold leading-[1.3] tracking-[-0.01em]">{task.title}</h3>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         <span className="dchip tentc">Tentative {formatIso(task.tentative)}</span>
         <span className="dchip fixc">Fixed {formatIso(task.fixed)}</span>
       </div>
 
-      {task.notes && (
-        <p className="m-0 line-clamp-2 text-[13px] leading-[1.6] text-muted-2">{task.notes}</p>
+      {/* Waiting cards show the note as a callout (it says what they are waiting for); other open cards show one line. */}
+      {task.notes && task.status === 'waiting' && (
+        <p className="m-0 flex items-start gap-1.5 rounded-xl bg-white/70 px-2.5 py-1.5 text-xs leading-[1.5] text-lavender-dark">
+          <svg aria-hidden="true" className="mt-[3px] flex-none" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="5" y="4" width="5" height="16" rx="1.5" />
+            <rect x="14" y="4" width="5" height="16" rx="1.5" />
+          </svg>
+          <span className="line-clamp-2">{task.notes}</span>
+        </p>
+      )}
+      {task.notes && (task.status === 'todo' || task.status === 'progress') && (
+        <p className="m-0 line-clamp-1 text-xs leading-[1.5] text-muted-2">{task.notes}</p>
       )}
 
-      <div className="flex flex-col gap-2 pt-0.5">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-2.5 gap-y-1">
-          <span className={`text-[12.5px] font-bold ${foot.colour}`}>{foot.text}</span>
-          <span className="text-[12.5px] font-bold text-[#2E384D]">{hoursText}</span>
-        </div>
-        <div className="h-2 overflow-hidden rounded-full bg-[#EDF1F8]">
-          <div className={`h-full rounded-full ${category.bar}`} style={{ width: `${percent}%` }} />
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${badge.colour}`}>
+          <BadgeSymbol icon={badge.icon} />
+          {badge.text}
+        </span>
+        {finished ? (
+          <button
+            type="button"
+            className="cursor-pointer border-0 bg-transparent px-1 py-1 font-sans text-xs font-bold text-navy underline-offset-2 hover:underline"
+            onClick={() => onMove(task.id, move.to)}
+          >
+            {move.label}
+          </button>
+        ) : (
+          <span className="text-xs font-bold text-[#2E384D]">{hoursText}</span>
+        )}
       </div>
 
-      <div className="flex gap-2.5 pt-0.5">
-        <button
-          type="button"
-          className="pillbtn light h-11 flex-1 bg-[#F1F4FB] px-3 text-[13px] shadow-none md:h-[42px]"
-          onClick={() => onLog?.(task.id)}
-        >
-          Log update
-        </button>
-        <button
-          type="button"
-          className="pillbtn dark h-11 flex-1 px-3 text-[13px] md:h-[42px]"
-          onClick={() => onMove(task.id, move.to)}
-        >
-          {move.label}
-        </button>
-      </div>
+      {/* To do cards have nothing logged yet, so they skip the bar. */}
+      {(task.status === 'progress' || task.status === 'waiting') && (
+        <div className="h-2 overflow-hidden rounded-full bg-white/80">
+          <div className={`h-full rounded-full ${category.bar}`} style={{ width: `${percent}%` }} />
+        </div>
+      )}
+
+      {!finished && (
+        <div className="flex gap-2">
+          <button
+            type="button"
+            className="pillbtn light h-11 flex-1 bg-white/80 px-3 text-[13px] shadow-none md:h-9 md:text-xs"
+            onClick={() => onLog?.(task.id)}
+          >
+            Log update
+          </button>
+          <button
+            type="button"
+            className="pillbtn dark h-11 flex-1 px-3 text-[13px] md:h-9 md:text-xs"
+            onClick={() => onMove(task.id, move.to)}
+          >
+            {move.label}
+          </button>
+        </div>
+      )}
     </article>
   )
 }

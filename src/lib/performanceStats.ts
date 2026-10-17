@@ -11,6 +11,15 @@ export type PeriodSummary = {
   tentativePercent: number
   /** Average days late, over the tasks that finished late. 0 when none were late. */
   averageDelayDays: number
+  /** Hours estimated and hours actually logged, over the finished tasks. */
+  plannedHours: number
+  loggedHours: number
+  /** Finished within 10% of the estimate, took longer than that, or came in faster than planned. */
+  onEstimate: number
+  tookLonger: number
+  faster: number
+  /** Percent of finished tasks that landed within 10% of their time estimate. */
+  estimatePercent: number
 }
 
 /** First and last month index (inclusive) that a period covers, given the index of the current month. */
@@ -166,11 +175,19 @@ export function summarise(months: MonthStats[], first: number, last: number): Pe
   let onTime = 0
   let tentativeHit = 0
   let lateDays = 0
+  let plannedHours = 0
+  let loggedHours = 0
+  let onEstimate = 0
+  let tookLonger = 0
   for (let i = first; i <= last; i++) {
     done += months[i].done
     onTime += months[i].onTime
     tentativeHit += months[i].tentativeHit
     lateDays += months[i].lateDays
+    plannedHours += months[i].plannedHours
+    loggedHours += months[i].loggedHours
+    onEstimate += months[i].onEstimate
+    tookLonger += months[i].tookLonger
   }
   const lateCount = done - onTime
   return {
@@ -180,6 +197,12 @@ export function summarise(months: MonthStats[], first: number, last: number): Pe
     lateCount,
     fixedPercent: percent(onTime, done),
     tentativePercent: percent(tentativeHit, done),
+    plannedHours,
+    loggedHours,
+    onEstimate,
+    tookLonger,
+    faster: done - onEstimate - tookLonger,
+    estimatePercent: percent(onEstimate, done),
     averageDelayDays: lateCount ? Math.round((lateDays / lateCount) * 10) / 10 : 0,
   }
 }
