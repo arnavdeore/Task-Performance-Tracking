@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import SlateMark from '../components/SlateMark'
+import { useAuth } from '../lib/authContext'
 
 /** Whether the text looks like an email address (something, an @, something, a dot, something). */
 function looksLikeEmail(text: string): boolean {
@@ -10,23 +11,38 @@ function looksLikeEmail(text: string): boolean {
 
 /**
  * The sign-in screen. Restyled from design/Login.dc.html to match the desktop pages.
- * For now it only checks the two fields and opens the Dashboard; real sign-in with Supabase is Phase 3.
+ * Signs in with Supabase (email and password). The session is kept on this device, so you stay signed in.
  */
 export default function Login() {
   const navigate = useNavigate()
+  const { session, signIn } = useAuth()
+  const [busy, setBusy] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<string[]>([])
   const [showReset, setShowReset] = useState(false)
 
-  function submit(event: FormEvent) {
+  // Already signed in (for example a saved session on this device): go straight to the Dashboard.
+  if (session) return <Navigate to="/" replace />
+
+  async function submit(event: FormEvent) {
     event.preventDefault()
+    if (busy) return
     const problems: string[] = []
     if (!email.trim()) problems.push('Enter your email address.')
     else if (!looksLikeEmail(email.trim())) problems.push('That email address does not look right.')
     if (!password) problems.push('Enter your password.')
     setErrors(problems)
-    if (problems.length === 0) navigate('/')
+    if (problems.length > 0) return
+
+    setBusy(true)
+    const failure = await signIn(email.trim(), password)
+    setBusy(false)
+    if (failure) {
+      setErrors([failure])
+      return
+    }
+    navigate('/', { replace: true })
   }
 
   return (
@@ -87,8 +103,8 @@ export default function Login() {
           />
         </label>
 
-        <button type="submit" className="pillbtn dark h-[54px] text-[15px]">
-          Sign in
+        <button type="submit" className="pillbtn dark h-[54px] text-[15px]" disabled={busy} aria-busy={busy}>
+          {busy ? 'Signing in…' : 'Sign in'}
         </button>
 
         <div className="flex flex-col items-center gap-1">
@@ -101,7 +117,8 @@ export default function Login() {
           </button>
           {showReset && (
             <p role="status" className="m-0 text-center text-xs leading-[1.55] text-muted">
-              Password reset will work once sign-in is connected to the database.
+              Reset by email is not set up yet. To change your password, open your Supabase project, go to Authentication,
+              then Users, and reset it there.
             </p>
           )}
         </div>

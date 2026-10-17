@@ -1,4 +1,6 @@
+import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../lib/authContext'
 import SlateMark from './SlateMark'
 
 const TABS = [
@@ -23,6 +25,27 @@ const iconProps = {
 
 /** The top bar shared by every desktop page. Pass it to AppShell's `header` slot. */
 export default function TopNav() {
+  const { session, signOut } = useAuth()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  // The profile menu closes on Esc or a click anywhere outside it.
+  useEffect(() => {
+    if (!menuOpen) return
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    function onClick(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) setMenuOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('mousedown', onClick)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('mousedown', onClick)
+    }
+  }, [menuOpen])
+
   return (
     <header className="white box-border flex flex-wrap items-center justify-between gap-x-5 gap-y-2.5 rounded-[28px] px-[18px] py-2.5">
       <NavLink
@@ -61,18 +84,42 @@ export default function TopNav() {
             <path d="M10 21h4" />
           </svg>
         </button>
-        <div className="ml-1.5 flex items-center gap-2.5">
-          <div
-            role="img"
-            aria-label="Profile"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(160deg,#F3F0FD,#D9D2F7)] font-extrabold text-lavender-dark shadow-[inset_0_1px_0_#FFFFFF,0_8px_12px_-6px_rgba(76,58,166,0.45)]"
+        <div ref={menuRef} className="relative ml-1.5">
+          <button
+            type="button"
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            aria-label="Profile menu"
+            onClick={() => setMenuOpen((open) => !open)}
+            className="flex cursor-pointer items-center gap-2.5 rounded-full border-0 bg-transparent p-0 text-left font-sans text-ink"
           >
-            A
-          </div>
-          <div className="hidden flex-col leading-tight sm:flex">
-            <span className="text-[13px] font-bold">Arnav</span>
-            <span className="text-[11px] text-muted">Data analyst</span>
-          </div>
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(160deg,#F3F0FD,#D9D2F7)] font-extrabold text-lavender-dark shadow-[inset_0_1px_0_#FFFFFF,0_8px_12px_-6px_rgba(76,58,166,0.45)]">
+              A
+            </span>
+            <span className="hidden flex-col leading-tight sm:flex">
+              <span className="text-[13px] font-bold">Arnav</span>
+              <span className="text-[11px] text-muted">Data analyst</span>
+            </span>
+          </button>
+          {menuOpen && (
+            <div
+              role="menu"
+              className="white absolute right-0 top-[calc(100%+10px)] z-50 flex w-60 flex-col gap-1 rounded-[22px] p-2"
+            >
+              <div className="px-3 py-2">
+                <div className="text-xs text-muted">Signed in as</div>
+                <div className="overflow-hidden text-ellipsis text-[13px] font-bold">{session?.user.email}</div>
+              </div>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => void signOut()}
+                className="h-11 w-full cursor-pointer rounded-[16px] border-0 bg-[#F1F4FB] px-3 text-left font-sans text-[13px] font-bold text-navy hover:bg-[#E6ECF8]"
+              >
+                Sign out
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

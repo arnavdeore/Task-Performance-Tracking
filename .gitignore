@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local secrets: never commit. Commit .env.example instead.
+.env
+.env.*
+!.env.example
