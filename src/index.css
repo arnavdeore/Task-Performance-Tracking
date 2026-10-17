@@ -40,6 +40,20 @@
   --color-bank-cell: #e7ecf5;
 }
 
+/* Phone scale: the sizes in the components are desktop pixels, so under 768px everything is shrunk together
+   (blocks, icons, fonts, shapes). Change this one number to make the phone view bigger or smaller. */
+@media (max-width: 767.98px) {
+  html {
+    zoom: 0.82;
+  }
+}
+/* Desktop scale: gentler than the phone one, so the pages read as medium sized instead of zoomed in. */
+@media (min-width: 768px) {
+  html {
+    zoom: 0.9;
+  }
+}
+
 body {
   margin: 0;
   background: #dce5f4;
