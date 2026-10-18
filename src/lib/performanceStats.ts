@@ -11,14 +11,16 @@ export type PeriodSummary = {
   tentativePercent: number
   /** Average days late, over the tasks that finished late. 0 when none were late. */
   averageDelayDays: number
-  /** Hours estimated and hours actually logged, over the finished tasks. */
+  /** Finished tasks that have both a time estimate and logged hours (the only ones that can be compared on time). */
+  estimated: number
+  /** Hours estimated and hours actually logged, over those tasks. */
   plannedHours: number
   loggedHours: number
   /** Finished within 10% of the estimate, took longer than that, or came in faster than planned. */
   onEstimate: number
   tookLonger: number
   faster: number
-  /** Percent of finished tasks that landed within 10% of their time estimate. */
+  /** Percent of those tasks that landed within 10% of their time estimate. */
   estimatePercent: number
 }
 
@@ -175,6 +177,7 @@ export function summarise(months: MonthStats[], first: number, last: number): Pe
   let onTime = 0
   let tentativeHit = 0
   let lateDays = 0
+  let estimated = 0
   let plannedHours = 0
   let loggedHours = 0
   let onEstimate = 0
@@ -184,6 +187,7 @@ export function summarise(months: MonthStats[], first: number, last: number): Pe
     onTime += months[i].onTime
     tentativeHit += months[i].tentativeHit
     lateDays += months[i].lateDays
+    estimated += months[i].estimated
     plannedHours += months[i].plannedHours
     loggedHours += months[i].loggedHours
     onEstimate += months[i].onEstimate
@@ -197,12 +201,13 @@ export function summarise(months: MonthStats[], first: number, last: number): Pe
     lateCount,
     fixedPercent: percent(onTime, done),
     tentativePercent: percent(tentativeHit, done),
+    estimated,
     plannedHours,
     loggedHours,
     onEstimate,
     tookLonger,
-    faster: done - onEstimate - tookLonger,
-    estimatePercent: percent(onEstimate, done),
+    faster: estimated - onEstimate - tookLonger,
+    estimatePercent: percent(onEstimate, estimated),
     averageDelayDays: lateCount ? Math.round((lateDays / lateCount) * 10) / 10 : 0,
   }
 }

@@ -80,13 +80,21 @@ export default function HealthCheck({ period, summary }: HealthCheckProps) {
         <span className="text-xs text-muted">{periodPhrase[period]}</span>
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-        <EstimateRing percent={summary.estimatePercent} />
-        <p className="m-0 min-w-[150px] flex-1 text-[13px] leading-[1.55] text-muted-2">
-          <strong className="text-ink">Estimate accuracy.</strong> {summary.onEstimate} of {summary.done} finished tasks
-          took within 10% of the time you expected.
+      {summary.estimated === 0 ? (
+        <p className="m-0 rounded-[20px] bg-white/70 px-4 py-6 text-center text-[13px] leading-[1.6] text-muted">
+          Nothing to compare yet. This card needs finished tasks that have both a time estimate and logged hours. Add an
+          estimate when you create a task and log hours in your EOD updates.
         </p>
-      </div>
+      ) : (
+        <>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            <EstimateRing percent={summary.estimatePercent} />
+            <p className="m-0 min-w-[150px] flex-1 text-[13px] leading-[1.55] text-muted-2">
+              <strong className="text-ink">Estimate accuracy.</strong> {summary.onEstimate} of {summary.estimated}{' '}
+              {summary.estimated === 1 ? 'task' : 'tasks'} with an estimate and logged hours took within 10% of the time
+              you expected.
+            </p>
+          </div>
 
       <div className="flex flex-col gap-3 rounded-[20px] bg-white/70 p-4">
         <HoursBars planned={summary.plannedHours} logged={summary.loggedHours} />
@@ -105,6 +113,8 @@ export default function HealthCheck({ period, summary }: HealthCheckProps) {
           </div>
         ))}
       </div>
+        </>
+      )}
     </section>
   )
 }

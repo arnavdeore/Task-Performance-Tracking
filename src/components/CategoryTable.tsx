@@ -1,6 +1,6 @@
 import { categoryNames } from '../data/dashboard'
 import type { CategoryKey } from '../data/dashboard'
-import { categoryPerformance } from '../data/performance'
+import type { CategoryPerformance } from '../data/performance'
 import { hoursVariancePercent } from '../lib/performanceStats'
 
 // Full class names are written out so Tailwind can see them.
@@ -21,15 +21,17 @@ function varianceColour(variance: number): string {
 }
 
 type CategoryTableProps = {
+  /** This month's figures for each category (from `buildCategoryPerformance`). */
+  rows: CategoryPerformance[]
   /** The selected category, or null for all. Lives in the page so the late list can follow it. */
   selected: CategoryKey | null
   onSelect: (category: CategoryKey | null) => void
 }
 
 /** "By category (this month)": done, on-time rate and planned vs actual hours per category. Layout from design/Performance.dc.html. */
-export default function CategoryTable({ selected, onSelect }: CategoryTableProps) {
-  const planned = categoryPerformance.reduce((sum, row) => sum + row.plannedHours, 0)
-  const actual = categoryPerformance.reduce((sum, row) => sum + row.actualHours, 0)
+export default function CategoryTable({ rows, selected, onSelect }: CategoryTableProps) {
+  const planned = Math.round(rows.reduce((sum, row) => sum + row.plannedHours, 0) * 10) / 10
+  const actual = Math.round(rows.reduce((sum, row) => sum + row.actualHours, 0) * 10) / 10
 
   return (
     <section className="glass box-border flex min-w-0 flex-[3_1_520px] flex-col gap-3 rounded-[34px] px-6 py-[22px]">
@@ -52,7 +54,7 @@ export default function CategoryTable({ selected, onSelect }: CategoryTableProps
             <span>Planned vs actual hours</span>
           </div>
 
-          {categoryPerformance.map((row) => {
+          {rows.map((row) => {
             const on = selected === row.category
             const variance = hoursVariancePercent(row.plannedHours, row.actualHours)
             return (
@@ -70,15 +72,21 @@ export default function CategoryTable({ selected, onSelect }: CategoryTableProps
                   </span>
                 </span>
                 <span className="font-bold">{row.done}</span>
-                <span className="font-bold">{Math.round((row.onTime / row.done) * 100)}%</span>
+                <span className="font-bold">{row.done ? `${Math.round((row.onTime / row.done) * 100)}%` : '–'}</span>
                 <span className="flex items-center gap-2.5">
-                  <span>
-                    {row.plannedHours}h to {row.actualHours}h
-                  </span>
-                  <span className={`rounded-full px-2.5 py-[3px] text-xs font-bold ${varianceColour(variance)}`}>
-                    {variance > 0 ? '+' : ''}
-                    {variance}%
-                  </span>
+                  {row.plannedHours === 0 && row.actualHours === 0 ? (
+                    <span className="text-muted">No hours to compare</span>
+                  ) : (
+                    <>
+                      <span>
+                        {row.plannedHours}h to {row.actualHours}h
+                      </span>
+                      <span className={`rounded-full px-2.5 py-[3px] text-xs font-bold ${varianceColour(variance)}`}>
+                        {variance > 0 ? '+' : ''}
+                        {variance}%
+                      </span>
+                    </>
+                  )}
                 </span>
               </button>
             )

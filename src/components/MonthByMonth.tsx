@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FIXED_TARGET_PERCENT, YEAR } from '../data/performance'
+import { FIXED_TARGET_PERCENT } from '../data/performance'
 import type { MonthStats } from '../data/performance'
 import { monthPercent } from '../lib/performanceStats'
 
@@ -16,13 +16,15 @@ const PX_PER_TASK = 5.6
 
 type MonthByMonthProps = {
   months: MonthStats[]
+  /** The year the months belong to (shown after the month name). */
+  year: number
   /** First and last month (inclusive) of the chosen period; capsules inside it are blue, outside it striped. */
   first: number
   last: number
 }
 
 /** "Month by month": a capsule per month with an On-time % / Tasks done toggle. Layout from design/Performance.dc.html. */
-export default function MonthByMonth({ months, first, last }: MonthByMonthProps) {
+export default function MonthByMonth({ months, year, first, last }: MonthByMonthProps) {
   const [view, setView] = useState<View>('pct')
   // Starts on the last month of the period. The page re-creates this component when the period changes.
   const [selected, setSelected] = useState(last)
@@ -58,7 +60,7 @@ export default function MonthByMonth({ months, first, last }: MonthByMonthProps)
         className="flex flex-wrap items-baseline gap-x-[18px] gap-y-1.5 rounded-[20px] bg-white/85 px-[18px] py-3"
       >
         <span className="text-sm font-bold">
-          {month.month} {YEAR}
+          {month.month} {year}
         </span>
         <span className="text-[22px] font-bold text-green-dark">{percent}% on time</span>
         <span className="text-[13px] text-muted-2">
