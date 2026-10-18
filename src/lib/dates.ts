@@ -1,6 +1,13 @@
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
+/** Today's date on this device as an ISO date (YYYY-MM-DD). Built from local time, not UTC, so an evening in India is still today. */
+export function todayIso(now: Date = new Date()): string {
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${now.getFullYear()}-${month}-${day}`
+}
+
 /** Index of a date's weekday with Monday = 0 … Sunday = 6 (the week starts Monday). */
 export function mondayIndex(date: Date): number {
   return (date.getDay() + 6) % 7

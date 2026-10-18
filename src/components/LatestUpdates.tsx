@@ -1,9 +1,16 @@
 import { Link } from 'react-router-dom'
-import { latestUpdates } from '../data/dashboard'
+import type { LatestUpdate } from '../data/dashboard'
 import { MOOD_COLOUR } from './moodColours'
 
-/** "Latest updates": the two most recent EOD entries. Layout from design/Main.dc.html. */
-export default function LatestUpdates() {
+type LatestUpdatesProps = {
+  /** The newest updates, newest first (the Dashboard passes the 3 newest). */
+  updates: LatestUpdate[]
+  /** How many updates exist in all, so the card can point to the full log when there are more. */
+  total: number
+}
+
+/** "Latest updates": the newest EOD entries, with a link to the full log on the Tasks page. Layout from design/Main.dc.html. */
+export default function LatestUpdates({ updates, total }: LatestUpdatesProps) {
   return (
     <section className="glass box-border flex min-w-0 flex-[1_1_380px] flex-col gap-3.5 rounded-[34px] px-6 py-[22px]">
       <div className="flex flex-wrap items-center justify-between gap-2.5">
@@ -13,7 +20,13 @@ export default function LatestUpdates() {
         </Link>
       </div>
 
-      {latestUpdates.map((update) => (
+      {updates.length === 0 && (
+        <div className="rounded-[22px] bg-white/[0.88] px-[18px] py-6 text-center text-[13px] leading-[1.6] text-muted">
+          No updates yet. At the end of the day, use the EOD update button on the Tasks page to log what you did.
+        </div>
+      )}
+
+      {updates.map((update) => (
         <div key={update.id} className="flex flex-col gap-2 rounded-[22px] bg-white/[0.88] px-[18px] py-[15px]">
           <div className="flex flex-wrap items-center gap-2">
             <span className="mr-1 text-[14.5px] font-bold">{update.title}</span>
@@ -30,7 +43,16 @@ export default function LatestUpdates() {
       ))}
 
       <p className="mb-0 mt-auto text-xs leading-[1.55] text-muted">
-        Each update adds its hours to your performance report. Write one at the end of the day from the tasks board.
+        {total > updates.length ? (
+          <>
+            Showing the {updates.length} newest of {total} updates.{' '}
+            <Link to="/tasks" className="font-bold text-navy hover:text-navy">
+              See all on the Tasks page
+            </Link>
+            .{' '}
+          </>
+        ) : null}
+        Each update adds its hours to your performance report.
       </p>
     </section>
   )

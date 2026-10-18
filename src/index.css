@@ -162,6 +162,11 @@ body {
 .pillbtn:active {
   transform: translateY(1px);
 }
+.pillbtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+}
 
 /* Round icon button (search, bell) */
 .icobtn {

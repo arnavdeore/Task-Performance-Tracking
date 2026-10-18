@@ -1,19 +1,22 @@
-import { mockWeekDone, weekPlanned } from '../data/dashboard'
 import { mondayIndex, shortDate, weekDates } from '../lib/dates'
 
 const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 type WeekStripProps = {
   today: Date
+  /** Tasks due on each day, Monday first (see `weekCounts` in dashboardStats.ts). */
+  planned: number[]
+  /** Of those, how many are done. */
+  done: number[]
 }
 
 /** "This week": seven day columns, Monday to Sunday. Layout from design/Main.dc.html. */
-export default function WeekStrip({ today }: WeekStripProps) {
+export default function WeekStrip({ today, planned: plannedPerDay, done: donePerDay }: WeekStripProps) {
   const todayIndex = mondayIndex(today)
   const dates = weekDates(today)
 
-  const days = weekPlanned.map((planned, i) => {
-    const done = mockWeekDone(i, todayIndex)
+  const days = plannedPerDay.map((planned, i) => {
+    const done = donePerDay[i]
     const percent = planned ? Math.round((done / planned) * 100) : 0
     return {
       name: DAY_NAMES[i],
@@ -61,11 +64,13 @@ export default function WeekStrip({ today }: WeekStripProps) {
       </div>
 
       <div className="mt-auto flex flex-wrap items-center gap-x-[18px] gap-y-2 border-t border-[rgba(35,43,94,0.08)] pt-3.5 text-[12.5px] text-muted-2">
-        <span className="font-bold text-[#2E384D]">{Math.round((totalDone / totalPlanned) * 100)}% of the week done</span>
+        <span className="font-bold text-[#2E384D]">
+          {totalPlanned ? `${Math.round((totalDone / totalPlanned) * 100)}% of the week done` : 'Nothing due this week'}
+        </span>
         <span>
           {left} {left === 1 ? 'task' : 'tasks'} left
         </span>
-        <span>Monday to Sunday, from your fixed and tentative dates</span>
+        <span>Monday to Sunday, by fixed date</span>
       </div>
     </section>
   )

@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { categoryNames, deadlineRows } from '../data/dashboard'
+import { Link } from 'react-router-dom'
+import { categoryNames } from '../data/dashboard'
 import type { CategoryKey, DeadlineRow, DeadlineStatus } from '../data/dashboard'
 
 type Filter = 'all' | 'overdue' | 'soon'
@@ -21,8 +22,12 @@ const BADGE: Record<CategoryKey, { initial: string; colour: string }> = {
 const STATUS: Record<DeadlineStatus, { label: string; colour: string }> = {
   todo: { label: 'To do', colour: 'bg-[#EEF1F6] text-muted-2' },
   progress: { label: 'In progress', colour: 'bg-blue-pastel text-blue-dark' },
+  waiting: { label: 'Waiting', colour: 'bg-lavender-pastel text-lavender-dark' },
   overdue: { label: 'Overdue', colour: 'bg-red text-white' },
 }
+
+// The list stays short on the Dashboard; the Tasks page has everything.
+const MAX_ROWS = 8
 
 function matches(row: DeadlineRow, filter: Filter, category: CategoryKey | null): boolean {
   if (category && row.category !== category) return false
@@ -31,11 +36,18 @@ function matches(row: DeadlineRow, filter: Filter, category: CategoryKey | null)
   return true
 }
 
+type DeadlineWatchProps = {
+  /** Every open task, soonest fixed date first (from `deadlineRows` in dashboardStats.ts). */
+  rows: DeadlineRow[]
+}
+
 /** "Deadline watch": upcoming and overdue tasks with a three-way filter and category pills. Layout from design/Main.dc.html. */
-export default function DeadlineWatch() {
+export default function DeadlineWatch({ rows: allRows }: DeadlineWatchProps) {
   const [filter, setFilter] = useState<Filter>('all')
   const [category, setCategory] = useState<CategoryKey | null>(null)
-  const rows = deadlineRows.filter((row) => matches(row, filter, category))
+  const matching = allRows.filter((row) => matches(row, filter, category))
+  const rows = matching.slice(0, MAX_ROWS)
+  const hidden = matching.length - rows.length
 
   return (
     <section className="glass box-border flex min-w-0 flex-[1_1_380px] flex-col gap-3 rounded-[34px] px-6 py-[22px]">
@@ -96,7 +108,8 @@ export default function DeadlineWatch() {
               <div className="flex min-w-0 flex-[1_1_auto] flex-col gap-0.5">
                 <span className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold">{row.title}</span>
                 <span className="text-xs text-muted">
-                  {categoryNames[row.category]}, T {row.tentative}
+                  {categoryNames[row.category]}
+                  {row.tentative ? `, T ${row.tentative}` : ''}
                 </span>
               </div>
               <div className="flex flex-none flex-col items-end gap-1">
@@ -112,7 +125,15 @@ export default function DeadlineWatch() {
         })}
         {rows.length === 0 && (
           <div className="border-t border-[rgba(35,43,94,0.08)] py-3.5 text-[13px] font-semibold text-green-dark">
-            Nothing in this view.
+            {allRows.length === 0 ? 'No open tasks. Add one from the Tasks page.' : 'Nothing in this view.'}
+          </div>
+        )}
+        {hidden > 0 && (
+          <div className="border-t border-[rgba(35,43,94,0.08)] py-3 text-[12.5px] text-muted">
+            {hidden} more.{' '}
+            <Link to="/tasks" className="font-bold text-navy hover:text-navy">
+              See all on the Tasks page
+            </Link>
           </div>
         )}
       </div>

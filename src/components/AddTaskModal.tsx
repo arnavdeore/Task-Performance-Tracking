@@ -53,23 +53,27 @@ function check(form: Form): string[] {
 
 type AddTaskModalProps = {
   onClose: () => void
-  onAdd: (task: NewTask) => void
+  /** Saves the task. Resolves to null on success (the page closes the pop-up) or a message to show if it failed. */
+  onAdd: (task: NewTask) => Promise<string | null>
 }
 
 /** The "Add task" pop-up. Layout from design/Tasks.dc.html. */
 export default function AddTaskModal({ onClose, onAdd }: AddTaskModalProps) {
   const [form, setForm] = useState<Form>(BLANK)
   const [errors, setErrors] = useState<string[]>([])
+  const [busy, setBusy] = useState(false)
 
   function set<K extends keyof Form>(key: K, value: Form[K]) {
     setForm((current) => ({ ...current, [key]: value }))
   }
 
-  function submit() {
+  async function submit() {
+    if (busy) return
     const problems = check(form)
     setErrors(problems)
     if (problems.length > 0) return
-    onAdd({
+    setBusy(true)
+    const failure = await onAdd({
       title: form.title.trim(),
       category: form.category,
       priority: form.priority,
@@ -79,6 +83,9 @@ export default function AddTaskModal({ onClose, onAdd }: AddTaskModalProps) {
       estimateHours: form.estimate === '' ? 0 : Number(form.estimate),
       notes: form.notes.trim(),
     })
+    setBusy(false)
+    // On success the page closes this pop-up; on failure it stays open with the form as typed.
+    if (failure) setErrors([failure])
   }
 
   return (
@@ -225,8 +232,14 @@ export default function AddTaskModal({ onClose, onAdd }: AddTaskModalProps) {
           >
             Clear
           </button>
-          <button type="button" className="pillbtn dark h-[54px] flex-[2_1_260px] text-[15px]" onClick={submit}>
-            Add task
+          <button
+            type="button"
+            className="pillbtn dark h-[54px] flex-[2_1_260px] text-[15px]"
+            onClick={submit}
+            disabled={busy}
+            aria-busy={busy}
+          >
+            {busy ? 'Saving…' : 'Add task'}
           </button>
         </div>
       </div>

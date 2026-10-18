@@ -36,7 +36,8 @@ type EodModalProps = {
   /** The task to preselect (when opened from a card's "Log update"), or '' for none. */
   initialTaskId: string
   onClose: () => void
-  onSave: (update: NewEodUpdate) => void
+  /** Saves the update. Resolves to null on success (the page closes the pop-up) or a message to show if it failed. */
+  onSave: (update: NewEodUpdate) => Promise<string | null>
 }
 
 /** The "EOD update" pop-up. Layout from design/Tasks.dc.html. */
@@ -52,6 +53,7 @@ export default function EodModal({ tasks, initialTaskId, onClose, onSave }: EodM
     next: '',
   })
   const [errors, setErrors] = useState<string[]>([])
+  const [busy, setBusy] = useState(false)
 
   const task = tasks.find((item) => item.id === form.taskId)
 
@@ -64,11 +66,13 @@ export default function EodModal({ tasks, initialTaskId, onClose, onSave }: EodM
     setErrors([])
   }
 
-  function submit() {
+  async function submit() {
+    if (busy) return
     const problems = check(form, task)
     setErrors(problems)
     if (problems.length > 0 || !task) return
-    onSave({
+    setBusy(true)
+    const failure = await onSave({
       taskId: task.id,
       hours: form.hours === '' ? 0 : Number(form.hours),
       mood: form.mood,
@@ -76,6 +80,9 @@ export default function EodModal({ tasks, initialTaskId, onClose, onSave }: EodM
       comment: form.comment.trim(),
       next: form.next.trim(),
     })
+    setBusy(false)
+    // On success the page closes this pop-up; on failure it stays open with the form as typed.
+    if (failure) setErrors([failure])
   }
 
   return (
@@ -203,8 +210,14 @@ export default function EodModal({ tasks, initialTaskId, onClose, onSave }: EodM
           >
             Clear
           </button>
-          <button type="button" className="pillbtn dark h-[54px] flex-[2_1_260px] text-[15px]" onClick={submit}>
-            Save EOD update
+          <button
+            type="button"
+            className="pillbtn dark h-[54px] flex-[2_1_260px] text-[15px]"
+            onClick={submit}
+            disabled={busy}
+            aria-busy={busy}
+          >
+            {busy ? 'Saving…' : 'Save EOD update'}
           </button>
         </div>
       </div>

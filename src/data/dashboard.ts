@@ -1,4 +1,4 @@
-// Mock data for the Dashboard (from design/Main.dc.html). Replaced by Supabase queries in Phase 3.
+// Types and names for the Dashboard. The numbers are worked out from the user's tasks and EOD updates in src/lib/dashboardStats.ts.
 
 export type Tone = 'blue' | 'green' | 'red' | 'ink'
 
@@ -11,15 +11,6 @@ export type StatTileData = {
   to?: string
 }
 
-export const statTiles: StatTileData[] = [
-  { label: 'Open tasks', value: '9', sub: '5 due this week', tone: 'blue', to: '/tasks' },
-  { label: 'Done this month', value: '23', sub: '4 more than September', tone: 'green', to: '/performance' },
-  { label: 'On time, fixed dates', value: '87%', sub: 'Target 90%', tone: 'green', to: '/performance' },
-  { label: 'Overdue', value: '1', sub: 'Oldest 2 days late', tone: 'red', to: '/tasks' },
-]
-
-// ---- Today's tasks ----
-
 export type CategoryKey = 'dev' | 'clean' | 'mgmt' | 'bi'
 
 export const categoryNames: Record<CategoryKey, string> = {
@@ -29,61 +20,17 @@ export const categoryNames: Record<CategoryKey, string> = {
   bi: 'Power BI',
 }
 
-export type TodayTask = {
-  id: string
-  title: string
-  priority: string
-  category: CategoryKey
-  /** Tentative deadline, already in the short "13 Oct" form. */
-  tentative: string
-  /** Fixed deadline, already in the short "15 Oct" form. */
-  fixed: string
-  estimateHours: number
-  loggedHours: number
-}
-
-export const todayTasks: TodayTask[] = [
-  {
-    id: 't1',
-    title: 'Review sales dashboard KPIs',
-    priority: 'High priority',
-    category: 'bi',
-    tentative: '10 Oct',
-    fixed: '11 Oct',
-    estimateHours: 3,
-    loggedHours: 2,
-  },
-  {
-    id: 't2',
-    title: 'Fix sync script bug',
-    priority: 'High priority',
-    category: 'dev',
-    tentative: '13 Oct',
-    fixed: '15 Oct',
-    estimateHours: 3,
-    loggedHours: 2,
-  },
-  {
-    id: 't3',
-    title: 'Clean customer export file',
-    priority: 'Medium priority',
-    category: 'clean',
-    tentative: '14 Oct',
-    fixed: '16 Oct',
-    estimateHours: 4,
-    loggedHours: 1.5,
-  },
-]
-
 // ---- Deadline watch ----
 
-export type DeadlineStatus = 'todo' | 'progress' | 'overdue'
+export type DeadlineStatus = 'todo' | 'progress' | 'waiting' | 'overdue'
 
 export type DeadlineRow = {
   id: string
   title: string
   category: CategoryKey
+  /** Already in the short "13 Oct" form; empty when the task has no tentative date. */
   tentative: string
+  /** Already in the short "15 Oct" form. */
   fixed: string
   status: DeadlineStatus
   /** Fixed date has passed. */
@@ -92,75 +39,26 @@ export type DeadlineRow = {
   dueSoon: boolean
 }
 
-export const deadlineRows: DeadlineRow[] = [
-  { id: 'd1', title: 'Review sales dashboard KPIs', category: 'bi', tentative: '10 Oct', fixed: '11 Oct', status: 'overdue', overdue: true, dueSoon: false },
-  { id: 'd2', title: 'Fix sync script bug', category: 'dev', tentative: '13 Oct', fixed: '15 Oct', status: 'progress', overdue: false, dueSoon: true },
-  { id: 'd3', title: 'Clean customer export file', category: 'clean', tentative: '14 Oct', fixed: '16 Oct', status: 'progress', overdue: false, dueSoon: true },
-  { id: 'd4', title: 'Refresh monthly report', category: 'bi', tentative: '15 Oct', fixed: '17 Oct', status: 'todo', overdue: false, dueSoon: true },
-  { id: 'd5', title: 'Update master data tracker', category: 'mgmt', tentative: '18 Oct', fixed: '20 Oct', status: 'todo', overdue: false, dueSoon: false },
-]
-
-// ---- This week ----
-
-/** Tasks planned for each day, Monday first (from the design). Phase 3 derives this from the tentative and fixed dates. */
-export const weekPlanned = [3, 2, 3, 2, 2, 1, 0]
-
-/** Mock "done" count for a day: past days mostly done, today one done, later days none. */
-export function mockWeekDone(dayIndex: number, todayIndex: number): number {
-  const planned = weekPlanned[dayIndex]
-  if (dayIndex < todayIndex) return Math.max(0, planned - (dayIndex % 3 === 0 ? 1 : 0))
-  if (dayIndex === todayIndex) return Math.min(planned, 1)
-  return 0
-}
-
-// ---- Latest updates (the two most recent EOD entries) ----
+// ---- Latest updates ----
 
 export type Mood = 'On track' | 'At risk' | 'Blocked'
 
 export type LatestUpdate = {
   id: string
   title: string
+  /** For example "2h" or "1.5h". */
   hours: string
   mood: Mood
   comment: string
-  /** Shown as written, e.g. "Yesterday, 12 Oct". Phase 3 formats this from the real date. */
+  /** Shown as written, e.g. "Yesterday, 12 Oct". */
   when: string
 }
-
-export const latestUpdates: LatestUpdate[] = [
-  {
-    id: 'u1',
-    title: 'Fix sync script bug',
-    hours: '2h',
-    mood: 'On track',
-    comment: 'Reproduced the bug. The date parser fails on blank rows in the export.',
-    when: 'Yesterday, 12 Oct',
-  },
-  {
-    id: 'u2',
-    title: 'Clean customer export file',
-    hours: '1.5h',
-    mood: 'At risk',
-    comment: 'Removed duplicates. Three columns still need mapping from the old template.',
-    when: 'Yesterday, 12 Oct',
-  },
-]
 
 // ---- Month calendar ----
 
 export type CalendarDeadline = {
   title: string
-  /** ISO dates, YYYY-MM-DD */
+  /** ISO dates, YYYY-MM-DD. Tentative is '' when the task has none. */
   tentative: string
   fixed: string
 }
-
-export const calendarDeadlines: CalendarDeadline[] = [
-  { title: 'Review sales dashboard KPIs', tentative: '2026-10-10', fixed: '2026-10-11' },
-  { title: 'Fix sync script bug', tentative: '2026-10-13', fixed: '2026-10-15' },
-  { title: 'Clean customer export file', tentative: '2026-10-14', fixed: '2026-10-16' },
-  { title: 'Refresh monthly report', tentative: '2026-10-15', fixed: '2026-10-17' },
-  { title: 'Update master data tracker', tentative: '2026-10-18', fixed: '2026-10-20' },
-  { title: 'Quarter close data pack', tentative: '2026-10-26', fixed: '2026-10-30' },
-  { title: 'Branch mapping refresh', tentative: '2026-11-03', fixed: '2026-11-05' },
-]

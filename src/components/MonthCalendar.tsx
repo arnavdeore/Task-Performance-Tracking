@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { calendarDeadlines } from '../data/dashboard'
+import type { CalendarDeadline } from '../data/dashboard'
 import { bankSaturdayWhich, festivalName, festivalsInMonth, holidayName, holidaysInMonth, isBankSaturday } from '../lib/holidays.js'
 import { thoughtLib } from '../lib/thoughtLib'
 
@@ -50,7 +50,7 @@ const iconProps = {
  * Month calendar for the Dashboard: fixed deadlines (red dot), tentative dates (blue ring),
  * Indian holidays and bank closures. Behaviour and layout from design/Main.dc.html.
  */
-export default function MonthCalendar() {
+export default function MonthCalendar({ deadlines }: { deadlines: CalendarDeadline[] }) {
   const [now] = useState(() => new Date())
   const [monthOffset, setMonthOffset] = useState(0)
   const [selected, setSelected] = useState('') // ISO date of the clicked day, or ''
@@ -68,8 +68,8 @@ export default function MonthCalendar() {
   const cells = Array.from({ length: daysInMonth }, (_, index) => {
     const day = index + 1
     const key = isoDate(year, month, day)
-    const fixed = calendarDeadlines.filter((item) => item.fixed === key)
-    const tentative = calendarDeadlines.filter((item) => item.tentative === key)
+    const fixed = deadlines.filter((item) => item.fixed === key)
+    const tentative = deadlines.filter((item) => item.tentative === key)
     fixedCount += fixed.length
     tentativeCount += tentative.length
     const holiday = holidayName(key)
@@ -104,7 +104,7 @@ export default function MonthCalendar() {
   let note: string
   const selectedDay = selected.startsWith(isoDate(year, month, 1).slice(0, 7)) ? Number(selected.slice(8)) : 0
   if (selectedDay) {
-    const items = calendarDeadlines.filter((item) => item.fixed === selected || item.tentative === selected)
+    const items = deadlines.filter((item) => item.fixed === selected || item.tentative === selected)
     const holiday = holidayName(selected)
     const festival = festivalName(selected)
     const bits: string[] = []
