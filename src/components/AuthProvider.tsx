@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { AuthContext } from '../lib/authContext'
+import { clearCache } from '../lib/taskCache'
 import type { AuthState } from '../lib/authContext'
 import { supabase } from '../lib/supabase'
 
@@ -35,7 +36,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => {
         if (active) setLoading(false)
       })
-    const { data } = supabase.auth.onAuthStateChange((_event, next) => {
+    const { data } = supabase.auth.onAuthStateChange((event, next) => {
+      // The saved copy of the tasks is private: remove it whenever the user is signed out, however that happened.
+      if (event === 'SIGNED_OUT') clearCache()
       setSession(next)
       setLoading(false)
     })
@@ -57,6 +60,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         return null
       },
       async signOut() {
+        clearCache()
         await supabase.auth.signOut()
         setSession(null)
       },

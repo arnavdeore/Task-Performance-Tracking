@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import AddTaskModal from '../components/AddTaskModal'
 import EodLog from '../components/EodLog'
 import EodModal from '../components/EodModal'
+import StaleBanner from '../components/StaleBanner'
 import StatTile from '../components/StatTile'
 import TaskBoard from '../components/TaskBoard'
 import Toast from '../components/Toast'
@@ -13,7 +14,7 @@ import type { NewEodUpdate, NewTask, TaskStatus } from '../data/tasks'
 import { todayIso } from '../lib/dates'
 import { errorMessage, insertTask, saveEodUpdate, setTaskStatus, sortTasks } from '../lib/tasksApi'
 import { dueInWeekCount, hoursLoggedOn, openTasks, overdueCount, tasksLoggedOn } from '../lib/taskStats'
-import { useTasksData } from '../lib/useTasksData'
+import { useTasksData } from '../lib/tasksDataContext'
 
 export type CategoryFilter = CategoryKey | 'all'
 
@@ -29,7 +30,7 @@ function plural(count: number, one: string, many: string): string {
 /** The Tasks page. Layout from design/Tasks.dc.html. */
 export default function Tasks() {
   // The task list and the EOD log live here so the board and the pop-ups can share them. They are loaded from Supabase.
-  const { tasks, setTasks, eodLog, load, loadError, reload } = useTasksData()
+  const { tasks, setTasks, eodLog, load, loadError, refreshError, reload } = useTasksData()
   const [filter, setFilter] = useState<CategoryFilter>('all')
   // Phone only: the search box, and which status the board shows (design/MobileTasks.dc.html opens on In progress).
   const [query, setQuery] = useState('')
@@ -132,6 +133,8 @@ export default function Tasks() {
 
   return (
     <>
+      {load === 'ready' && refreshError && <StaleBanner message={refreshError} onRetry={() => void reload(true)} />}
+
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-[18px] px-1.5">
         <div className="min-w-0 md:flex-[1_1_320px]">
           <h1 className="m-0 text-[22px] font-extrabold tracking-[-0.015em] md:text-[30px]">Tasks</h1>

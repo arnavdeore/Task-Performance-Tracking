@@ -2,6 +2,7 @@ import { useState } from 'react'
 import DeadlineWatch from '../components/DeadlineWatch'
 import LatestUpdates from '../components/LatestUpdates'
 import MonthCalendar from '../components/MonthCalendar'
+import StaleBanner from '../components/StaleBanner'
 import StatTile from '../components/StatTile'
 import ThoughtStrip from '../components/ThoughtStrip'
 import TodayTasks from '../components/TodayTasks'
@@ -9,7 +10,7 @@ import WeekStrip from '../components/WeekStrip'
 import type { StatTileData } from '../data/dashboard'
 import { calendarDeadlines, deadlineRows, latestUpdates, statTiles, todayFocus, weekCounts } from '../lib/dashboardStats'
 import { greeting, longDate, todayIso, weekDates } from '../lib/dates'
-import { useTasksData } from '../lib/useTasksData'
+import { useTasksData } from '../lib/tasksDataContext'
 
 // Shown in place of the real tiles until the data has loaded.
 const LOADING_TILES: StatTileData[] = [
@@ -30,7 +31,7 @@ const LOADING_TILES: StatTileData[] = [
  */
 export default function Dashboard() {
   const [now] = useState(() => new Date())
-  const { tasks, eodLog, load, loadError, reload } = useTasksData()
+  const { tasks, eodLog, load, loadError, refreshError, reload } = useTasksData()
   // Today on this device (local time), so an evening in India still counts as today.
   const today = todayIso(now)
   const ready = load === 'ready'
@@ -43,6 +44,9 @@ export default function Dashboard() {
 
   return (
     <>
+      {/* No order class: on a phone it sorts first (order 0), above the greeting. */}
+      {ready && refreshError && <StaleBanner message={refreshError} onRetry={() => void reload(true)} />}
+
       <div className="contents md:flex md:flex-wrap md:items-end md:justify-between md:gap-x-6 md:gap-y-[18px] md:px-1.5">
         <div className="order-1 min-w-0 px-1.5 md:order-none md:flex-[1_1_320px] md:px-0">
           <h1 className="m-0 text-[22px] font-extrabold tracking-[-0.015em] md:text-[30px]">
