@@ -7,12 +7,13 @@ import StaleBanner from '../components/StaleBanner'
 import StatTile from '../components/StatTile'
 import TaskBoard from '../components/TaskBoard'
 import Toast from '../components/Toast'
+import ViewTaskModal from '../components/ViewTaskModal'
 import { categoryNames } from '../data/dashboard'
 import type { CategoryKey } from '../data/dashboard'
 import { statusNames } from '../data/tasks'
-import type { NewEodUpdate, NewTask, TaskStatus } from '../data/tasks'
+import type { NewEodUpdate, NewTask, TaskEdits, TaskStatus } from '../data/tasks'
 import { todayIso } from '../lib/dates'
-import { errorMessage, insertTask, saveEodUpdate, setTaskStatus, sortTasks } from '../lib/tasksApi'
+import { deleteTask, errorMessage, insertTask, saveEodUpdate, setTaskStatus, sortTasks, updateTask } from '../lib/tasksApi'
 import { dueInWeekCount, hoursLoggedOn, openTasks, overdueCount, tasksLoggedOn } from '../lib/taskStats'
 import { useTasksData } from '../lib/tasksDataContext'
 
@@ -41,6 +42,12 @@ export default function Tasks() {
   const [eodOpen, setEodOpen] = useState(false)
   const [eodTaskId, setEodTaskId] = useState('')
   const [toast, setToast] = useState('')
+  // The Edit task pop-up: the id of the task being edited, or '' when it is closed.
+  const [editId, setEditId] = useState('')
+  const editing = tasks.find((task) => task.id === editId)
+  // The Task details pop-up (read-only): the id of the task being viewed, or '' when it is closed.
+  const [viewId, setViewId] = useState('')
+  const viewing = tasks.find((task) => task.id === viewId)
   // Today on this device (local time), so an evening in India still counts as today.
   const today = todayIso()
 
@@ -69,6 +76,48 @@ export default function Tasks() {
       setFilter('all')
       closeAdd()
       setToast(`Added "${task.title}" to ${statusNames[task.status]}.`)
+      return null
+    } catch (error) {
+      return errorMessage(error)
+    }
+  }
+
+  // Saves the changes made in the Edit task pop-up. Resolves to null on success, or a message the pop-up shows.
+  async function saveEdit(form: NewTask): Promise<string | null> {
+    if (!editing) return 'That task could not be found. Reload the page.'
+    const edits: TaskEdits = {
+      title: form.title,
+      category: form.category,
+      priority: form.priority,
+      tentative: form.tentative,
+      fixed: form.fixed,
+      estimateHours: form.estimateHours,
+      notes: form.notes,
+      status: form.status,
+    }
+    // A finished task keeps its original finish date; one that has just been set to Done gets today; any other status clears it.
+    const completedOn = edits.status !== 'done' ? '' : editing.status === 'done' ? editing.completedOn : today
+    try {
+      await updateTask(editing.id, edits, completedOn)
+      setTasks((all) => sortTasks(all.map((task) => (task.id === editing.id ? { ...task, ...edits, completedOn } : task))))
+      setSelectedId(editing.id)
+      setEditId('')
+      setToast(`Saved changes to "${edits.title}".`)
+      return null
+    } catch (error) {
+      return errorMessage(error)
+    }
+  }
+
+  // Deletes the task being edited. Its EOD updates go with it, so the data is reloaded to refresh the log and the hours.
+  async function removeTask(): Promise<string | null> {
+    if (!editing) return 'That task could not be found. Reload the page.'
+    try {
+      await deleteTask(editing.id)
+      setTasks((all) => all.filter((task) => task.id !== editing.id))
+      setEditId('')
+      setToast(`Deleted "${editing.title}".`)
+      void reload(true)
       return null
     } catch (error) {
       return errorMessage(error)
@@ -295,12 +344,41 @@ export default function Tasks() {
           phoneStatus={phoneStatus}
           onMove={moveTask}
           onLog={openEod}
+          onEdit={setEditId}
+          onView={setViewId}
         />
       )}
 
       {load === 'ready' && <EodLog log={eodLog} today={today} />}
 
+      {viewing && (
+        <ViewTaskModal
+          key={viewing.id}
+          task={viewing}
+          updates={eodLog.filter((entry) => entry.taskId === viewing.id)}
+          today={today}
+          onClose={() => setViewId('')}
+          onEdit={() => {
+            setViewId('')
+            setEditId(viewing.id)
+          }}
+          onLog={() => {
+            setViewId('')
+            openEod(viewing.id)
+          }}
+        />
+      )}
       {addOpen && <AddTaskModal onClose={closeAdd} onAdd={addTask} />}
+      {editing && (
+        <AddTaskModal
+          key={editing.id}
+          editing={editing}
+          updateCount={eodLog.filter((entry) => entry.taskId === editing.id).length}
+          onClose={() => setEditId('')}
+          onAdd={saveEdit}
+          onDelete={removeTask}
+        />
+      )}
       {eodOpen && (
         <EodModal tasks={tasks} initialTaskId={eodTaskId} onClose={() => setEodOpen(false)} onSave={saveEod} />
       )}

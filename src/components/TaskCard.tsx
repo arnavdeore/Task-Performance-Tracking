@@ -64,10 +64,14 @@ type TaskCardProps = {
   selected: boolean
   onMove: (id: string, to: TaskStatus) => void
   onLog?: (id: string) => void
+  /** Opens the Edit task pop-up for this card. */
+  onEdit?: (id: string) => void
+  /** Opens the read-only Task details pop-up for this card. */
+  onView?: (id: string) => void
 }
 
 /** One card on the Tasks board. Each status has its own look (see .tcard.st-* in index.css). Compact on purpose. Layout from design/Tasks.dc.html. */
-export default function TaskCard({ task, today, selected, onMove, onLog }: TaskCardProps) {
+export default function TaskCard({ task, today, selected, onMove, onLog, onEdit, onView }: TaskCardProps) {
   const category = CATEGORY_STYLE[task.category]
   const priority = PRIORITY_STYLE[task.priority]
   const badge = statusBadge(task, today)
@@ -91,8 +95,35 @@ export default function TaskCard({ task, today, selected, onMove, onLog }: TaskC
           <span className={`h-[7px] w-[7px] flex-none rounded-full ${category.dot}`} />
           <span className="overflow-hidden text-ellipsis whitespace-nowrap">{categoryNames[task.category]}</span>
         </span>
-        <span className={`flex-none rounded-full px-2.5 py-0.5 text-[11px] font-bold ${priority.colour}`}>
-          {priority.label}
+        <span className="flex flex-none items-center gap-1.5">
+          <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${priority.colour}`}>{priority.label}</span>
+          {onView && (
+            <button
+              type="button"
+              aria-label={`View details of "${task.title}"`}
+              title="View details"
+              className="-my-1.5 flex h-9 w-9 flex-none cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-muted-2 hover:bg-white/80 hover:text-navy"
+              onClick={() => onView(task.id)}
+            >
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          )}
+          {onEdit && (
+            <button
+              type="button"
+              aria-label={`Edit "${task.title}"`}
+              title="Edit task"
+              className="-my-1.5 -mr-1.5 flex h-9 w-9 flex-none cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-muted-2 hover:bg-white/80 hover:text-navy"
+              onClick={() => onEdit(task.id)}
+            >
+              <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15.5 4.5l4 4L8 20l-5 1 1-5L15.5 4.5z" />
+              </svg>
+            </button>
+          )}
         </span>
       </div>
 
@@ -149,7 +180,7 @@ export default function TaskCard({ task, today, selected, onMove, onLog }: TaskC
             className="pillbtn light h-11 flex-1 bg-white/80 px-3 text-[13px] shadow-none md:h-9 md:text-xs"
             onClick={() => onLog?.(task.id)}
           >
-            Log update
+            EOD update
           </button>
           <button
             type="button"

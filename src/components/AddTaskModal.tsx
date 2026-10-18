@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { categoryNames } from '../data/dashboard'
 import type { CategoryKey } from '../data/dashboard'
 import { statusNames } from '../data/tasks'
-import type { NewTask, Priority, TaskStatus } from '../data/tasks'
+import type { NewTask, Priority, Task, TaskStatus } from '../data/tasks'
 import Modal from './Modal'
 import { SHEET_FOOTER } from './sheetFooter'
 
@@ -51,17 +51,39 @@ function check(form: Form): string[] {
   return errors
 }
 
-type AddTaskModalProps = {
-  onClose: () => void
-  /** Saves the task. Resolves to null on success (the page closes the pop-up) or a message to show if it failed. */
-  onAdd: (task: NewTask) => Promise<string | null>
+/** The form filled in with an existing task, for editing. */
+function formFrom(task: Task): Form {
+  return {
+    title: task.title,
+    category: task.category,
+    priority: task.priority,
+    tentative: task.tentative,
+    fixed: task.fixed,
+    estimate: task.estimateHours ? String(task.estimateHours) : '',
+    status: task.status,
+    notes: task.notes,
+  }
 }
 
-/** The "Add task" pop-up. Layout from design/Tasks.dc.html. */
-export default function AddTaskModal({ onClose, onAdd }: AddTaskModalProps) {
-  const [form, setForm] = useState<Form>(BLANK)
+type AddTaskModalProps = {
+  onClose: () => void
+  /** Saves the task (a new one, or the changes when `editing` is set). Resolves to null on success (the page closes the pop-up) or a message to show if it failed. */
+  onAdd: (task: NewTask) => Promise<string | null>
+  /** When set, the pop-up edits this task instead of adding a new one. */
+  editing?: Task
+  /** Edit mode only: deletes the task. Resolves to null on success or a message to show. */
+  onDelete?: () => Promise<string | null>
+  /** Edit mode only: how many EOD updates are logged on the task (they are deleted with it). */
+  updateCount?: number
+}
+
+/** The "Add task" pop-up, also used as "Edit task". Layout from design/Tasks.dc.html. */
+export default function AddTaskModal({ onClose, onAdd, editing, onDelete, updateCount = 0 }: AddTaskModalProps) {
+  const [form, setForm] = useState<Form>(() => (editing ? formFrom(editing) : BLANK))
   const [errors, setErrors] = useState<string[]>([])
   const [busy, setBusy] = useState(false)
+  // Edit mode: the first press on Delete only asks "are you sure?".
+  const [confirming, setConfirming] = useState(false)
 
   function set<K extends keyof Form>(key: K, value: Form[K]) {
     setForm((current) => ({ ...current, [key]: value }))
@@ -88,10 +110,26 @@ export default function AddTaskModal({ onClose, onAdd }: AddTaskModalProps) {
     if (failure) setErrors([failure])
   }
 
+  async function remove() {
+    if (busy || !onDelete) return
+    setBusy(true)
+    const failure = await onDelete()
+    setBusy(false)
+    // On success the page closes this pop-up; on failure it stays open and says why.
+    if (failure) {
+      setConfirming(false)
+      setErrors([failure])
+    }
+  }
+
   return (
     <Modal
-      title="Add task"
-      subtitle="Set a tentative target and a fixed commitment. The fixed date drives your on-time score."
+      title={editing ? 'Edit task' : 'Add task'}
+      subtitle={
+        editing
+          ? 'Fix a title, a date or an estimate, or change the status (for example, set a task on hold to Waiting).'
+          : 'Set a tentative target and a fixed commitment. The fixed date drives your on-time score.'
+      }
       onClose={onClose}
     >
       <div className="flex flex-col gap-[18px]">
@@ -221,26 +259,72 @@ export default function AddTaskModal({ onClose, onAdd }: AddTaskModalProps) {
           </label>
         </div>
 
+        {editing && confirming && (
+          <p role="alert" className="m-0 rounded-[18px] bg-red-pastel px-[18px] py-4 text-[13.5px] font-semibold leading-[1.5] text-red-dark">
+            Delete "{editing.title}"?
+            {updateCount > 0 &&
+              ` Its ${updateCount} logged ${updateCount === 1 ? 'update goes' : 'updates go'} with it and your Performance figures will change.`}{' '}
+            This cannot be undone.
+          </p>
+        )}
+
         <div className={`flex flex-wrap gap-3.5 ${SHEET_FOOTER}`}>
-          <button
-            type="button"
-            className="pillbtn light h-[54px] flex-[1_1_160px] bg-[#F1F4FB] text-[15px] shadow-none"
-            onClick={() => {
-              setForm(BLANK)
-              setErrors([])
-            }}
-          >
-            Clear
-          </button>
-          <button
-            type="button"
-            className="pillbtn dark h-[54px] flex-[2_1_260px] text-[15px]"
-            onClick={submit}
-            disabled={busy}
-            aria-busy={busy}
-          >
-            {busy ? 'Saving…' : 'Add task'}
-          </button>
+          {editing && confirming ? (
+            <>
+              <button
+                type="button"
+                className="pillbtn light h-[54px] flex-[1_1_160px] bg-[#F1F4FB] text-[15px] shadow-none"
+                onClick={() => setConfirming(false)}
+                disabled={busy}
+              >
+                Keep task
+              </button>
+              <button
+                type="button"
+                className="pillbtn dark h-[54px] flex-[2_1_260px] text-[15px]"
+                style={{ background: 'var(--color-red-dark)' }}
+                onClick={remove}
+                disabled={busy}
+                aria-busy={busy}
+              >
+                {busy ? 'Deleting…' : 'Yes, delete it'}
+              </button>
+            </>
+          ) : (
+            <>
+              {editing ? (
+                <button
+                  type="button"
+                  className="pillbtn light h-[54px] flex-[1_1_160px] bg-[#F1F4FB] text-[15px] shadow-none"
+                  style={{ color: 'var(--color-red-dark)' }}
+                  onClick={() => setConfirming(true)}
+                  disabled={busy}
+                >
+                  Delete task
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="pillbtn light h-[54px] flex-[1_1_160px] bg-[#F1F4FB] text-[15px] shadow-none"
+                  onClick={() => {
+                    setForm(BLANK)
+                    setErrors([])
+                  }}
+                >
+                  Clear
+                </button>
+              )}
+              <button
+                type="button"
+                className="pillbtn dark h-[54px] flex-[2_1_260px] text-[15px]"
+                onClick={submit}
+                disabled={busy}
+                aria-busy={busy}
+              >
+                {busy ? 'Saving…' : editing ? 'Save changes' : 'Add task'}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </Modal>

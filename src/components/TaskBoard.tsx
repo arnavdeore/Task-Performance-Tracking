@@ -18,10 +18,12 @@ type TaskBoardProps = {
   phoneStatus: TaskStatus
   onMove: (id: string, to: TaskStatus) => void
   onLog?: (id: string) => void
+  onEdit?: (id: string) => void
+  onView?: (id: string) => void
 }
 
 /** The four-column board. On a phone it shows one status at a time. Layout from design/Tasks.dc.html. */
-export default function TaskBoard({ tasks, today, selectedId, phoneStatus, onMove, onLog }: TaskBoardProps) {
+export default function TaskBoard({ tasks, today, selectedId, phoneStatus, onMove, onLog, onEdit, onView }: TaskBoardProps) {
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(292px,1fr))] items-start gap-[18px]">
       {COLUMNS.map((column) => {
@@ -69,6 +71,8 @@ export default function TaskBoard({ tasks, today, selectedId, phoneStatus, onMov
                 selected={task.id === selectedId}
                 onMove={onMove}
                 onLog={onLog}
+                onEdit={onEdit}
+                onView={onView}
               />
             ))}
 

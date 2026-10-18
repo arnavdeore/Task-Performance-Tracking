@@ -1,5 +1,5 @@
 import type { CategoryKey, Mood } from '../data/dashboard'
-import type { EodUpdate, NewEodUpdate, NewTask, Priority, Task, TaskStatus } from '../data/tasks'
+import type { EodUpdate, NewEodUpdate, NewTask, Priority, Task, TaskEdits, TaskStatus } from '../data/tasks'
 import { supabase } from './supabase'
 
 /*
@@ -134,6 +134,37 @@ export async function insertTask(newTask: NewTask, today: string): Promise<Task>
     .single()
   if (error) throw failure(error)
   return toTask(data as TaskRow, 0)
+}
+
+/**
+ * Changes a task's details and status. `completedOn` is the date the task was finished, or '' when the new status is not Done
+ * (the database requires a completed date exactly when the status is Done).
+ */
+export async function updateTask(id: string, edits: TaskEdits, completedOn: string): Promise<void> {
+  const { data, error } = await supabase
+    .from('tasks')
+    .update({
+      status: edits.status,
+      completed_on: completedOn || null,
+      title: edits.title,
+      category: edits.category,
+      priority: edits.priority,
+      tentative_date: edits.tentative || null,
+      fixed_date: edits.fixed,
+      estimate_hours: edits.estimateHours,
+      notes: edits.notes,
+    })
+    .eq('id', id)
+    .select('id')
+  if (error) throw failure(error)
+  if (!data || data.length === 0) throw new Error('That task could not be found. Reload the page.')
+}
+
+/** Deletes a task. Its EOD updates are deleted with it (the database does this, see supabase/schema.sql). */
+export async function deleteTask(id: string): Promise<void> {
+  const { data, error } = await supabase.from('tasks').delete().eq('id', id).select('id')
+  if (error) throw failure(error)
+  if (!data || data.length === 0) throw new Error('That task could not be found. Reload the page.')
 }
 
 /** Moves a task to another status. Done stamps today's date as completed; any other status clears it. */

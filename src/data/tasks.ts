@@ -30,6 +30,9 @@ export type Task = {
 /** What the Add task form hands over; the page adds the id, the logged hours and the completed date. */
 export type NewTask = Omit<Task, 'id' | 'loggedHours' | 'completedOn'>
 
+/** The fields the Edit task pop-up can change (everything the Add task form has, including the status). */
+export type TaskEdits = NewTask
+
 /** What the EOD update form hands over; the page adds the id, the date and the task title. */
 export type NewEodUpdate = Omit<EodUpdate, 'id' | 'date' | 'title'>
 
